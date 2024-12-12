@@ -34,9 +34,11 @@ button {
     background-color: #1D1D1F;
     border-color: #CECECF;
     color: #F6F6F8;
-    margin: 1rem;
+    margin-inline: .5rem;
+    margin-block: 1rem;
     border-radius: 10px;
     border-width: 1px;
+    white-space: nowrap;
 }
 
 /* #home-button {
@@ -132,24 +134,31 @@ button {
 }
 
 .header i {
-    margin-right: .5rem;
+    margin-inline: .5rem;
 }
 
-.tab-table td {
+.tab-table div {
     border-style: solid;
     border-color: #1D1D1F;
-    table-layout: fixed;
+    border-radius: 10px;
+    padding: .33rem;
+    margin-right: 1rem;
+    background-color: #1D1D1F;
+    color: #F6F6F8;    
 }
 
 .tab-table {
-    border-style: solid;
     border-color: #1D1D1F;
     position: fixed;
     bottom: 0px;
     left: 0px;
-    margin: 2rem;
+    margin: 1rem;
 }
 
 .tab-table td {
     padding: .5rem;
 }
+
+select {
+    display:inline-block;
+  }
