@@ -161,4 +161,9 @@ button {
 
 select {
     display:inline-block;
-  }
+}
+
+#username-label {
+    color: inherit;
+    margin-left: .5rem;
+}

@@ -2,6 +2,7 @@ import './create.css';
 import jsPDF from "jspdf";
 
 class Create {
+    private user;
     private highEString: string[];
     private bString: string[];
     private gString: string[];
@@ -10,6 +11,7 @@ class Create {
     private eString: string[];
 
     constructor() {
+        this.user = { username: "Guest" };
         this.highEString = ["0", "-", "0", "-", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "2", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "-", "-", "-", "-", "-", "-", "-", "-"];
         this.bString = ["0", "-", "0", "-", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "2", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "-", "-", "-", "-", "-", "-", "-", "-"];
         this.gString = ["0", "-", "0", "-", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "2", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "1", "2", "-", "-", "-", "-", "-", "-", "-", "-"];
@@ -19,11 +21,28 @@ class Create {
     }
 
     public init = (): void => {
+        this.getUserAccount();
         this.exit();
         this.export();
         this.buildTabCellRows();
         this.updateTabCell();
     };
+
+    private getUserAccount = async () => {
+        // Get the query string from the URL
+        const queryString = window.location.search; // For the current page
+
+        // Use URLSearchParams to parse the query string
+        const params = new URLSearchParams(queryString);
+
+        // Get individual parameters by name
+        const username = params.get('username');
+
+        const userAccount = await fetch("http://localhost:5000/getUserAccount?username=" + username)
+        const userAccountData = await userAccount.json()
+        const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
+        usernameLabel.innerHTML = userAccountData.username;
+    }
 
     // Return to home page.
     private exit = (): void => {

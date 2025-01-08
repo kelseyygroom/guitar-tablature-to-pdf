@@ -50,3 +50,18 @@ button {
     border-radius: 10px;
     border-width: 1px;
 }
+
+#failed-login-error {
+    display: none;
+    color: chocolate;
+}
+
+@media (min-width: 600px) and (orientation:landscape) {
+    input, button, .icon-container {
+        margin-bottom: .5rem;
+        box-sizing: border-box;
+        width: 25%;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+  }
