@@ -4,7 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: {
     index: './src/main.ts',
-    create: './src/create.ts', // Entry for create page
+    create: './src/create.ts',
+    home: './src/home.ts'
   },
   output: {
     filename: '[name].bundle.js',
@@ -37,6 +38,11 @@ module.exports = {
       template: './src/create.html',
       filename: 'create.html',
       chunks: ['create'], // Specify the chunks for this HTML
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/home.html',
+      filename: 'home.html',
+      chunks: ['home'], // Specify the chunks for this HTML
     }),
   ],
   devServer: {

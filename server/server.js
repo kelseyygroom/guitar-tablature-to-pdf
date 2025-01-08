@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors()); // Enables CORS with default settings
 
-// Correct usage: Query the database and return only the data
 app.get('/login', async (req, res) => {
     const username = req.query.username;
     const password = req.query.pass;
@@ -31,7 +30,6 @@ app.get('/login', async (req, res) => {
     }
 });
 
-// Correct usage: Query the database and return only the data
 app.get('/getUserAccount', async (req, res) => {
     const username = req.query.username;
 
@@ -52,7 +50,6 @@ app.get('/getUserAccount', async (req, res) => {
     }
 });
 
-// Correct usage: Query the database and return only the data
 app.post('/createAccount', async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -61,9 +58,31 @@ app.post('/createAccount', async (req, res) => {
 
     try {
         const db = await connectToDatabase();
-        const accountInfo = await db.collection('userAccount').insertOne({ username, password, email });
+        const accountInfo = await db.collection('userAccount').insertOne({ username, password, email, tabs: [] });
 
         if (accountInfo) {
+            res.json(true);
+        }
+        else {
+            res.json(false);
+        }
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.post('/saveTab', async (req, res) => {
+    const username = req.body.username;
+    const tabData = req.body.tabData;
+    const tabTitle = req.body.title;
+
+    try {
+        const db = await connectToDatabase();
+        const saveTab = await db.collection('userAccount').updateOne({ username }, { $push: { tabs: { tab: { tabTitle, tabData }} } });
+
+        if (saveTab) {
             res.json(true);
         }
         else {

@@ -27,7 +27,8 @@ class SignIn {
             const loginApproval = await userResponse.json();
 
             if (loginApproval === true) {
-                window.location.href = "create.html?username=" + usernameInput.value;
+                // window.location.href = "create.html?username=" + usernameInput.value;
+                window.location.href = "home.html?username=" + createUsernameInput.value;
             }
             else {
                 loginErrorLabel.style.display = "block";
@@ -46,7 +47,8 @@ class SignIn {
             const createApproval = await createUserResponse.json();
 
             if (createApproval === true) {
-                window.location.href = "create.html?username=" + createUsernameInput.value;
+                // window.location.href = "create.html?username=" + createUsernameInput.value;
+                window.location.href = "home.html?username=" + createUsernameInput.value;
             }
         });
     }
