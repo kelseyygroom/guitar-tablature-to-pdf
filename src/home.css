@@ -1,0 +1,53 @@
+.header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 2rem;
+    width: 100vw;
+    background-color: #1D1D1F;
+    color: #F6F6F8;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding: .25rem;
+}
+
+.header i {
+    margin-inline: .5rem;
+}
+
+body {
+    margin: 0px;
+}
+
+#tab-list-container {
+    margin-top: 2.5rem;
+    padding: 0px;
+    width: 100vw;
+    margin-left: 0px;
+    overflow: scroll;
+}
+
+.list-item {
+    list-style-type: none;
+    padding: 1rem;
+    font-size: large;
+    border-style: solid;
+    margin: 0px;
+}
+
+#create-tab-button {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: 3rem;
+    height: 3rem;
+    margin: 1rem;
+    border-radius: 100%;
+    background-color: #1D1D1F;
+    color: #F6F6F8;
+}
+
+#create-tab-button:hover {
+    background-color: #246ec3;
+}

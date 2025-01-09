@@ -2,7 +2,7 @@ import './create.css';
 import jsPDF from "jspdf";
 
 class Create {
-    private user;
+    private user: any;
     private highEString: string[];
     private bString: string[];
     private gString: string[];
@@ -24,7 +24,6 @@ class Create {
         this.getUserAccount();
         this.exit();
         this.export();
-        this.buildTabCellRows();
         this.updateTabCell();
         this.saveTab();
     };
@@ -44,14 +43,29 @@ class Create {
         this.user = userAccountData;
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
         usernameLabel.innerHTML = userAccountData.username;
+        this.loadTab();
     }
 
     // Return to home page.
     private exit = (): void => {
         const exitButton: HTMLButtonElement = document.getElementById("home-button") as HTMLButtonElement;
         exitButton?.addEventListener("click", () => {
-            window.location.href = "index.html"
+            window.location.href = "home.html?username=" + this.user.username;
         });
+    };
+
+    private loadTab = () => {
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+        const title = params.get('title');
+        const tab = this.user.tabs.find((tab: any) => { return tab.tab.tabTitle === title});
+        this.highEString = tab.tab.tabData.highEString.split("");
+        this.bString = tab.tab.tabData.bString.split("");
+        this.gString = tab.tab.tabData.gString.split("");
+        this.dString = tab.tab.tabData.dString.split("");
+        this.aString = tab.tab.tabData.aString.split("");
+        this.eString = tab.tab.tabData.eString.split("");
+        this.buildTabCellRows();
     };
 
     private saveTab = () => {
@@ -67,7 +81,7 @@ class Create {
                 body: JSON.stringify({ tabData, username: this.user.username, title: "My First Tab" })
             })
         })
-    }
+    };
 
     // Export the tab.
     private export = (): void => {
@@ -134,7 +148,6 @@ class Create {
             eString: this.translateTabCellString("e")
         };
 
-        console.log("tab", tab)
         return tab;
     };
 

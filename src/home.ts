@@ -1,3 +1,5 @@
+import "./home.css"
+
 // I started to speed through this, it's 4am and I'm just trying to get it done at this point. I want to deploy a working prototype already! 
 // I'll clean this up later, I promise!
 class Home {
@@ -10,20 +12,28 @@ class Home {
 
     public init = () => {
         this.getUserAccount();
+        this.createNewTab();
     };
 
     private displayTabsList = () => {
-        console.log(this.tabs)
         const tabListContainer: HTMLDivElement = document.getElementById("tab-list-container") as HTMLDivElement;
         this.tabs.forEach(tab => {
-            console.log("tab", tab)
             const listItem = document.createElement("li");
             listItem.id = "tab-title-" + tab.tab.tabTitle;
-            listItem.innerHTML = tab.tab.tabTitle;
+            listItem.className = "list-item"
+            listItem.innerHTML = '<i style="color: black; height: 1rem; width: 1rem; margin-right: 1rem;" class="fas fa-file"></i>' + tab.tab.tabTitle;
             listItem.onclick = () => {
                 this.openCreatePage(tab.tab.tabTitle);
             }
             tabListContainer.append(listItem);
+        })
+    };
+
+    private createNewTab = () => {
+        const createNewTabButton: HTMLButtonElement = document.getElementById('create-tab-button') as HTMLButtonElement;
+
+        createNewTabButton.addEventListener("click", () => {
+            window.location.href = "create.html?username=" + this.user.username;
         })
     };
 
