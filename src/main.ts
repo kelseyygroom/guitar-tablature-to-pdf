@@ -22,13 +22,10 @@ class SignIn {
         
         loginButton?.addEventListener("click", async () => {
             const userResponse = await fetch(`http://localhost:5000/login?username=${usernameInput.value}&pass=${passwordInput.value}`);
-            console.log("userResponse", userResponse)
-
             const loginApproval = await userResponse.json();
-
             if (loginApproval === true) {
                 // window.location.href = "create.html?username=" + usernameInput.value;
-                window.location.href = "home.html?username=" + createUsernameInput.value;
+                window.location.href = "home.html?username=" + usernameInput.value;
             }
             else {
                 loginErrorLabel.style.display = "block";

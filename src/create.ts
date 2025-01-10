@@ -3,6 +3,7 @@ import jsPDF from "jspdf";
 
 class Create {
     private user: any;
+    private tabTitle: string;
     private highEString: string[];
     private bString: string[];
     private gString: string[];
@@ -12,6 +13,7 @@ class Create {
 
     constructor() {
         this.user = { username: "Guest" };
+        this.tabTitle = "";
         this.highEString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
         this.bString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
         this.gString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
@@ -26,6 +28,7 @@ class Create {
         this.export();
         this.updateTabCell();
         this.saveTab();
+        this.addLine();
     };
 
     private getUserAccount = async () => {
@@ -58,15 +61,36 @@ class Create {
         const queryString = window.location.search;
         const params = new URLSearchParams(queryString);
         const title = params.get('title');
-        const tab = this.user.tabs.find((tab: any) => { return tab.tab.tabTitle === title});
-        this.highEString = tab.tab.tabData.highEString.split("");
-        this.bString = tab.tab.tabData.bString.split("");
-        this.gString = tab.tab.tabData.gString.split("");
-        this.dString = tab.tab.tabData.dString.split("");
-        this.aString = tab.tab.tabData.aString.split("");
-        this.eString = tab.tab.tabData.eString.split("");
+        this.tabTitle = title!;
+        const tab = this.user.tabs.find((tab: any) => { return tab.tabTitle === title});
+        this.highEString = tab.tabData.highEString.split("");
+        this.bString = tab.tabData.bString.split("");
+        this.gString = tab.tabData.gString.split("");
+        this.dString = tab.tabData.dString.split("");
+        this.aString = tab.tabData.aString.split("");
+        this.eString = tab.tabData.eString.split("");
         this.buildTabCellRows();
     };
+
+    private addLine = (): void => {
+        const addLineButton: HTMLButtonElement = document.getElementById("add-line-button") as HTMLButtonElement;
+        addLineButton.addEventListener("click", () => {
+            console.log("connect")
+            // let temphighEArray = this.highEString;
+            // let tempbArray = this.bString;
+            // let tempgArray = this.gString;
+            // let tempdArray = this.dString;
+            // let tempaArray = this.aString;
+            // let tempeArray = this.eString;
+            // this.highEString.push("-");
+            // this.bString.push("-");
+            // this.gString.push("-");
+            // this.dString.push("-");
+            // this.aString.push("-");
+            // this.eString.push("-");
+            this.buildTabCellRows();
+        });
+    }
 
     private saveTab = () => {
         const saveTabButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
@@ -78,7 +102,7 @@ class Create {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ tabData, username: this.user.username, title: "My First Tab" })
+                body: JSON.stringify({ tabData, username: this.user.username, title: this.tabTitle })
             })
         })
     };

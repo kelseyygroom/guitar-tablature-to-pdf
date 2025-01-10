@@ -6,7 +6,7 @@ class Home {
     private user;
     private tabs: any[];
     constructor() {
-        this.user = { username: "" };
+        this.user = { username: "", tabs: [] };
         this.tabs = [];
     }
 
@@ -19,21 +19,55 @@ class Home {
         const tabListContainer: HTMLDivElement = document.getElementById("tab-list-container") as HTMLDivElement;
         this.tabs.forEach(tab => {
             const listItem = document.createElement("li");
-            listItem.id = "tab-title-" + tab.tab.tabTitle;
+            listItem.id = "tab-title-" + tab.tabTitle;
             listItem.className = "list-item"
-            listItem.innerHTML = '<i style="color: black; height: 1rem; width: 1rem; margin-right: 1rem;" class="fas fa-file"></i>' + tab.tab.tabTitle;
+            listItem.innerHTML = '<i style="color: black; height: 1rem; width: 1rem; margin-right: 1rem;" class="fas fa-file"></i>' + tab.tabTitle;
             listItem.onclick = () => {
-                this.openCreatePage(tab.tab.tabTitle);
+                this.openCreatePage(tab.tabTitle);
             }
             tabListContainer.append(listItem);
         })
+    };
+
+    private checkIfTabExists = (title: string) => {
+        if (this.user.tabs.length > 1) {
+            this.user.tabs.forEach((tab: any) => {
+                console.log(tab)
+                if (tab.tabTitle === title) {
+                    tab
+                }
+            })
+        }
     };
 
     private createNewTab = () => {
         const createNewTabButton: HTMLButtonElement = document.getElementById('create-tab-button') as HTMLButtonElement;
 
         createNewTabButton.addEventListener("click", () => {
-            window.location.href = "create.html?username=" + this.user.username;
+            const title: string | null = prompt("Enter Title", "");
+
+            if (title) {
+                this.checkIfTabExists(title)
+                fetch("http://localhost:5000/saveTab", {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        username: this.user.username,
+                        tabData: {
+                            highEString: "-----",
+                            bString: "-----",
+                            gString: "-----",
+                            dString: "-----",
+                            aString: "-----",
+                            eString: "-----"
+                        }, 
+                        title,
+                    })
+                });
+                window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
+            }
         })
     };
 

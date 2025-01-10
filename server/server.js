@@ -80,7 +80,28 @@ app.post('/saveTab', async (req, res) => {
 
     try {
         const db = await connectToDatabase();
-        const saveTab = await db.collection('userAccount').updateOne({ username }, { $push: { tabs: { tab: { tabTitle, tabData }} } });
+        const saveTab = await db.collection('userAccount').updateOne(
+            {
+              username, // Match the user by username
+              'tabs.tabTitle': tabTitle // Check if a tab with the same title exists
+            },
+            {
+              $set: { 'tabs.$.tabData': tabData } // Update the tab data if it exists
+            },
+            {
+              upsert: false // Do not create a new document if the username is not found
+            }
+          );
+          
+          if (saveTab.matchedCount === 0) {
+            // If no tab with the specified title exists, push a new one
+            await db.collection('userAccount').updateOne(
+              { username },
+              {
+                $push: { tabs: { tabTitle, tabData } } // Add a new tab
+              }
+            );
+          }
 
         if (saveTab) {
             res.json(true);
@@ -94,5 +115,26 @@ app.post('/saveTab', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+// app.post('/createTab', async (req, res) => {
+//     const username = req.body.username;
+//     const tabTitle = req.body.tabTitle;
+
+//     try {
+//         const db = await connectToDatabase();
+//         const saveTab = await db.collection('userAccount').updateOne({ username }, { $set: { 'tabs.$.tabTitle': title }});
+
+//         if (saveTab) {
+//             res.json(true);
+//         }
+//         else {
+//             res.json(false);
+//         }
+
+//     } catch (error) {
+//         console.error('Error:', error.message);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
 
 app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));

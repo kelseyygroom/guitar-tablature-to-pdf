@@ -1,0 +1,2 @@
+[build]
+  publish = "dist" # Directory where your built files are located
