@@ -168,7 +168,7 @@ class Create {
                 tabCell.innerHTML = newFret;
                 currentNoteDisplay.innerHTML = newFret;
                 if (tabCell.innerHTML !== "-") {
-                    tabCell.style.backgroundColor = "#1D1D1F";
+                    // tabCell.style.backgroundColor = "#1D1D1F";
                 }
             };
         });

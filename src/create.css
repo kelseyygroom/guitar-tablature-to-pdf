@@ -35,18 +35,23 @@ button {
     box-sizing: border-box;
     width: 100%;
     padding: 1rem;
-    background-color: #1D1D1F;
-    border-color: #CECECF;
-    color: #F0f8ff;
+    background: #efefef;
+    border: none;
+    border-radius: .5rem;
+    color: #444;
     margin-inline: .5rem;
     margin-block: 1rem;
-    border-radius: 10px;
+    border-radius: 5px;
     border-width: 1px;
     white-space: nowrap;
     box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
     -6px -6px 10px rgba(255, 255, 255, .5),
     6px 6px 8px rgba(255, 255, 255, .075),
     6px 6px 10px rgba(0, 0, 0, .15);
+}
+
+button i {
+    color: #444;
 }
 
 /* #home-button {
@@ -72,18 +77,21 @@ button {
     justify-content: center;
     align-items: center;
     border-style: solid;
-    border-radius: 3px;
+    border-radius: 2px;
     margin: .25rem;
     border-color: white;
     border-width: 1px;
     width: .75rem;
     height: .75rem;
-    border-color: #1D1D1F;
-    background-color: #1D1D1F;
-    color: #F0f8ff;
-    box-shadow: 2.5px 2.5px 2.5px #CECECF;
+    border-color: #c9c9d0;
+    background: #efefef;
+    color: #444;
     transition: all;
     transition-duration: 1s;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
+    -6px -6px 10px rgba(255, 255, 255, .5),
+    6px 6px 8px rgba(255, 255, 255, .075),
+    6px 6px 10px rgba(0, 0, 0, .15);
 }
 
 .tab-cell-active {
