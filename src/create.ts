@@ -266,7 +266,7 @@ class Create {
         tabCell.classList.add("tab-cell")
 
         if (tabCell.innerHTML === "-") {
-            tabCell.style.opacity = ".7";
+            tabCell.style.opacity = ".6";
         }
 
         tabCell.addEventListener("click", () => {

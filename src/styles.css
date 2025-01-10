@@ -33,6 +33,10 @@ input, button {
     width: 100%;
     padding: 1rem;
     border-radius: 10px;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
+    -6px -6px 10px rgba(255, 255, 255, .5),
+    6px 6px 8px rgba(255, 255, 255, .075),
+    6px 6px 10px rgba(0, 0, 0, .15);
 }
 
 .icon-container {

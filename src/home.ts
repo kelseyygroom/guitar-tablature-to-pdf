@@ -26,7 +26,7 @@ class Home {
             const listItem = document.createElement("li");
             listItem.id = "tab-title-" + tab.tabTitle;
             listItem.className = "list-item"
-            listItem.innerHTML = '<i style="color: black; height: 1rem; width: 1rem; margin-right: 1rem;" class="fas fa-file"></i>' + tab.tabTitle;
+            listItem.innerHTML = '<i style="color: black; height: 1rem; width: 1rem; margin-right: 1rem;" class="fa-solid fa-guitar"></i>' + tab.tabTitle;
             listItem.onclick = () => {
                 this.openCreatePage(tab.tabTitle);
             }
