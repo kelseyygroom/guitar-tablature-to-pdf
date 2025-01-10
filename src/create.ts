@@ -65,12 +65,16 @@ class Create {
         const title = params.get('title');
         this.tabTitle = title!;
         const tab = this.user.tabs.find((tab: any) => { return tab.tabTitle === title});
-        this.highEString = tab.tabData.highEString.split("");
-        this.bString = tab.tabData.bString.split("");
-        this.gString = tab.tabData.gString.split("");
-        this.dString = tab.tabData.dString.split("");
-        this.aString = tab.tabData.aString.split("");
-        this.eString = tab.tabData.eString.split("");
+
+        if (tab) {
+            this.highEString = tab.tabData.highEString.split("");
+            this.bString = tab.tabData.bString.split("");
+            this.gString = tab.tabData.gString.split("");
+            this.dString = tab.tabData.dString.split("");
+            this.aString = tab.tabData.aString.split("");
+            this.eString = tab.tabData.eString.split("");
+        }
+
         this.buildTabCellRows();
     };
 
@@ -230,6 +234,10 @@ class Create {
         tabCell.innerHTML += tabDataString;
         tabCell.id = stringName + position;
         tabCell.classList.add("tab-cell")
+
+        if (tabCell.innerHTML === "-") {
+            tabCell.style.opacity = ".7";
+        }
 
         tabCell.addEventListener("click", () => {
             const activeTabCells = document.getElementsByClassName("tab-cell-active");

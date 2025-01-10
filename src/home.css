@@ -55,3 +55,8 @@ body {
 #create-tab-button:hover {
     background-color: #246ec3;
 }
+
+a {
+    color: #F6F6F8;
+    text-decoration: none; /* no underline */
+}

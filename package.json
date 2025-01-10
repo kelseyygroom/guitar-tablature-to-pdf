@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "server": "nodemon ./server/server.js --verbose",
-    "start": "node ./server/server.js"
+    "start": "node ./server/server.js",
+    "dev": "webpack serve --mode development --open"
   },
   "engines": {
     "node": "18.x"

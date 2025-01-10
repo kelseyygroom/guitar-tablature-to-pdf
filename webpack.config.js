@@ -5,7 +5,8 @@ module.exports = {
   entry: {
     index: './src/main.ts',
     create: './src/create.ts',
-    home: './src/home.ts'
+    home: './src/home.ts',
+    signup: './src/signup.ts'
   },
   output: {
     filename: '[name].bundle.js',
@@ -44,6 +45,11 @@ module.exports = {
       template: './src/home.html',
       filename: 'home.html',
       chunks: ['home'], // Specify the chunks for this HTML
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/signup.html',
+      filename: 'signup.html',
+      chunks: ['signup'], // Specify the chunks for this HTML
     }),
   ],
   devServer: {
