@@ -6,7 +6,7 @@
 "scripts": {
   "build": "webpack --mode production",
   "server": "nodemon ./server/server.js --verbose",
-  "start": "webpack --mode production"
+  "start": "node ./server/server.js"
 },
 // "scripts": {
 //   "test": "echo \"Error: no test specified\" && exit 1",
