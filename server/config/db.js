@@ -11,12 +11,10 @@ let dbInstance = null;
 async function connectToDatabase() {
   if (!dbInstance) {
     const client = await MongoClient.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       ssl: true
     });
     console.log('Connected to MongoDB');
-    dbInstance = client.db(DATABASE_NAME); // Return the specific database object, not the client
+    dbInstance = client.db(DATABASE_NAME);
   }
   return dbInstance;
 }
