@@ -8,6 +8,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors()); // Enables CORS with default settings
+app.use(cors({ origin: '*' }));
+app.options('*', cors());
 
 app.get('/login', async (req, res) => {
     const username = req.query.username;
@@ -114,26 +116,5 @@ app.post('/saveTab', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
-// app.post('/createTab', async (req, res) => {
-//     const username = req.body.username;
-//     const tabTitle = req.body.tabTitle;
-
-//     try {
-//         const db = await connectToDatabase();
-//         const saveTab = await db.collection('userAccount').updateOne({ username }, { $set: { 'tabs.$.tabTitle': title }});
-
-//         if (saveTab) {
-//             res.json(true);
-//         }
-//         else {
-//             res.json(false);
-//         }
-
-//     } catch (error) {
-//         console.error('Error:', error.message);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// });
 
 app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
