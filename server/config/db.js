@@ -13,6 +13,7 @@ async function connectToDatabase() {
     const client = await MongoClient.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      sslValidate: false
     });
     console.log('Connected to MongoDB');
     dbInstance = client.db(DATABASE_NAME); // Return the specific database object, not the client
