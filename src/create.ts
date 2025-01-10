@@ -12,6 +12,7 @@ class Create {
     private dString: string[];
     private aString: string[];
     private eString: string[];
+    private displayFretChangeModal: boolean;
 
     constructor() {
         this.user = { username: "Guest" };
@@ -22,6 +23,7 @@ class Create {
         this.dString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
         this.aString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
         this.eString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
+        this.displayFretChangeModal = false;
     }
 
     public init = (): void => {
@@ -31,6 +33,7 @@ class Create {
         this.updateTabCell();
         this.saveTab();
         this.addLine();
+        this.listenForModalClose();
     };
 
     private getUserAccount = async () => {
@@ -226,6 +229,20 @@ class Create {
         });
     }
 
+    private listenForModalClose = () => {
+        const changeFretModal: HTMLDivElement = document.getElementById("change-fret-modal") as HTMLDivElement;
+
+        window.addEventListener("click", (event) => {
+            // @ts-ignore
+            if (!changeFretModal.contains(event.target) && this.displayFretChangeModal) {
+                // Click occurred outside the element
+                console.log('Clicked outside!', changeFretModal.style.display);
+                changeFretModal.style.display = "none";
+                this.displayFretChangeModal = false;
+            }
+        })
+    }
+
     // Builds the individual Tab Cell element and appends it to its corresponding string container.
     private buildTabCellElement = (tabDataString: string, stringName: string, position: number): void => {
         const tabCellContainer = document.getElementById(stringName + "-string")
@@ -241,12 +258,17 @@ class Create {
 
         tabCell.addEventListener("click", () => {
             const activeTabCells = document.getElementsByClassName("tab-cell-active");
+            const changeFretModal: HTMLDivElement = document.getElementById("change-fret-modal") as HTMLDivElement;
 
             for (let i: number = 0; i < activeTabCells.length; i++) {
                 activeTabCells[i].classList.remove("tab-cell-active")
             }
             tabCell.classList.add("tab-cell-active")
             tabDisplay!.innerHTML = tabCell.innerHTML;
+            changeFretModal.style.display = "flex";
+            setTimeout(() => {
+                this.displayFretChangeModal = true;
+            }, 500);
         });
 
         tabCellContainer?.append(tabCell);
