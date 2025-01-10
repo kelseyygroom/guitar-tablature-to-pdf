@@ -61,8 +61,8 @@ button {
 } */
 
 .tab-cell {
-    min-width: 1.25rem;
-    min-height: 1.25rem;
+    min-width: .75rem;
+    min-height: .75rem;
     padding: .25rem;
     display: flex;
     justify-content: center;
@@ -72,8 +72,8 @@ button {
     margin: .25rem;
     border-color: white;
     border-width: 1px;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: .75rem;
+    height: .75rem;
     border-color: #1D1D1F;
     background-color: #1D1D1F;
     color: #F6F6F8;
@@ -102,7 +102,7 @@ button {
 .tab-cell-container {
     width: 100vw;
     position: fixed;
-    top: 3.5rem;
+    top: 2.75rem;
     left: 0px;
     overflow-x: scroll;
     height: 100vh;
