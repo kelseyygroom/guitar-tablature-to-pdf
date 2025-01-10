@@ -1,5 +1,7 @@
 import './create.css';
 import jsPDF from "jspdf";
+const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+// const url = "http://localhost:5000/";
 
 class Create {
     private user: any;
@@ -41,7 +43,7 @@ class Create {
         // Get individual parameters by name
         const username = params.get('username');
 
-        const userAccount = await fetch("http://localhost:5000/getUserAccount?username=" + username)
+        const userAccount = await fetch(url + "getUserAccount?username=" + username)
         const userAccountData = await userAccount.json()
         this.user = userAccountData;
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
@@ -97,7 +99,7 @@ class Create {
 
         saveTabButton.addEventListener("click", () => {
             const tabData: any = this.translateTabCellsToData();
-            fetch("http://localhost:5000/saveTab", {
+            fetch(url + "saveTab", {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

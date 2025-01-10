@@ -54,7 +54,6 @@ app.post('/createAccount', async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
-    console.log("here", username, password)
 
     try {
         const db = await connectToDatabase();

@@ -1,4 +1,6 @@
 import './styles.css';
+const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+// const url = "http://localhost:5000/";
 
 class SignIn {
     private iconIndex: number;
@@ -21,7 +23,7 @@ class SignIn {
         const iconContainerCollection: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("icon-container") as HTMLCollectionOf<HTMLDivElement>;
         
         loginButton?.addEventListener("click", async () => {
-            const userResponse = await fetch(`http://localhost:5000/login?username=${usernameInput.value}&pass=${passwordInput.value}`);
+            const userResponse = await fetch(url + `login?username=${usernameInput.value}&pass=${passwordInput.value}`);
             const loginApproval = await userResponse.json();
             if (loginApproval === true) {
                 // window.location.href = "create.html?username=" + usernameInput.value;
@@ -33,7 +35,7 @@ class SignIn {
         });
 
         createUserButton?.addEventListener("click", async () => {
-            const createUserResponse = await fetch(`http://localhost:5000/createAccount`, {
+            const createUserResponse = await fetch(url + `createAccount`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

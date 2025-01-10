@@ -1,4 +1,6 @@
 import "./home.css"
+const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+// const url = "http://localhost:5000/";
 
 // I started to speed through this, it's 4am and I'm just trying to get it done at this point. I want to deploy a working prototype already! 
 // I'll clean this up later, I promise!
@@ -48,7 +50,7 @@ class Home {
 
             if (title) {
                 this.checkIfTabExists(title)
-                fetch("http://localhost:5000/saveTab", {
+                fetch(url + "saveTab", {
                     method: 'POST',
                     headers: {
                     'Content-Type': 'application/json',
@@ -85,7 +87,7 @@ class Home {
         // Get individual parameters by name
         const username = params.get('username');
 
-        const userAccount = await fetch("http://localhost:5000/getUserAccount?username=" + username)
+        const userAccount = await fetch(url + "getUserAccount?username=" + username)
         const userAccountData = await userAccount.json()
         this.user = userAccountData;
         this.tabs = userAccountData.tabs
