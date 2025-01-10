@@ -11,6 +11,10 @@ app.use(cors()); // Enables CORS with default settings
 app.use(cors({ origin: '*' }));
 app.options('*', cors());
 
+app.get('/', (req, res) => {
+    res.send('Hello from Heroku!');
+});
+
 app.get('/login', async (req, res) => {
     const username = req.query.username;
     const password = req.query.pass;
