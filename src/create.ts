@@ -167,6 +167,9 @@ class Create {
                 const newFret: string = changeFretInput.value;
                 tabCell.innerHTML = newFret;
                 currentNoteDisplay.innerHTML = newFret;
+                if (tabCell.innerHTML !== "-") {
+                    tabCell.style.backgroundColor = "#1D1D1F";
+                }
             };
         });
     };
@@ -233,8 +236,17 @@ class Create {
         const changeFretModal: HTMLDivElement = document.getElementById("change-fret-modal") as HTMLDivElement;
 
         window.addEventListener("click", (event) => {
+            const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
+
             // @ts-ignore
             if (!changeFretModal.contains(event.target) && this.displayFretChangeModal) {
+                for (let i: number = 0; i < activeTabCells.length; i++) {
+                    if (activeTabCells[i].innerHTML !== "-") {
+                        activeTabCells[i].style.opacity = "1";
+                    }
+
+                    activeTabCells[i].classList.remove("tab-cell-active")
+                }
                 // Click occurred outside the element
                 console.log('Clicked outside!', changeFretModal.style.display);
                 changeFretModal.style.display = "none";
@@ -257,7 +269,7 @@ class Create {
         }
 
         tabCell.addEventListener("click", () => {
-            const activeTabCells = document.getElementsByClassName("tab-cell-active");
+            const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
             const changeFretModal: HTMLDivElement = document.getElementById("change-fret-modal") as HTMLDivElement;
 
             for (let i: number = 0; i < activeTabCells.length; i++) {

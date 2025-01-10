@@ -19,6 +19,9 @@ class Home {
 
     private displayTabsList = () => {
         const tabListContainer: HTMLDivElement = document.getElementById("tab-list-container") as HTMLDivElement;
+        const loadingIcon: HTMLElement = document.getElementById("loading-icon") as HTMLElement;
+
+        loadingIcon.style.display = "none";
         this.tabs.forEach(tab => {
             const listItem = document.createElement("li");
             listItem.id = "tab-title-" + tab.tabTitle;
