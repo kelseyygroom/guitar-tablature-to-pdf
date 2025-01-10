@@ -92,6 +92,8 @@ class Home {
 
         const userAccount = await fetch(url + "getUserAccount?username=" + username)
         const userAccountData = await userAccount.json()
+        const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
+        userAccountLabel.innerHTML = "Welcome " + userAccountData.username + "<i class='fas fa-user'></i>";
         this.user = userAccountData;
         this.tabs = userAccountData.tabs
         this.displayTabsList();

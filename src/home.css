@@ -60,3 +60,11 @@ a {
     color: #F6F6F8;
     text-decoration: none; /* no underline */
 }
+
+#username-label {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    margin: .75rem;
+    color: #F6F6F8;
+}

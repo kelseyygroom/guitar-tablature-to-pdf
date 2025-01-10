@@ -180,4 +180,16 @@ select {
     opacity: .7;
     justify-content: center;
     align-items: center;
+    animation: slideInFromRight .25s;
+}
+
+@keyframes slideInFromRight {
+    from {
+      transform: translateX(100%); /* Start off-screen to the right */
+      opacity: 0; /* Optional: Start with transparent */
+    }
+    to {
+      transform: translateX(0); /* Slide to its original position */
+      opacity: .7; /* Optional: Fully visible */
+    }
 }
