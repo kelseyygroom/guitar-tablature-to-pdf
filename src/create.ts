@@ -49,8 +49,6 @@ class Create {
         const userAccount = await fetch(url + "getUserAccount?username=" + username)
         const userAccountData = await userAccount.json()
         this.user = userAccountData;
-        const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
-        usernameLabel.innerHTML = userAccountData.username;
         this.loadTab();
     }
 
@@ -78,6 +76,8 @@ class Create {
             this.eString = tab.tabData.eString.split("");
         }
 
+        const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
+        usernameLabel.innerHTML = this.tabTitle;
         this.buildTabCellRows();
     };
 
@@ -247,11 +247,12 @@ class Create {
 
                     activeTabCells[i].classList.remove("tab-cell-active")
                 }
+
                 // Click occurred outside the element
-                console.log('Clicked outside!', changeFretModal.style.display);
                 changeFretModal.style.display = "none";
+            setTimeout(() => {
                 this.displayFretChangeModal = false;
-            }
+            }, 500);            }
         })
     }
 

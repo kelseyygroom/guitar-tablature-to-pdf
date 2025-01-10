@@ -3,7 +3,7 @@ html {
 }
 
 body {
-    background-color: #F6F6F8;
+    background-color: #F0f8ff;
     color: white;
     display: flex;
     justify-content: center;
@@ -13,7 +13,7 @@ body {
 }
 
 html {
-    background-color: #F6F6F8;
+    background-color: #F0f8ff;
 }
 
 h1, h2, h3, input, button, p, div {
@@ -37,7 +37,7 @@ button {
     padding: 1rem;
     background-color: #1D1D1F;
     border-color: #CECECF;
-    color: #F6F6F8;
+    color: #F0f8ff;
     margin-inline: .5rem;
     margin-block: 1rem;
     border-radius: 10px;
@@ -76,7 +76,7 @@ button {
     height: .75rem;
     border-color: #1D1D1F;
     background-color: #1D1D1F;
-    color: #F6F6F8;
+    color: #F0f8ff;
     box-shadow: 2.5px 2.5px 2.5px #CECECF;
     transition: all;
     transition-duration: 1s;
@@ -95,7 +95,7 @@ button {
     50% {
         background-color: #0171E2;
         transform: scale(1.25); /* Grows to 1.5x size */
-        border-color: #F6F6F8;
+        border-color: #F0f8ff;
     }
 }
 
@@ -130,7 +130,7 @@ button {
     height: 2rem;
     width: 100vw;
     background-color: #1D1D1F;
-    color: #F6F6F8;
+    color: #F0f8ff;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -148,7 +148,7 @@ button {
     padding: .33rem;
     margin-right: 1rem;
     background-color: #1D1D1F;
-    color: #F6F6F8;    
+    color: #F0f8ff;    
 }
 
 .tab-table {
@@ -181,6 +181,11 @@ select {
     justify-content: center;
     align-items: center;
     animation: slideInFromRight .25s;
+}
+
+#change-fret-input {
+    background-color: black;
+    color: #0171E2;
 }
 
 @keyframes slideInFromRight {

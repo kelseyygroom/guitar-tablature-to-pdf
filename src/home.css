@@ -1,5 +1,6 @@
 html {
     height: 100vh;
+    background-color: #F0f8ff;
 }
 
 .header {
@@ -9,7 +10,7 @@ html {
     height: 2rem;
     width: 100vw;
     background-color: #1D1D1F;
-    color: #F6F6F8;
+    color: #F0f8ff;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -49,7 +50,7 @@ body {
     margin: 1rem;
     border-radius: 100%;
     background-color: #1D1D1F;
-    color: #F6F6F8;
+    color: #F0f8ff;
 }
 
 #create-tab-button:hover {
@@ -57,7 +58,7 @@ body {
 }
 
 a {
-    color: #F6F6F8;
+    color: #F0f8ff;
     text-decoration: none; /* no underline */
 }
 
@@ -66,5 +67,5 @@ a {
     top: 0px;
     right: 0px;
     margin: .75rem;
-    color: #F6F6F8;
+    color: #F0f8ff;
 }
