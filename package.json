@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "main": "./server/server.js",
   "type": "commonjs",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node server/server.js",
-    "server": "nodemon server.js --verbose",
-    "start": "webpack serve --mode development"
-  },
+"scripts": {
+  "build": "webpack --mode production",
+  "server": "nodemon ./server/server.js --verbose",
+  "start": "node ./server/server.js"
+},
   "engines": {
     "node": "18.x"
   },
