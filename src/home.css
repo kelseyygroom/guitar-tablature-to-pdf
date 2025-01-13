@@ -1,6 +1,6 @@
 html {
     height: 100vh;
-    background-color: #F0f8ff;
+    background: linear-gradient(to right, #5DCCF5, #964FF6);
 }
 
 .header {
@@ -37,7 +37,7 @@ body {
     margin: 10px;
     list-style-type: none;
     padding: 1.5em 5em;
-    background: #efefef;
+    background: white;
     border: none;
     border-radius: .5rem;
     color: #444;
@@ -48,10 +48,10 @@ body {
     outline: none;
     cursor: pointer;
     transition: .2s ease-in-out;
-    box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
-                -6px -6px 10px rgba(255, 255, 255, .5),
-                6px 6px 8px rgba(255, 255, 255, .075),
-                6px 6px 10px rgba(0, 0, 0, .15);
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
 }
 
 #create-tab-button {
@@ -64,10 +64,10 @@ body {
     border-radius: 100%;
     background-color: #1D1D1F;
     color: #F0f8ff;
-    box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
-    -6px -6px 10px rgba(255, 255, 255, .5),
-    6px 6px 8px rgba(255, 255, 255, .075),
-    6px 6px 10px rgba(0, 0, 0, .15);
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
 }
 
 #create-tab-button:hover {

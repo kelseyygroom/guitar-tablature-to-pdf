@@ -3,7 +3,7 @@ html {
 }
 
 body {
-    background-color: #F0f8ff;
+    background: linear-gradient(to right, #5DCCF5, #964FF6);
     color: white;
     display: flex;
     justify-content: center;
@@ -13,7 +13,7 @@ body {
 }
 
 html {
-    background-color: #F0f8ff;
+    background: linear-gradient(to right, #5DCCF5, #964FF6);
 }
 
 h1, h2, h3, input, button, p, div {
@@ -35,7 +35,7 @@ button {
     box-sizing: border-box;
     width: 100%;
     padding: 1rem;
-    background: #efefef;
+    background: white;
     border: none;
     border-radius: .5rem;
     color: #444;
@@ -44,10 +44,10 @@ button {
     border-radius: 5px;
     border-width: 1px;
     white-space: nowrap;
-    box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
-    -6px -6px 10px rgba(255, 255, 255, .5),
-    6px 6px 8px rgba(255, 255, 255, .075),
-    6px 6px 10px rgba(0, 0, 0, .15);
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
 }
 
 button i {
@@ -84,14 +84,14 @@ button i {
     width: .75rem;
     height: .75rem;
     border-color: #c9c9d0;
-    background: #efefef;
+    background: white;
     color: #444;
     transition: all;
     transition-duration: 1s;
-    box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
-    -6px -6px 10px rgba(255, 255, 255, .5),
-    6px 6px 8px rgba(255, 255, 255, .075),
-    6px 6px 10px rgba(0, 0, 0, .15);
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
 }
 
 .tab-cell-active {

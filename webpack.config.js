@@ -17,13 +17,17 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
+        test: /\.(png|jpg|jpeg|gif|svg)$/i, // Match image files
+        type: 'asset/resource', // Use Webpack's built-in asset/resource
       },
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        test: /\.ts$/, // Matches .ts files
+        use: 'ts-loader', // Use ts-loader to process TypeScript files
+        exclude: /node_modules/, // Exclude node_modules from processing
+      },
+      {
+        test: /\.css$/, // Matches .css files
+        use: ['style-loader', 'css-loader'], // Process CSS files
       },
     ],
   },
