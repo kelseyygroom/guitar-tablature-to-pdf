@@ -4,6 +4,7 @@ html {
 }
 
 body {
+    margin: 0px;
     background: linear-gradient(to right, #5DCCF5, #964FF6);
     color: white;
     display: flex;
