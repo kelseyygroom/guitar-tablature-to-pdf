@@ -73,3 +73,18 @@ button {
         border-radius: 10px;
     }
 }
+
+a {
+    text-decoration: none;
+    color: #1D1D1F;
+}
+
+#logo {
+    width: 25vw;
+}
+
+@media (max-width: 600px) and (orientation:portrait) {
+    #logo {
+        width: 90vw;
+    }
+}

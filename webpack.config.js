@@ -29,6 +29,10 @@ module.exports = {
         test: /\.css$/, // Matches .css files
         use: ['style-loader', 'css-loader'], // Process CSS files
       },
+      {
+        test: /\.svg$/,
+        type: 'asset/resource',
+      },
     ],
   },
   resolve: {

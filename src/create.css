@@ -85,7 +85,7 @@ button i {
     height: .75rem;
     border-color: #c9c9d0;
     background: white;
-    color: #444;
+    color: #1D1D1F;
     transition: all;
     transition-duration: 1s;
     box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
@@ -103,11 +103,13 @@ button i {
         background-color: #1D1D1F;
         transform: scale(1); /* Original size */
         border-color: #1D1D1F;
+        color: white;
     }
     50% {
         background-color: #0171E2;
         transform: scale(1.25); /* Grows to 1.5x size */
         border-color: #F0f8ff;
+        color: white;
     }
 }
 

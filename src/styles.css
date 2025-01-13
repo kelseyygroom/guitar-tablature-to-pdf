@@ -64,6 +64,10 @@ button {
     color: chocolate;
 }
 
+#logo {
+    width: 25vw;
+}
+
 @media (min-width: 600px) and (orientation:landscape) {
     input, button, .icon-container {
         margin-bottom: .5rem;
@@ -71,6 +75,12 @@ button {
         width: 25%;
         padding: 1rem;
         border-radius: 10px;
+    }
+}
+
+@media (max-width: 600px) and (orientation:portrait) {
+    #logo {
+        width: 90vw;
     }
 }
 

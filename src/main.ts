@@ -1,15 +1,17 @@
 import './styles.css';
+import logo from './images/logo.svg'
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 // const url = "http://localhost:5000/";
 
 class SignIn {
-    private iconIndex: number;
-    private iconColors: string[];
-
     constructor() {
-        this.iconIndex = 0;
-        this.iconColors = ["red", "blue", "green", "pink", "purple", "orange", "yellow"];
+        this.setLogo();
     }
+
+    private setLogo = () => {
+        const logoImage: HTMLImageElement = document.getElementById("logo") as HTMLImageElement;
+        logoImage.src = logo;
+    };
 
     public init = (): void => {
         const loginButton: HTMLButtonElement = document.getElementById("login-button") as HTMLButtonElement;

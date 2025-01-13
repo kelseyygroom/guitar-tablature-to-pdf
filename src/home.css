@@ -86,3 +86,15 @@ a {
     margin: .75rem;
     color: #F0f8ff;
 }
+
+@media (min-width: 600px) and (orientation:landscape) {
+    li {
+        width: 50vw;
+    }
+
+    #tab-list-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
