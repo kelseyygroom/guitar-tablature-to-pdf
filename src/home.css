@@ -1,6 +1,7 @@
 html {
     height: 100vh;
     background: linear-gradient(to right, #5DCCF5, #964FF6);
+    margin: 0px;
 }
 
 .header {
@@ -23,6 +24,7 @@ html {
 
 body {
     margin: 0px;
+    overscroll-behavior-y: none;
 }
 
 #tab-list-container {

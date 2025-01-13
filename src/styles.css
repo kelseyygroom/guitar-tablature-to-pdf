@@ -1,5 +1,7 @@
 html {
     height: 100vh;
+    overflow: hidden;
+    margin: 0px;
 }
 
 body {
@@ -10,6 +12,7 @@ body {
     align-items: center;
     flex-direction: column;
     padding: 2rem;
+    overscroll-behavior-y: none;
 }
 
 h1, h2, h3, input, button, p, div, i {
