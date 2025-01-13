@@ -62,7 +62,14 @@ app.post('/createAccount', async (req, res) => {
 
     try {
         const db = await connectToDatabase();
-        const accountInfo = await db.collection('userAccount').insertOne({ username, password, email, tabs: [{ tabTitle: "Tutorial" }] });
+        const accountInfo = await db.collection('userAccount').insertOne({ username, password, email, tabs: [{ tabTitle: "Tutorial", tabData: {
+            highEString: ["-"],
+            bString: ["-"],
+            gString: ["-"],
+            dString: ["-"],
+            aString: ["-"],
+            eString: ["-"]
+        } }] });
 
         if (accountInfo) {
             res.json(true);

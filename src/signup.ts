@@ -14,6 +14,16 @@ class SignUp {
         logoImage.src = logo;
     };
 
+    private verifyEmail = (email: string) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    };
+
+    private verifyPassword = (password: string) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
     public init = (): void => {
         const createUserButton: HTMLButtonElement = document.getElementById("create-user-button") as HTMLButtonElement;
         const createUsernameInput: HTMLInputElement = document.getElementById("create-username-input") as HTMLInputElement;
@@ -21,19 +31,24 @@ class SignUp {
         const createEmailInput: HTMLInputElement = document.getElementById("create-email-input") as HTMLInputElement;
 
         createUserButton?.addEventListener("click", async () => {
-            const createUserResponse = await fetch(url + `createAccount`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username: createUsernameInput.value, password: createPasswordInput.value, email: createEmailInput.value })
-            });
+            if (this.verifyEmail(createEmailInput.value) && this.verifyPassword(createPasswordInput.value)) {
+                const createUserResponse = await fetch(url + `createAccount`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: createUsernameInput.value, password: createPasswordInput.value, email: createEmailInput.value })
+                });
 
-            const createApproval = await createUserResponse.json();
+                const createApproval = await createUserResponse.json();
 
-            if (createApproval === true) {
-                // window.location.href = "create.html?username=" + createUsernameInput.value;
-                window.location.href = "home.html?username=" + createUsernameInput.value;
+                if (createApproval === true) {
+                    // window.location.href = "create.html?username=" + createUsernameInput.value;
+                    window.location.href = "home.html?username=" + createUsernameInput.value;
+                }
+            }
+            else {
+                alert("Must be valid email.\nOR\nUsername is taken.\nOR\nPasswords must contian a capital character, special character, and a number. (Like 'P@ssword1').")
             }
         });
     }
