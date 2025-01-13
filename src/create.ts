@@ -78,7 +78,7 @@ class Create {
         }
 
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
-        usernameLabel.innerHTML = this.tabTitle;
+        usernameLabel.innerHTML = "<i class='fas fa-file-pdf'></i>" + this.tabTitle;
         this.buildTabCellRows();
     };
 
