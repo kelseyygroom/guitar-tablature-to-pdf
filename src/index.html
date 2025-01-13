@@ -6,17 +6,23 @@
   <title>Tab to PDF</title>
 </head>
 <body>
+  <div class="layout-container">
+    <div class="layout-top">
+      <img id="logo" alt="logo">
+    </div>
+    <div class="layout-bottom">
+      <input id="username-input" placeholder="Username"></input>
+      <input id="password-input" type="password" placeholder="Password"></input>
+      <a href="/signup.html">Sign up</a>
+      <label id="failed-login-error">
+        Username or password are incorrect.
+      </label>
+      <button id="login-button">
+        Sign In
+      </button>
+    </div>
+  </div>
     <script src="https://kit.fontawesome.com/6b339ffbdd.js" crossorigin="anonymous"></script>
-    <img id="logo" alt="logo">
-    <input id="username-input" placeholder="Username"></input>
-    <input id="password-input" type="password" placeholder="Password"></input>
-    <a href="/signup.html">Sign up</a>
-    <label id="failed-login-error">
-      Username or password are incorrect.
-    </label>
-    <button id="login-button">
-      Continue
-    </button>
   <script src="bundle.js"></script>
 </body>
 </html>

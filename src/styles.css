@@ -68,6 +68,59 @@ button {
     width: 25vw;
 }
 
+.layout-container {
+    display: flex;
+    flex-direction: row;
+    width: 70vw;
+    height: calc(100vh - 4rem);
+}
+
+.layout-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.layout-bottom {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10vw;
+}
+
+.layout-bottom input, .layout-bottom button {
+    width: 100%;
+}
+
+@media (max-width: 600px) and (orientation:portrait) {
+    body {
+        justify-content: center;
+    }
+
+    #logo {
+        width: 90vw;
+    }
+
+    .layout-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+    }
+
+    .layout-bottom {
+        margin-left: auto;
+    }
+
+    .layout-bottom input, .layout-bottom button {
+        width: 75%;
+    }
+}
+
 @media (min-width: 600px) and (orientation:landscape) {
     input, button, .icon-container {
         margin-bottom: .5rem;
@@ -75,12 +128,6 @@ button {
         width: 25%;
         padding: 1rem;
         border-radius: 10px;
-    }
-}
-
-@media (max-width: 600px) and (orientation:portrait) {
-    #logo {
-        width: 90vw;
     }
 }
 

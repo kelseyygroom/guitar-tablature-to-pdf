@@ -114,12 +114,13 @@ button i {
 }
 
 .tab-cell-container {
-    width: 100vw;
+    width: calc(100vw - 1rem);
     position: fixed;
     top: 2.75rem;
     left: 0px;
     overflow-x: scroll;
     height: 100vh;
+    padding-left: 1rem;
 }
 
 .tab-cell-container div {
