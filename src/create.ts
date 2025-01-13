@@ -151,15 +151,28 @@ class Create {
     private saveTab = () => {
         const saveTabButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
 
-        saveTabButton.addEventListener("click", () => {
+        saveTabButton.addEventListener("click", async () => {
             const tabData: any = this.translateTabCellsToData();
-            fetch(url + "saveTab", {
+            const response = await fetch(url + "saveTab", {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ tabData, username: this.user.username, title: this.tabTitle })
             })
+
+            if (response) {
+                saveTabButton.style.backgroundColor = "#964FF6";
+                saveTabButton.classList.add("save-button-acitve");
+                saveTabButton.innerHTML = '<i style="color: white; height: 1rem; width: 1rem;" class="fas fa-file"></i>Saved!';
+                saveTabButton.style.color = "white";
+
+                setTimeout(() => {
+                    saveTabButton.style.color = "black";
+                    saveTabButton.style.backgroundColor = "white";
+                    saveTabButton.innerHTML = '<i style="height: 1rem; width: 1rem;" class="fas fa-file"></i> Save';
+                }, 1000);
+            }
         })
     };
 

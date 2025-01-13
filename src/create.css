@@ -300,3 +300,25 @@ select {
     6px 6px 8px rgba(255, 255, 255, .3),
     6px 6px 10px rgba(0, 0, 0, .05);
 }
+
+.save-button {
+    transition: background-color;
+    transition-duration: .5s;
+}
+
+.save-button i {
+    transition: color;
+    transition-duration: .5s;
+}
+
+/* @keyframes saveButtonBounce {
+    0% {
+        background-color: white;
+    }
+    50% {
+        background-color: #5DCCF5;
+    }
+    100% {
+        background-color: #964FF6;
+    }
+} */
