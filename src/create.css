@@ -144,7 +144,7 @@ button i {
     height: 2rem;
     width: 100vw;
     background-color: #1D1D1F;
-    color: #F0f8ff;
+    color: white;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -180,7 +180,10 @@ select {
 
 #username-label {
     color: inherit;
-    margin-left: .5rem;
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    margin: .5rem;
 }
 
 #change-fret-modal {
@@ -210,5 +213,28 @@ select {
     to {
       transform: translateX(0); /* Slide to its original position */
       opacity: .7; /* Optional: Fully visible */
+    }
+}
+
+@media (max-width: 600px) and (orientation:portrait) {
+    .button-bottom-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 1rem;
+        left: 0rem;
+        width: auto;
+    }
+
+    .button-bottom-container div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        justify-self: center;
+        width: auto;
+        width: 85%;
+    }
+
+    button {
+        width: 90%;
     }
 }

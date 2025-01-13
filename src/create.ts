@@ -151,7 +151,7 @@ class Create {
                 range = range + initialRange;
             }
 
-            doc.save("myPDF.pdf");
+            doc.save(this.tabTitle);
         });
     };
 
