@@ -81,15 +81,9 @@ class Home {
     };
 
     private getUserAccount = async () => {
-        // Get the query string from the URL
         const queryString = window.location.search; // For the current page
-
-        // Use URLSearchParams to parse the query string
         const params = new URLSearchParams(queryString);
-
-        // Get individual parameters by name
         const username = params.get('username');
-
         const userAccount = await fetch(url + "getUserAccount?username=" + username)
         const userAccountData = await userAccount.json()
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
