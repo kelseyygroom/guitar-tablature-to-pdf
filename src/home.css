@@ -33,6 +33,7 @@ body {
     width: 100vw;
     margin-left: 0px;
     overflow: scroll;
+    padding-bottom: 10rem;
 }
 
 .list-item {
@@ -54,6 +55,24 @@ body {
     -6px -6px 10px rgba(255, 255, 255, .2),
     6px 6px 8px rgba(255, 255, 255, .3),
     6px 6px 10px rgba(0, 0, 0, .05);
+    animation: slideInFromBottom 1s;
+}
+
+@keyframes slideInFromBottom {
+    from {
+      transform: translateY(100%); /* Start off-screen to the right */
+      opacity: 0; /* Optional: Start with transparent */
+    }
+    to {
+      transform: translateY(0); /* Slide to its original position */
+      opacity: 1; /* Optional: Fully visible */
+    }
+}
+
+#loading-icon {
+    position: fixed;
+    top: calc(50vh - 2rem);
+    left: calc(50vw - 2rem);
 }
 
 #create-tab-button {
@@ -98,5 +117,19 @@ a {
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+}
+
+#loading-icon {
+    transition: all;
+    animation: fadeIn 1s;    
+}
+
+@keyframes fadeIn {
+    from {
+      opacity: 0; /* Optional: Start with transparent */
+    }
+    to {
+      opacity: 1; /* Optional: Fully visible */
     }
 }
