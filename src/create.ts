@@ -33,6 +33,7 @@ class Create {
         this.updateTabCell();
         this.saveTab();
         this.addLine();
+        this.removeLine();
         this.listenForModalClose();
     };
 
@@ -110,6 +111,39 @@ class Create {
             this.aString.push("-");
             this.eString = tabData.eString.split("");
             this.eString.push("-");
+            this.buildTabCellRows();
+        });
+    }
+
+    private removeLine = (): void => {
+        const removeLineButton: HTMLButtonElement = document.getElementById("remove-line-button") as HTMLButtonElement;
+        removeLineButton.addEventListener("click", () => {
+            const tabData: any = this.translateTabCellsToData();
+            const heighETabCellContainer: HTMLDivElement = document.getElementById("high-e-string") as HTMLDivElement;
+            const bTabCellContainer: HTMLDivElement = document.getElementById("b-string") as HTMLDivElement;
+            const gTabCellContainer: HTMLDivElement = document.getElementById("g-string") as HTMLDivElement;
+            const dTabCellContainer: HTMLDivElement = document.getElementById("d-string") as HTMLDivElement;
+            const aTabCellContainer: HTMLDivElement = document.getElementById("a-string") as HTMLDivElement;
+            const eTabCellContainer: HTMLDivElement = document.getElementById("e-string") as HTMLDivElement;
+            heighETabCellContainer.innerHTML = "";
+            bTabCellContainer.innerHTML = "";
+            gTabCellContainer.innerHTML = "";
+            dTabCellContainer.innerHTML = "";
+            aTabCellContainer.innerHTML = "";
+            eTabCellContainer.innerHTML = "";
+
+            this.highEString = tabData.highEString.split("");
+            this.highEString.pop();
+            this.bString = tabData.bString.split("");
+            this.bString.pop();
+            this.gString = tabData.gString.split("");
+            this.gString.pop();
+            this.dString = tabData.dString.split("");
+            this.dString.pop();
+            this.aString = tabData.aString.split("");
+            this.aString.pop();
+            this.eString = tabData.eString.split("");
+            this.eString.pop();
             this.buildTabCellRows();
         });
     }

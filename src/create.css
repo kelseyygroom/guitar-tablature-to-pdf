@@ -195,7 +195,7 @@ select {
     top: 0px;
     width: 50vw;
     background-color: #1D1D1F;
-    opacity: .85;
+    opacity: .95;
     justify-content: center;
     align-items: center;
     animation: slideInFromRight .25s;
