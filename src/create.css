@@ -164,9 +164,7 @@ button i {
     border-color: #1D1D1F;
     border-radius: 10px;
     padding: .33rem;
-    margin-right: 1rem;
     background-color: #1D1D1F;
-    color: #F0f8ff;    
 }
 
 .tab-table {
@@ -197,10 +195,11 @@ select {
     top: 0px;
     width: 50vw;
     background-color: #1D1D1F;
-    opacity: .7;
+    opacity: .85;
     justify-content: center;
     align-items: center;
     animation: slideInFromRight .25s;
+    flex-direction: column;
 }
 
 #change-fret-input {
@@ -261,4 +260,30 @@ select {
     button {
         width: 90%;
     }
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    grid-gap: 10px; /* add 10px gap between rows and columns */
+    width: 90%;
+}
+
+.button-grid button {
+    padding: .25rem;
+    margin: .25rem;
+    height: 3rem;
+    width: 3rem;
+}
+
+#current-note {
+    border-radius: 5px;
+    border-style: solid;
+    border-color: white;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
 }

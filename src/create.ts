@@ -85,7 +85,6 @@ class Create {
         const addLineButton: HTMLButtonElement = document.getElementById("add-line-button") as HTMLButtonElement;
         addLineButton.addEventListener("click", () => {
             const tabData: any = this.translateTabCellsToData();
-            console.log("tabData", tabData)
             const heighETabCellContainer: HTMLDivElement = document.getElementById("high-e-string") as HTMLDivElement;
             const bTabCellContainer: HTMLDivElement = document.getElementById("b-string") as HTMLDivElement;
             const gTabCellContainer: HTMLDivElement = document.getElementById("g-string") as HTMLDivElement;
@@ -170,22 +169,26 @@ class Create {
     };
 
     private updateTabCell = (): void => {
-        const changeFretInput: HTMLSelectElement = document.getElementById("change-fret-input") as HTMLSelectElement;
+        const changeFretButtons: HTMLCollectionOf<HTMLButtonElement> = document.getElementsByClassName("change-fret-button") as HTMLCollectionOf<HTMLButtonElement>;
 
-        changeFretInput.addEventListener("change", () => {
-            const tabCellCollection: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLElement>;
-            const tabCell: HTMLElement = tabCellCollection[0] as HTMLElement;
-            const currentNoteDisplay: HTMLElement = document.getElementById("current-note") as HTMLElement;
+        for (let i: number = 0; i < changeFretButtons.length; i++) {
+            const changeFretInput: HTMLButtonElement = changeFretButtons[i];
 
-            if (tabCell !== undefined && tabCell !== null) {
-                const newFret: string = changeFretInput.value;
-                tabCell.innerHTML = newFret;
-                currentNoteDisplay.innerHTML = newFret;
-                if (tabCell.innerHTML !== "-") {
-                    // tabCell.style.backgroundColor = "#1D1D1F";
-                }
-            };
-        });
+            changeFretInput.addEventListener("click", () => {
+                const tabCellCollection: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLElement>;
+                const tabCell: HTMLElement = tabCellCollection[0] as HTMLElement;
+                const currentNoteDisplay: HTMLElement = document.getElementById("current-note") as HTMLElement;
+                console.log("click")
+                if (tabCell !== undefined && tabCell !== null) {
+                    const newFret: string = changeFretInput.value;
+                    tabCell.innerHTML = newFret;
+                    currentNoteDisplay.innerHTML = newFret;
+                    if (tabCell.innerHTML !== "-") {
+                        // tabCell.style.backgroundColor = "#1D1D1F";
+                    }
+                };
+            });
+        }
     };
 
     private translateTabCellsToData = (): object => {
