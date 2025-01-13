@@ -17,12 +17,12 @@ class Create {
     constructor() {
         this.user = { username: "Guest" };
         this.tabTitle = "";
-        this.highEString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
-        this.bString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
-        this.gString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
-        this.dString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
-        this.aString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
-        this.eString = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
+        this.highEString = [];
+        this.bString = [];
+        this.gString = [];
+        this.dString = [];
+        this.aString = [];
+        this.eString = [];
         this.displayFretChangeModal = false;
     }
 
@@ -84,19 +84,33 @@ class Create {
     private addLine = (): void => {
         const addLineButton: HTMLButtonElement = document.getElementById("add-line-button") as HTMLButtonElement;
         addLineButton.addEventListener("click", () => {
-            console.log("connect")
-            // let temphighEArray = this.highEString;
-            // let tempbArray = this.bString;
-            // let tempgArray = this.gString;
-            // let tempdArray = this.dString;
-            // let tempaArray = this.aString;
-            // let tempeArray = this.eString;
-            // this.highEString.push("-");
-            // this.bString.push("-");
-            // this.gString.push("-");
-            // this.dString.push("-");
-            // this.aString.push("-");
-            // this.eString.push("-");
+            const tabData: any = this.translateTabCellsToData();
+            console.log("tabData", tabData)
+            const heighETabCellContainer: HTMLDivElement = document.getElementById("high-e-string") as HTMLDivElement;
+            const bTabCellContainer: HTMLDivElement = document.getElementById("b-string") as HTMLDivElement;
+            const gTabCellContainer: HTMLDivElement = document.getElementById("g-string") as HTMLDivElement;
+            const dTabCellContainer: HTMLDivElement = document.getElementById("d-string") as HTMLDivElement;
+            const aTabCellContainer: HTMLDivElement = document.getElementById("a-string") as HTMLDivElement;
+            const eTabCellContainer: HTMLDivElement = document.getElementById("e-string") as HTMLDivElement;
+            heighETabCellContainer.innerHTML = "";
+            bTabCellContainer.innerHTML = "";
+            gTabCellContainer.innerHTML = "";
+            dTabCellContainer.innerHTML = "";
+            aTabCellContainer.innerHTML = "";
+            eTabCellContainer.innerHTML = "";
+
+            this.highEString = tabData.highEString.split("");
+            this.highEString.push("-");
+            this.bString = tabData.bString.split("");
+            this.bString.push("-");
+            this.gString = tabData.gString.split("");
+            this.gString.push("-");
+            this.dString = tabData.dString.split("");
+            this.dString.push("-");
+            this.aString = tabData.aString.split("");
+            this.aString.push("-");
+            this.eString = tabData.eString.split("");
+            this.eString.push("-");
             this.buildTabCellRows();
         });
     }
