@@ -272,18 +272,31 @@ select {
 .button-grid button {
     padding: .25rem;
     margin: .25rem;
-    height: 3rem;
-    width: 3rem;
+    height: 100%;
+    width: 100%;
+}
+
+.button-grid button:active {
+    background-color: #0171E2;
 }
 
 #current-note {
     border-radius: 5px;
     border-style: solid;
-    border-color: white;
-    width: 2rem;
-    height: 2rem;
+    border-color: #1D1D1F;
+    background-color: #964FF6;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
+    box-sizing: border-box;
+    padding: .25rem;
+    margin-top: .25rem;
+    margin-left: .25rem;
+    height: 100%;
+    width: 100%;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
 }
