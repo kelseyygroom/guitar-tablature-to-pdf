@@ -195,7 +195,6 @@ select {
     position: fixed;
     right: 0px;
     top: 0px;
-    height: 100vh;
     width: 50vw;
     background-color: #1D1D1F;
     opacity: .7;
@@ -220,7 +219,28 @@ select {
     }
 }
 
+@keyframes slideInFromBottom {
+    from {
+      transform: translateY(100%); /* Start off-screen to the right */
+      opacity: 0; /* Optional: Start with transparent */
+    }
+    to {
+      transform: translateY(0); /* Slide to its original position */
+      opacity: .7; /* Optional: Fully visible */
+    }
+}
+
 @media (max-width: 600px) and (orientation:portrait) {
+    #change-fret-modal {
+        bottom: 0px;
+        left: 0px;
+        top: 50vh;
+        width: 100vw;
+        animation: slideInFromBottom .25s;
+        justify-content: center;
+        align-items: center;
+    }
+    
     .button-bottom-container {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
