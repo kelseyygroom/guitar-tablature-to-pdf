@@ -4,6 +4,7 @@
   "main": "./server/server.js",
   "type": "commonjs",
   "scripts": {
+    "clean": "rm -rf dist",
     "build": "webpack --mode production",
     "server": "nodemon ./server/server.js --verbose",
     "start": "node ./server/server.js",

@@ -2,6 +2,7 @@ import "./signup.css";
 import logo from './images/logo.svg'
 
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+// const url = "http://localhost:5000/";
 
 class SignUp {
     constructor() {

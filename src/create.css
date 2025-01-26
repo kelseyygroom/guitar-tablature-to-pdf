@@ -128,6 +128,7 @@ button i {
     overflow-x: scroll;
     height: 100vh;
     padding-left: 1rem;
+    animation: fadeIn 1s;
 }
 
 .tab-cell-container div {
@@ -143,6 +144,7 @@ button i {
     position: fixed;
     bottom: 0px;
     right: 0px;
+    animation: fadeIn 1s;
 }
 
 .header {
@@ -315,14 +317,11 @@ select {
     transition-duration: .5s;
 }
 
-/* @keyframes saveButtonBounce {
-    0% {
-        background-color: white;
+@keyframes fadeIn {
+    from {
+      opacity: 0; /* Optional: Start with transparent */
     }
-    50% {
-        background-color: #5DCCF5;
+    to {
+      opacity: 1; /* Optional: Fully visible */
     }
-    100% {
-        background-color: #964FF6;
-    }
-} */
+}
