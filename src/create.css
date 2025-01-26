@@ -97,7 +97,7 @@ button i {
     6px 6px 10px rgba(0, 0, 0, .05);
 }
 
-.tab-cell-container div:last-child {
+.tab-cell-row div:last-child {
     animation: slideInFromRight 1s;
 }
 

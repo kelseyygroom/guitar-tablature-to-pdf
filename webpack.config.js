@@ -1,5 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -26,12 +28,15 @@ module.exports = {
         exclude: /node_modules/, // Exclude node_modules from processing
       },
       {
-        test: /\.css$/, // Matches .css files
-        use: ['style-loader', 'css-loader'], // Process CSS files
-      },
-      {
         test: /\.svg$/,
         type: 'asset/resource',
+      },
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader, // Extract CSS into separate files
+          'css-loader',                // Handles @import and url() in CSS
+        ],
       },
     ],
   },
@@ -59,10 +64,19 @@ module.exports = {
       filename: 'signup.html',
       chunks: ['signup'], // Specify the chunks for this HTML
     }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css', // Output CSS file names
+    }),
   ],
   devServer: {
     static: './dist',
     port: 3000,
     open: true,
+  },
+  optimization: {
+    minimizer: [
+      `...`, // Use the default minimizers (e.g., Terser for JS)
+      new CssMinimizerPlugin(), // Minimize CSS
+    ],
   },
 };
