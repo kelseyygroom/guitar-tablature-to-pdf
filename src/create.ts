@@ -225,7 +225,7 @@ class Create {
                 const tabCellCollection: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLElement>;
                 const tabCell: HTMLElement = tabCellCollection[0] as HTMLElement;
                 const currentNoteDisplay: HTMLElement = document.getElementById("current-note") as HTMLElement;
-                console.log("click")
+
                 if (tabCell !== undefined && tabCell !== null) {
                     const newFret: string = changeFretInput.value;
                     tabCell.innerHTML = newFret;
@@ -257,42 +257,157 @@ class Create {
         let returnString = "";
 
         for (let i: number = 0; i < tabStringTabCells.length; i++) {
-            returnString += tabStringTabCells[i].innerHTML;
+            if (tabStringTabCells[i].innerHTML.length == 2) {
+                returnString += "{" + tabStringTabCells[i].innerHTML + "}";
+            }
+            else {
+                returnString += tabStringTabCells[i].innerHTML;
+            }
         }
 
         return returnString;
     };
 
+    private translateStringData = (string: string) => {
+
+    };
+
     // Builds the tabulature string rows.
     private buildTabCellRows = (): void => {
+        let tempCell = "";
+        let tempActive = false;
+
         // High E String
         this.highEString.forEach((tabCell: string, index: number) => {
-            this.buildTabCellElement(tabCell, "high-e", index)
+            if (tabCell === "{") {
+                tempActive = true;
+            }
+            else if (tabCell === "}") {
+                tempActive = false;
+                this.buildTabCellElement(tempCell, "high-e", index)
+                tempCell = "";
+            }
+
+            if (tabCell === "{" || tabCell === "}") {
+                return;
+            }
+            else if (tempActive) {
+                tempCell += tabCell;
+            }
+            else {
+                this.buildTabCellElement(tabCell, "high-e", index)
+            }
         });
 
         // B String
         this.bString.forEach((tabCell: string, index: number) => {
-            this.buildTabCellElement(tabCell, "b", index)
+            if (tabCell === "{") {
+                tempActive = true;
+            }
+            else if (tabCell === "}") {
+                tempActive = false;
+                this.buildTabCellElement(tempCell, "b", index)
+                tempCell = "";
+            }
+
+            if (tabCell === "{" || tabCell === "}") {
+                return;
+            }
+            else if (tempActive) {
+                tempCell += tabCell;
+            }
+            else {
+                this.buildTabCellElement(tabCell, "b", index)
+            }
         });
 
         // G String
         this.gString.forEach((tabCell: string, index: number) => {
-            this.buildTabCellElement(tabCell, "g", index)
+            if (tabCell === "{") {
+                tempActive = true;
+            }
+            else if (tabCell === "}") {
+                tempActive = false;
+                this.buildTabCellElement(tempCell, "g", index)
+                tempCell = "";
+            }
+
+            if (tabCell === "{" || tabCell === "}") {
+                return;
+            }
+            else if (tempActive) {
+                tempCell += tabCell;
+            }
+            else {
+                this.buildTabCellElement(tabCell, "g", index)
+            }
         });
 
         // D String
         this.dString.forEach((tabCell: string, index: number) => {
-            this.buildTabCellElement(tabCell, "d", index)
+            if (tabCell === "{") {
+                tempActive = true;
+            }
+            else if (tabCell === "}") {
+                tempActive = false;
+                this.buildTabCellElement(tempCell, "d", index)
+                tempCell = "";
+                tempCell = "";
+            }
+
+            if (tabCell === "{" || tabCell === "}") {
+                return;
+            }
+            else if (tempActive) {
+                tempCell += tabCell;
+            }
+            else {
+                this.buildTabCellElement(tabCell, "d", index)
+            }
         });
 
         // A String
         this.aString.forEach((tabCell: string, index: number) => {
-            this.buildTabCellElement(tabCell, "a", index)
+            if (tabCell === "{") {
+                tempActive = true;
+            }
+            else if (tabCell === "}") {
+                tempActive = false;
+                this.buildTabCellElement(tempCell, "a", index)
+                tempCell = "";
+            }
+
+            if (tabCell === "{" || tabCell === "}") {
+                return;
+            }
+            else if (tempActive) {
+                tempCell += tabCell;
+            }
+            else {
+                this.buildTabCellElement(tabCell, "a", index)
+            }
         });
 
         // E String
         this.eString.forEach((tabCell: string, index: number) => {
-            this.buildTabCellElement(tabCell, "e", index)
+            if (tabCell === "{") {
+                tempActive = true;
+            }
+            else if (tabCell === "}") {
+                tempActive = false;
+                this.buildTabCellElement(tempCell, "e", index)
+                tempCell = "";
+            }
+
+            if (tabCell === "{" || tabCell === "}") {
+                return;
+            }
+            else if (tempActive) {
+                tempCell += tabCell;
+            }
+            else {
+                this.buildTabCellElement(tabCell, "e", index)
+            }
         });
     }
 

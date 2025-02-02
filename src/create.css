@@ -73,7 +73,8 @@ button i {
 } */
 
 .tab-cell {
-    min-width: .75rem;
+    font-size: small;
+    min-width: 1rem;
     min-height: .75rem;
     padding: .25rem;
     display: flex;
