@@ -103,8 +103,10 @@ class SignUp {
 
         createUserButton?.addEventListener("click", async () => {
             const userAccount = await fetch(url + "getUserAccount?username=" + createUsernameInput.value)
+            const userData = await userAccount.json();
+            console.log(userData)
 
-            if (userAccount) {
+            if (userData !== "No Account found.") {
                 usernameErrorLabel.style.display = "flex";
                 createUsernameInput.classList.add("highlight-error")
 
@@ -134,12 +136,10 @@ class SignUp {
             }
             else {
                 createPasswordInput.classList.add("highlight-error")
-                createUsernameInput.classList.add("highlight-error")
 
                 setTimeout(() => {
                     usernameErrorLabel.style.display = "none";
                     createPasswordInput.classList.remove("highlight-error")
-                    createUsernameInput.classList.remove("highlight-error")
                 }, 2000);
             }
         });
