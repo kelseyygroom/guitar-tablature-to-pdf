@@ -41,6 +41,16 @@ input, button {
     -6px -6px 10px rgba(255, 255, 255, .2),
     6px 6px 8px rgba(255, 255, 255, .3),
     6px 6px 10px rgba(0, 0, 0, .05);
+    transition: all .5s;
+}
+
+.highlight-error {
+    border-color: #D20A2E;
+    background-color:#D20A2E;
+}
+
+.highlight-error::placeholder {
+    color: white;
 }
 
 .icon-container {
@@ -64,9 +74,58 @@ button {
     border-width: 1px;
 }
 
-#failed-login-error {
+#special-character-icon, #capital-letter-icon, #number-icon, #over-8-icon {
+    animation: fadeIn .5s;
+    color: #50C878; 
     display: none;
-    color: chocolate;
+    font-size: small;
+    margin-left: .5rem;
+}
+
+#failed-password-error-label p:first-child {
+    margin-top: .5rem;
+}
+
+#failed-password-error-label p {
+    margin: 0px;
+    width: calc(100% - 2rem);
+    justify-content: space-between;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    margin-left: 2rem;
+}
+
+#failed-password-error-label {
+    display: none;
+    color: white;
+    width: 75%;
+    font-size: small;
+    flex-direction: column;
+    animation: fadeIn 1s;
+    transition: all 1s;
+    margin-bottom: .5rem;
+}
+
+#failed-username-error-label  {
+    display: none;
+    color: white;
+    margin-bottom: .5rem;
+    flex-direction: column;
+    max-width: 100%;
+    font-size: small;
+    animation: fadeIn 1s;
+    transition: all 1s;
+    width: 100%;
+    justify-content: left;
+}
+
+#failed-password-error p {
+    color: white;
+    margin: 0px;
+    margin-left: .25rem;
+    white-space: nowrap;
+    transition: all 1s;
 }
 
 @media (min-width: 600px) and (orientation:landscape) {
@@ -76,6 +135,10 @@ button {
         width: 25%;
         padding: 1rem;
         border-radius: 10px;
+    }
+
+    #failed-password-error-label {
+        width: 100%;
     }
 }
 

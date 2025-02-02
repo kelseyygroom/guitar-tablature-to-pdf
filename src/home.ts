@@ -1,4 +1,5 @@
 import "./home.css"
+import logo from "./images/logo.svg"
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 // const url = "http://localhost:5000/";
 
@@ -87,7 +88,9 @@ class Home {
         const userAccount = await fetch(url + "getUserAccount?username=" + username)
         const userAccountData = await userAccount.json()
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
-        userAccountLabel.innerHTML = userAccountData.username + "<i style='margin-right: 0px;' class='fas fa-user'></i>";
+
+        // Set user account image and name.
+        userAccountLabel.innerHTML = userAccountData.username + "<img style='margin-right: 0px; width: 2rem;' src='" + logo + "'></img>";
         this.user = userAccountData;
         this.tabs = userAccountData.tabs
         this.displayTabsList();

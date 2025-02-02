@@ -104,8 +104,10 @@ a {
     position: fixed;
     top: 0px;
     right: 0px;
-    margin: .75rem;
+    margin: .25rem;
     color: #F0f8ff;
+    display: flex;
+    align-items: center;
 }
 
 @media (min-width: 600px) and (orientation:landscape) {

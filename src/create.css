@@ -98,7 +98,7 @@ button i {
 }
 
 .tab-cell-row div:last-child {
-    animation: slideInFromRight 1s;
+    animation: fadeIn 1s;
 }
 
 .tab-cell-active {

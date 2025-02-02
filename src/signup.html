@@ -13,7 +13,16 @@
         </div>
         <div class="layout-bottom">
             <input id="create-username-input" placeholder="Username"></input>
+            <div id="failed-username-error-label">This username is already taken.</div>
             <input id="create-password-input" type="password" placeholder="Password"></input>
+            <div id="failed-password-error-label">Please Include:
+              <p> A special character. <i id='special-character-icon' class='fas fa-check'></i></p>
+              <p> A capital letter. <i id='capital-letter-icon' class='fas fa-check'></i></p>
+              <p> A number. <i id='number-icon' class='fas fa-check'></i></p>
+              <p> Over 8 characters. <i id='over-8-icon' class='fas fa-check'></i></p>
+            </div>
+            
+            <div id="failed-password-error"></div>
             <input id="create-email-input" placeholder="Email@gmail.com"></input>
             <a href="/index.html">Sign in</a>
             <button id="create-user-button">
