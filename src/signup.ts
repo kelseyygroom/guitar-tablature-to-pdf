@@ -97,6 +97,10 @@ class SignUp {
         const createEmailInput: HTMLInputElement = document.getElementById("create-email-input") as HTMLInputElement;
         const usernameErrorLabel: HTMLDivElement = document.getElementById("failed-username-error-label") as HTMLDivElement;
 
+        createUsernameInput.addEventListener("keyup", () => {
+            usernameErrorLabel.style.display = "none";
+        });
+
         createUserButton?.addEventListener("click", async () => {
             const userAccount = await fetch(url + "getUserAccount?username=" + createUsernameInput.value)
 
@@ -105,7 +109,6 @@ class SignUp {
                 createUsernameInput.classList.add("highlight-error")
 
                 setTimeout(() => {
-                    usernameErrorLabel.style.display = "none";
                     createUsernameInput.classList.remove("highlight-error")
                 }, 2000);
                 
