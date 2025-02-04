@@ -176,11 +176,170 @@ class Create {
         })
     };
 
+    private findLongestString = (rawTabData: any) => {
+        const longestString = {
+            stringName: "",
+            stringLength: 0
+        };
+
+        Object.entries(rawTabData).forEach((entry: any) => {
+            const name = entry[0];
+            const length = entry[1].length;
+            if (length > longestString.stringLength) {
+                longestString.stringName = name;
+                longestString.stringLength = length;
+            }
+        });
+
+        return longestString.stringLength;
+    }
+
+    // Format the tab & handle double digit tab cells.
+    private formatTabForPDFExport = (rawTabData: any) => {
+        const longestString = this.findLongestString(rawTabData);
+        const formattedTab: any = {
+            highEString: [],
+            bString: [],
+            gString: [],
+            dString: [],
+            aString: [],
+            eString: []
+        };
+
+        for (let i: number = 0; i < longestString; i++) {
+            const highE = rawTabData.highEString[i];
+            const b = rawTabData.bString[i];
+            const g = rawTabData.gString[i];
+            const d = rawTabData.dString[i];
+            const a = rawTabData.aString[i];
+            const e = rawTabData.eString[i];
+            const prevHighE = rawTabData.highEString[i-1];
+            const prevB = rawTabData.bString[i-1];
+            const prevG = rawTabData.gString[i-1];
+            const prevD = rawTabData.dString[i-1];
+            const prevA = rawTabData.aString[i-1];
+            const prevE = rawTabData.eString[i-1];
+
+            // High E String.
+            if (
+                highE === "}"
+            ) {
+                formattedTab.bString.push("-");
+                formattedTab.gString.push("-");
+                formattedTab.dString.push("-");
+                formattedTab.aString.push("-");
+                formattedTab.eString.push("-");
+            }
+            else if (
+                highE !== "{"
+            ) {
+                formattedTab.highEString.push(highE);
+            }
+            
+
+            // B String.
+            if (
+                b === "}"
+            ) {
+                formattedTab.highEString.push("-");
+                formattedTab.gString.push("-");
+                formattedTab.dString.push("-");
+                formattedTab.aString.push("-");
+                formattedTab.eString.push("-");
+            }
+            else if (
+                b !== "{"
+            ) {
+                formattedTab.bString.push(b);
+            }
+
+            // G String.
+            if (
+                g === "}"
+            ) {
+                formattedTab.highEString.push("-");
+                formattedTab.bString.push("-");
+                formattedTab.dString.push("-");
+                formattedTab.aString.push("-");
+                formattedTab.eString.push("-");
+            }
+            else if (
+                g !== "{"
+            ) {
+                formattedTab.gString.push(g);
+            }
+
+            // D String.
+            if (
+                d === "}"
+            ) {
+                formattedTab.highEString.push("-");
+                formattedTab.bString.push("-");
+                formattedTab.gString.push("-");
+                formattedTab.aString.push("-");
+                formattedTab.eString.push("-");
+            }
+            else if (
+                d !== "{"
+            ) {
+                formattedTab.dString.push(d);
+            }
+
+            // A String.
+            if (
+                a === "}"
+            ) {
+                formattedTab.highEString.push("-");
+                formattedTab.bString.push("-");
+                formattedTab.gString.push("-");
+                formattedTab.dString.push("-");
+                formattedTab.eString.push("-");
+            }
+            else if (
+                a !== "{"
+            ) {
+                formattedTab.aString.push(a);
+            }
+
+            // E String.
+
+            // B String.
+            if (
+                e === "}"
+            ) {
+                formattedTab.highEString.push("-");
+                formattedTab.gString.push("-");
+                formattedTab.dString.push("-");
+                formattedTab.aString.push("-");
+                formattedTab.aString.push("-");
+            }
+            else if (
+                e !== "{"
+            ) {
+                formattedTab.eString.push(e);
+            }
+        }
+
+        const returnTab = {
+            highEString: formattedTab.highEString.join(""),
+            bString: formattedTab.bString.join(""),
+            gString: formattedTab.gString.join(""),
+            dString: formattedTab.dString.join(""),
+            aString: formattedTab.aString.join(""),
+            eString: formattedTab.eString.join("")
+        }
+
+        console.log("formatted:", returnTab)
+
+        return returnTab;
+    };
+
     // Export the tab.
     private export = (): void => {
         const exportButton: HTMLButtonElement = document.getElementById("export-button") as HTMLButtonElement;
         exportButton?.addEventListener("click", () => {
-            const tabData: any = this.translateTabCellsToData();
+            const tabDataRaw: any = this.translateTabCellsToData();
+            const tabData: any = this.formatTabForPDFExport(tabDataRaw);
             const doc = new jsPDF();
             doc.setFont("courier", "normal");
             let index: number = 0;
