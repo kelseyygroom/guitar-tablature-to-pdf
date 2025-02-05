@@ -206,6 +206,8 @@ class Create {
             eString: []
         };
 
+        console.log("raw", rawTabData)
+
         for (let i: number = 0; i < longestString; i++) {
             const highE = rawTabData.highEString[i];
             const b = rawTabData.bString[i];
@@ -219,114 +221,130 @@ class Create {
             const prevD = rawTabData.dString[i-1];
             const prevA = rawTabData.aString[i-1];
             const prevE = rawTabData.eString[i-1];
+            const nextHighE = rawTabData.highEString[i+1];
+            const nextB = rawTabData.bString[i+1];
+            const nextG = rawTabData.gString[i+1];
+            const nextD = rawTabData.dString[i+1];
+            const nextA = rawTabData.aString[i+1];
+            const nextE = rawTabData.eString[i+1];
 
-            // High E String.
+            // High E
             if (
-                highE === "}"
-            ) {
-                formattedTab.bString.push("-");
-                formattedTab.gString.push("-");
-                formattedTab.dString.push("-");
-                formattedTab.aString.push("-");
-                formattedTab.eString.push("-");
-            }
-            else if (
+                highE !== "}" &&
                 highE !== "{"
             ) {
                 formattedTab.highEString.push(highE);
             }
-            
 
-            // B String.
+            // B
             if (
-                b === "}"
-            ) {
-                formattedTab.highEString.push("-");
-                formattedTab.gString.push("-");
-                formattedTab.dString.push("-");
-                formattedTab.aString.push("-");
-                formattedTab.eString.push("-");
-            }
-            else if (
+                b !== "}" &&
                 b !== "{"
             ) {
                 formattedTab.bString.push(b);
             }
 
-            // G String.
+            // G
             if (
-                g === "}"
-            ) {
-                formattedTab.highEString.push("-");
-                formattedTab.bString.push("-");
-                formattedTab.dString.push("-");
-                formattedTab.aString.push("-");
-                formattedTab.eString.push("-");
-            }
-            else if (
+                g !== "}" &&
                 g !== "{"
             ) {
                 formattedTab.gString.push(g);
             }
 
-            // D String.
+            // D
             if (
-                d === "}"
-            ) {
-                formattedTab.highEString.push("-");
-                formattedTab.bString.push("-");
-                formattedTab.gString.push("-");
-                formattedTab.aString.push("-");
-                formattedTab.eString.push("-");
-            }
-            else if (
+                d !== "}" &&
                 d !== "{"
             ) {
                 formattedTab.dString.push(d);
             }
 
-            // A String.
+            // A
             if (
-                a === "}"
-            ) {
-                formattedTab.highEString.push("-");
-                formattedTab.bString.push("-");
-                formattedTab.gString.push("-");
-                formattedTab.dString.push("-");
-                formattedTab.eString.push("-");
-            }
-            else if (
+                a !== "}" &&
                 a !== "{"
             ) {
                 formattedTab.aString.push(a);
             }
 
-            // E String.
-
-            // B String.
+            // E
             if (
-                e === "}"
-            ) {
-                formattedTab.highEString.push("-");
-                formattedTab.gString.push("-");
-                formattedTab.dString.push("-");
-                formattedTab.aString.push("-");
-                formattedTab.aString.push("-");
-            }
-            else if (
+                e !== "}" &&
                 e !== "{"
             ) {
                 formattedTab.eString.push(e);
             }
+
+
+            // High E
+            if (
+                prevHighE !== "{" &&
+                nextHighE !== "{" &&
+                highE !== "}" &&
+                highE !== "{"
+            ) {
+                formattedTab.highEString.push("-");
+            }
+
+            // B
+            if (
+                prevB !== "{" &&
+                nextB !== "{" &&
+                b !== "}" &&
+                b !== "{"
+            ) {
+                formattedTab.bString.push("-");
+            }
+
+            // G
+            if (
+                prevG !== "{" &&
+                nextG !== "{" &&
+                g !== "}" &&
+                g !== "{"
+            ) {
+                formattedTab.gString.push("-");
+            }
+
+            // D
+            if (
+                prevD !== "{" &&
+                nextD !== "{" &&
+                d !== "}" &&
+                d !== "{"
+            ) {
+                formattedTab.dString.push("-");
+            }
+
+            // A
+            if (
+                prevA !== "{" &&
+                nextA !== "{" &&
+                a !== "}" &&
+                a !== "{"
+            ) {
+                formattedTab.aString.push("-");
+            }
+
+            // E
+            if (
+                prevE !== "{" &&
+                nextE !== "{" &&
+                e !== "}" &&
+                e !== "{"
+            ) {
+                formattedTab.eString.push("-");
+            }
         }
 
         const returnTab = {
-            highEString: formattedTab.highEString.join(""),
-            bString: formattedTab.bString.join(""),
-            gString: formattedTab.gString.join(""),
-            dString: formattedTab.dString.join(""),
-            aString: formattedTab.aString.join(""),
-            eString: formattedTab.eString.join("")
+            highEString: formattedTab.highEString.join("") + "    " + formattedTab.highEString.length,
+            bString: formattedTab.bString.join("") + "    " + formattedTab.bString.length,
+            gString: formattedTab.gString.join("") + "    " + formattedTab.gString.length,
+            dString: formattedTab.dString.join("") + "    " + formattedTab.dString.length,
+            aString: formattedTab.aString.join("") + "    " + formattedTab.aString.length,
+            eString: formattedTab.eString.join("") + "    " + formattedTab.eString.length,
         }
 
         console.log("formatted:", returnTab)
