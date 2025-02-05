@@ -79,10 +79,10 @@ body {
     position: fixed;
     bottom: 0px;
     right: 0px;
-    width: 3rem;
+    width: fit-content;
     height: 3rem;
     margin: 1rem;
-    border-radius: 100%;
+    border-radius: 1.5rem;
     background-color: #1D1D1F;
     color: #F0f8ff;
     box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),

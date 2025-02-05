@@ -1,4 +1,4 @@
-import e from 'express';
+import logo from "./images/logo.svg"
 import './create.css';
 import jsPDF from "jspdf";
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
@@ -29,7 +29,6 @@ class Create {
 
     public init = (): void => {
         this.getUserAccount();
-        this.exit();
         this.export();
         this.updateTabCell();
         this.saveTab();
@@ -57,6 +56,7 @@ class Create {
     // Return to home page.
     private exit = (): void => {
         const exitButton: HTMLButtonElement = document.getElementById("home-button") as HTMLButtonElement;
+
         exitButton?.addEventListener("click", () => {
             window.location.href = "home.html?username=" + this.user.username;
         });
@@ -81,7 +81,8 @@ class Create {
         this.formatTabForPDFExport(tab.tabData);
 
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
-        usernameLabel.innerHTML = "<i class='fas fa-file-pdf'></i>" + this.tabTitle;
+        usernameLabel.innerHTML = this.user.username + "<img id='home-button' style='margin-right: 0px; width: 2rem;' src='" + logo + "'></img>";
+        this.exit();
         this.buildTabCellRows();
     };
 
