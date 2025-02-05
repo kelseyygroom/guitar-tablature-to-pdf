@@ -234,6 +234,9 @@ class Create {
                 highE !== "{"
             ) {
                 formattedTab.highEString.push(highE);
+                if (prevHighE !== "{" && prevHighE !== "}" && nextHighE !== "}") {
+                    formattedTab.highEString.push("-");
+                }
             }
 
             // B
@@ -242,6 +245,9 @@ class Create {
                 b !== "{"
             ) {
                 formattedTab.bString.push(b);
+                if (prevB !== "{" && prevB !== "}" && nextB !== "}") {
+                    formattedTab.bString.push("-");
+                }
             }
 
             // G
@@ -250,6 +256,9 @@ class Create {
                 g !== "{"
             ) {
                 formattedTab.gString.push(g);
+                if (prevG !== "{" && prevG !== "}" && nextG !== "}") {
+                    formattedTab.gString.push("-");
+                }
             }
 
             // D
@@ -258,6 +267,10 @@ class Create {
                 d !== "{"
             ) {
                 formattedTab.dString.push(d);
+                if (prevD !== "{" && prevD !== "}" && nextD !== "}") {
+                    console.log("d", prevD, d)
+                    formattedTab.dString.push("-");
+                }
             }
 
             // A
@@ -266,6 +279,9 @@ class Create {
                 a !== "{"
             ) {
                 formattedTab.aString.push(a);
+                if (prevA !== "{" && prevA !== "}" && nextA !== "}") {
+                    formattedTab.aString.push("-");
+                }
             }
 
             // E
@@ -274,68 +290,12 @@ class Create {
                 e !== "{"
             ) {
                 formattedTab.eString.push(e);
+                if (prevE !== "{" && prevE !== "}" && nextE !== "}") {
+                    formattedTab.eString.push("-");
+                }
             }
 
-
-            // High E
-            if (
-                prevHighE !== "{" &&
-                nextHighE !== "{" &&
-                highE !== "}" &&
-                highE !== "{"
-            ) {
-                formattedTab.highEString.push("-");
-            }
-
-            // B
-            if (
-                prevB !== "{" &&
-                nextB !== "{" &&
-                b !== "}" &&
-                b !== "{"
-            ) {
-                formattedTab.bString.push("-");
-            }
-
-            // G
-            if (
-                prevG !== "{" &&
-                nextG !== "{" &&
-                g !== "}" &&
-                g !== "{"
-            ) {
-                formattedTab.gString.push("-");
-            }
-
-            // D
-            if (
-                prevD !== "{" &&
-                nextD !== "{" &&
-                d !== "}" &&
-                d !== "{"
-            ) {
-                formattedTab.dString.push("-");
-            }
-
-            // A
-            if (
-                prevA !== "{" &&
-                nextA !== "{" &&
-                a !== "}" &&
-                a !== "{"
-            ) {
-                formattedTab.aString.push("-");
-            }
-
-            // E
-            if (
-                prevE !== "{" &&
-                nextE !== "{" &&
-                e !== "}" &&
-                e !== "{"
-            ) {
-                formattedTab.eString.push("-");
-            }
+            // ADD DASH ///////////////////////////////////////////
         }
 
         const returnTab = {
