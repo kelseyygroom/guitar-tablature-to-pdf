@@ -78,6 +78,8 @@ class Create {
             this.eString = tab.tabData.eString.split("");
         }
 
+        this.formatTabForPDFExport(tab.tabData);
+
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
         usernameLabel.innerHTML = "<i class='fas fa-file-pdf'></i>" + this.tabTitle;
         this.buildTabCellRows();
@@ -172,6 +174,7 @@ class Create {
                     saveTabButton.style.color = "black";
                     saveTabButton.style.backgroundColor = "white";
                     saveTabButton.innerHTML = '<i style="height: 1rem; width: 1rem;" class="fas fa-file"></i> Save';
+                    this.formatTabForPDFExport(tabData)
                 }, 1000);
             }
         })
@@ -197,6 +200,7 @@ class Create {
 
     // Format the tab & handle double digit tab cells.
     private formatTabForPDFExport = (rawTabData: any) => {
+        console.log("raw", rawTabData)
         const longestString = this.findLongestString(rawTabData);
         const formattedTab: any = {
             highEString: [],
@@ -206,8 +210,6 @@ class Create {
             aString: [],
             eString: []
         };
-
-        console.log("raw", rawTabData)
 
         for (let i: number = 0; i < longestString; i++) {
             const highE = rawTabData.highEString[i];
@@ -239,12 +241,6 @@ class Create {
                     formattedTab.highEString.push("-");
                 }
             }
-            // if (
-            //     highE === "}" &&
-            //     nextHighE === "-"
-            // ) {
-            //     formattedTab.highEString.push("-");
-            // }
 
             // B
             if (
@@ -256,12 +252,6 @@ class Create {
                     formattedTab.bString.push("-");
                 }
             }
-            // if (
-            //     b === "}" &&
-            //     nextB !== "{"
-            // ) {
-            //     formattedTab.bString.push("-");
-            // }
 
             // G
             if (
@@ -273,12 +263,6 @@ class Create {
                     formattedTab.gString.push("-");
                 }
             }
-            // if (
-            //     g === "}" &&
-            //     nextG === "-"
-            // ) {
-            //     formattedTab.gString.push("-");
-            // }
 
             // D
             if (
@@ -290,12 +274,6 @@ class Create {
                     formattedTab.dString.push("-");
                 }
             }
-            // if (
-            //     d === "}" &&
-            //     nextD === "-"
-            // ) {
-            //     formattedTab.dString.push("-");
-            // }
 
             // A
             if (
@@ -307,12 +285,6 @@ class Create {
                     formattedTab.aString.push("-");
                 }
             }
-            // if (
-            //     a === "}" &&
-            //     nextA === "-"
-            // ) {
-            //     formattedTab.aString.push("-");
-            // }
 
             // E
             if (
@@ -324,14 +296,6 @@ class Create {
                     formattedTab.eString.push("-");
                 }
             }
-            // if (
-            //     e === "}" &&
-            //     nextE === "-"
-            // ) {
-            //     formattedTab.eString.push("-");
-            // }
-
-            // ADD DASH ///////////////////////////////////////////
         }
 
         const highELength = formattedTab.highEString.join("").split("");
@@ -368,6 +332,21 @@ class Create {
             aString: tempTab.aString.join(""),
             eString: tempTab.eString.join("")
         }
+
+        const highEPreview: HTMLDivElement = document.getElementById("high-e-string-preview") as HTMLDivElement;
+        const bPreview: HTMLDivElement = document.getElementById("b-string-preview") as HTMLDivElement;
+        const gPreview: HTMLDivElement = document.getElementById("g-string-preview") as HTMLDivElement;
+        const dPreview: HTMLDivElement = document.getElementById("d-string-preview") as HTMLDivElement;
+        const aPreview: HTMLDivElement = document.getElementById("a-string-preview") as HTMLDivElement;
+        const ePreview: HTMLDivElement = document.getElementById("e-string-preview") as HTMLDivElement;
+
+        console.log("made it", returnTab, highEPreview)
+        highEPreview.innerHTML = returnTab.highEString;
+        bPreview.innerHTML = returnTab.bString;
+        gPreview.innerHTML = returnTab.gString;
+        dPreview.innerHTML = returnTab.dString;
+        aPreview.innerHTML = returnTab.aString;
+        ePreview.innerHTML = returnTab.eString;
 
         return returnTab;
     };
@@ -431,6 +410,15 @@ class Create {
                         // tabCell.style.backgroundColor = "#1D1D1F";
                     }
                 };
+
+                this.formatTabForPDFExport({
+                    highEString: this.highEString,
+                    bString: this.bString,
+                    gString: this.gString,
+                    dString: this.dString,
+                    aString: this.aString,
+                    eString: this.eString
+                })
             });
         }
     };
@@ -463,10 +451,6 @@ class Create {
         }
 
         return returnString;
-    };
-
-    private translateStringData = (string: string) => {
-
     };
 
     // Builds the tabulature string rows.

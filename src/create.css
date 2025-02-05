@@ -132,6 +132,21 @@ button i {
     animation: fadeIn 1s;
 }
 
+.tab-preview-container {
+    width: calc(100vw - 1rem);
+    margin-top: 1rem;
+    left: 0px;
+    overflow-x: scroll;
+    height: 100vh;
+    animation: fadeIn 1s;
+}
+
+.tab-preview-container div {
+    font-family: monospace, monospace;
+    white-space: nowrap;
+    font-size: 1rem;
+}
+
 .tab-cell-container div {
     width: fit-content;
 }
