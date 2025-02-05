@@ -1,3 +1,4 @@
+import e from 'express';
 import './create.css';
 import jsPDF from "jspdf";
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
@@ -234,10 +235,16 @@ class Create {
                 highE !== "{"
             ) {
                 formattedTab.highEString.push(highE);
-                if (prevHighE !== "{" && prevHighE !== "}" && nextHighE !== "}") {
+                if (prevHighE !== "{" && nextHighE !== "}") {
                     formattedTab.highEString.push("-");
                 }
             }
+            // if (
+            //     highE === "}" &&
+            //     nextHighE === "-"
+            // ) {
+            //     formattedTab.highEString.push("-");
+            // }
 
             // B
             if (
@@ -245,10 +252,16 @@ class Create {
                 b !== "{"
             ) {
                 formattedTab.bString.push(b);
-                if (prevB !== "{" && prevB !== "}" && nextB !== "}") {
+                if (prevB !== "{" && nextB !== "}") {
                     formattedTab.bString.push("-");
                 }
             }
+            // if (
+            //     b === "}" &&
+            //     nextB !== "{"
+            // ) {
+            //     formattedTab.bString.push("-");
+            // }
 
             // G
             if (
@@ -256,10 +269,16 @@ class Create {
                 g !== "{"
             ) {
                 formattedTab.gString.push(g);
-                if (prevG !== "{" && prevG !== "}" && nextG !== "}") {
+                if (prevG !== "{" && nextG !== "}") {
                     formattedTab.gString.push("-");
                 }
             }
+            // if (
+            //     g === "}" &&
+            //     nextG === "-"
+            // ) {
+            //     formattedTab.gString.push("-");
+            // }
 
             // D
             if (
@@ -267,11 +286,16 @@ class Create {
                 d !== "{"
             ) {
                 formattedTab.dString.push(d);
-                if (prevD !== "{" && prevD !== "}" && nextD !== "}") {
-                    console.log("d", prevD, d)
+                if (prevD !== "{" && nextD !== "}") {
                     formattedTab.dString.push("-");
                 }
             }
+            // if (
+            //     d === "}" &&
+            //     nextD === "-"
+            // ) {
+            //     formattedTab.dString.push("-");
+            // }
 
             // A
             if (
@@ -279,10 +303,16 @@ class Create {
                 a !== "{"
             ) {
                 formattedTab.aString.push(a);
-                if (prevA !== "{" && prevA !== "}" && nextA !== "}") {
+                if (prevA !== "{" && nextA !== "}") {
                     formattedTab.aString.push("-");
                 }
             }
+            // if (
+            //     a === "}" &&
+            //     nextA === "-"
+            // ) {
+            //     formattedTab.aString.push("-");
+            // }
 
             // E
             if (
@@ -290,24 +320,54 @@ class Create {
                 e !== "{"
             ) {
                 formattedTab.eString.push(e);
-                if (prevE !== "{" && prevE !== "}" && nextE !== "}") {
+                if (prevE !== "{" && nextE !== "}") {
                     formattedTab.eString.push("-");
                 }
             }
+            // if (
+            //     e === "}" &&
+            //     nextE === "-"
+            // ) {
+            //     formattedTab.eString.push("-");
+            // }
 
             // ADD DASH ///////////////////////////////////////////
         }
 
-        const returnTab = {
-            highEString: formattedTab.highEString.join("") + "    " + formattedTab.highEString.length,
-            bString: formattedTab.bString.join("") + "    " + formattedTab.bString.length,
-            gString: formattedTab.gString.join("") + "    " + formattedTab.gString.length,
-            dString: formattedTab.dString.join("") + "    " + formattedTab.dString.length,
-            aString: formattedTab.aString.join("") + "    " + formattedTab.aString.length,
-            eString: formattedTab.eString.join("") + "    " + formattedTab.eString.length,
+        const highELength = formattedTab.highEString.join("").split("");
+        const bLength = formattedTab.bString.join("").split("");
+        const gLength = formattedTab.gString.join("").split("");
+        const dLength = formattedTab.dString.join("").split("");
+        const aLength = formattedTab.aString.join("").split("");
+        const eLength = formattedTab.eString.join("").split("");
+        const maxLength = Math.max(highELength.length, bLength.length, gLength.length, dLength.length, aLength.length, eLength.length)
+
+        const tempTab = {
+            highEString: [] as string[],
+            bString: [] as string[],
+            gString: [] as string[],
+            dString: [] as string[],
+            aString: [] as string[],
+            eString: [] as string[]
         }
 
-        console.log("formatted:", returnTab)
+        for (let i: number = 0; i < maxLength; i++) {
+            tempTab.highEString.push(formattedTab.highEString[i] || "-")
+            tempTab.bString.push(formattedTab.bString[i] || "-")
+            tempTab.gString.push(formattedTab.gString[i] || "-")
+            tempTab.dString.push(formattedTab.dString[i] || "-")
+            tempTab.aString.push(formattedTab.aString[i] || "-")
+            tempTab.eString.push(formattedTab.eString[i] || "-")
+        };
+
+        const returnTab = {
+            highEString: tempTab.highEString.join(""),
+            bString: tempTab.bString.join(""),
+            gString: tempTab.gString.join(""),
+            dString: tempTab.dString.join(""),
+            aString: tempTab.aString.join(""),
+            eString: tempTab.eString.join("")
+        }
 
         return returnTab;
     };
