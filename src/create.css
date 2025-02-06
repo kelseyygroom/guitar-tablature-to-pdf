@@ -239,11 +239,12 @@ select {
     color: inherit;
     position: fixed;
     right: 0px;
-    top: 0px;
+    top: 4px;
     margin: .25rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: large;
 }
 
 #change-fret-modal {

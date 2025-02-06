@@ -110,7 +110,7 @@ class Home {
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
 
         // Set user account image and name.
-        userAccountLabel.innerHTML = userAccountData.username + "<img style='margin-right: 0px; width: 2rem;' src='" + logo + "'></img>";
+        userAccountLabel.innerHTML = userAccountData.username + "'s Tabs" + "<i class='fas fa-bars'></i>";
         this.user = userAccountData;
         this.tabs = userAccountData.tabs
         this.displayTabsList();

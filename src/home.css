@@ -109,13 +109,15 @@ a {
 }
 
 #username-label {
+    color: inherit;
     position: fixed;
-    top: 0px;
     right: 0px;
+    top: 4px;
     margin: .25rem;
-    color: #F0f8ff;
     display: flex;
+    justify-content: center;
     align-items: center;
+    font-size: large;
 }
 
 @media (min-width: 600px) and (orientation:landscape) {

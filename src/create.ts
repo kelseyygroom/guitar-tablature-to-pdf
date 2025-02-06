@@ -62,7 +62,7 @@ class Create {
 
     // Return to home page.
     private exit = (): void => {
-        const exitButton: HTMLButtonElement = document.getElementById("home-button") as HTMLButtonElement;
+        const exitButton: HTMLButtonElement = document.getElementById("back-button") as HTMLButtonElement;
 
         exitButton?.addEventListener("click", () => {
             window.location.href = "home.html?username=" + this.user.username;
@@ -86,7 +86,7 @@ class Create {
         }
 
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
-        usernameLabel.innerHTML = this.user.username + "<img id='home-button' style='margin-right: 0px; width: 2rem;' src='" + logo + "'></img>";
+        usernameLabel.innerHTML = this.tabTitle + "<i style='padding-top: .2rem;' class='fas fa-bars'></i>";
         this.exit();
         this.buildTabCellRows();
 
@@ -563,11 +563,14 @@ class Create {
             const doc = new jsPDF();
             doc.setFont("courier", "normal");
             let index: number = 0;
-            const initialRange: number = 50
+            const initialRange: number = 60
             let range: number = initialRange;
             const loopRange: number = Math.ceil(tabData.highEString.length / range);
-
+            doc.text([
+                this.tabTitle
+            ], 10, 10);
             for (let i: number = 0; i < loopRange; i++) {
+
                 doc.text([
                     "e| ", 
                     "b| ", 
