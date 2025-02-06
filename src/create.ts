@@ -51,6 +51,7 @@ class Create {
         const userAccountData = await userAccount.json()
         this.user = userAccountData;
         this.loadTab();
+        this.tutorial();
     }
 
     // Return to home page.
@@ -77,8 +78,6 @@ class Create {
             this.aString = tab.tabData.aString.split("");
             this.eString = tab.tabData.eString.split("");
         }
-
-        this.formatTabForPDFExport(tab.tabData);
 
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
         usernameLabel.innerHTML = this.user.username + "<img id='home-button' style='margin-right: 0px; width: 2rem;' src='" + logo + "'></img>";
@@ -211,12 +210,31 @@ class Create {
             eString: []
         };
 
-        const highERawLength = rawTabData.highEString.split("");
-        const bRawLength = rawTabData.bString.split("");
-        const gRawLength = rawTabData.gString.split("");
-        const dRawLength = rawTabData.dString.split("");
-        const aRawLength = rawTabData.aString.split("");
-        const eRawLength = rawTabData.eString.split("");
+        // This can be made into a separate function, same with below.
+        let highERawLength;
+        let bRawLength;
+        let gRawLength;
+        let dRawLength;
+        let aRawLength;
+        let eRawLength;
+        
+        if (typeof rawTabData.highEString === "string") {
+            highERawLength = rawTabData.highEString.split("");
+            bRawLength = rawTabData.bString.split("");
+            gRawLength = rawTabData.gString.split("");
+            dRawLength = rawTabData.dString.split("");
+            aRawLength = rawTabData.aString.split("");
+            eRawLength = rawTabData.eString.split("");
+        }
+        else {
+            highERawLength = rawTabData.highEString;
+            bRawLength = rawTabData.bString;
+            gRawLength = rawTabData.gString;
+            dRawLength = rawTabData.dString;
+            aRawLength = rawTabData.aString;
+            eRawLength = rawTabData.eString;
+        }
+
         const maxRawLength = Math.max(highERawLength.length, bRawLength.length, gRawLength.length, dRawLength.length, aRawLength.length, eRawLength.length)
 
         for (let i: number = 0; i < maxRawLength; i++) {
@@ -245,9 +263,7 @@ class Create {
             }
         };
 
-        console.log("raw", rawTabData)
-        console.log("formatted", formattedTab)
-
+        // This whole method is pretty sloppy, consider moving from string and arrays for data to something like objects.
         for (let i: number = 0; i < longestString; i++) {
             const highE = rawTabData.highEString[i];
             const b = rawTabData.bString[i];
@@ -346,6 +362,7 @@ class Create {
             eString: [] as string[]
         }
 
+        // This can be made into a separate function.
         for (let i: number = 0; i < maxLength; i++) {
             tempTab.highEString.push(formattedTab.highEString[i] || "-")
             tempTab.bString.push(formattedTab.bString[i] || "-")
@@ -364,8 +381,7 @@ class Create {
             eString: tempTab.eString
         }
 
-        console.log("temp", tempTab)
-
+        // Second loop.
         for (let i: number = 0; i < tempTab.highEString.length; i++) {
             const highE = tempTab.highEString[i];
             const b = tempTab.bString[i];
@@ -379,11 +395,6 @@ class Create {
                 highE === "}"
             ) {
                 tempTab.highEString[i] = "-"
-                // tempTab.bString.splice(i, 0, "-");
-                // tempTab.gString.splice(i, 0, "-");
-                // tempTab.dString.splice(i, 0, "-");
-                // tempTab.aString.splice(i, 0, "-");
-                // tempTab.eString.splice(i, 0, "-");
             }
 
             // B
@@ -391,11 +402,6 @@ class Create {
                 b === "}"
             ) {
                 tempTab.bString[i] = "-"
-                // tempTab.highEString.splice(i, 0, "-");
-                // tempTab.gString.splice(i, 0, "-");
-                // tempTab.dString.splice(i, 0, "-");
-                // tempTab.aString.splice(i, 0, "-");
-                // tempTab.eString.splice(i, 0, "-");
             }
 
             // G
@@ -403,11 +409,6 @@ class Create {
                 g === "}"
             ) {
                 tempTab.gString[i] = "-"
-                // tempTab.highEString.splice(i, 0, "-");
-                // tempTab.bString.splice(i, 0, "-");
-                // tempTab.dString.splice(i, 0, "-");
-                // tempTab.aString.splice(i, 0, "-");
-                // tempTab.eString.splice(i, 0, "-");
             }
 
             // D
@@ -415,11 +416,6 @@ class Create {
                 d === "}"
             ) {
                 tempTab.dString[i] = "-"
-                // tempTab.highEString.splice(i, 0, "-");
-                // tempTab.bString.splice(i, 0, "-");
-                // tempTab.gString.splice(i, 0, "-");
-                // tempTab.aString.splice(i, 0, "-");
-                // tempTab.eString.splice(i, 0, "-");
             }
 
             // A
@@ -427,11 +423,6 @@ class Create {
                 a === "}"
             ) {
                 tempTab.aString[i] = "-"
-                // tempTab.highEString.splice(i, 0, "-");
-                // tempTab.bString.splice(i, 0, "-");
-                // tempTab.gString.splice(i, 0, "-");
-                // tempTab.dString.splice(i, 0, "-");
-                // tempTab.eString.splice(i, 0, "-");
             }
 
             // E
@@ -439,11 +430,6 @@ class Create {
                 e === "}"
             ) {
                 tempTab.eString[i] = "-"
-                // tempTab.highEString.splice(i, 0, "-");
-                // tempTab.bString.splice(i, 0, "-");
-                // tempTab.gString.splice(i, 0, "-");
-                // tempTab.dString.splice(i, 0, "-");
-                // tempTab.aString.splice(i, 0, "-");
             }
 
             if (
@@ -513,11 +499,9 @@ class Create {
                 else {
                     tempTab.eString.splice(i, 0, "-");
                 }
-                }
+            }
         }
         
-        console.log("temp", tempTab)
-
         const returnTab: any = {
             highEString: tempTab.highEString.join(""),
             bString: tempTab.bString.join(""),
@@ -541,20 +525,6 @@ class Create {
         dPreview.innerHTML = returnTab.dString;
         aPreview.innerHTML = returnTab.aString;
         ePreview.innerHTML = returnTab.eString;
-
-        const highEPreviewRaw: HTMLDivElement = document.getElementById("high-e-string-preview-raw") as HTMLDivElement;
-        const bPreviewRaw: HTMLDivElement = document.getElementById("b-string-preview-raw") as HTMLDivElement;
-        const gPreviewRaw: HTMLDivElement = document.getElementById("g-string-preview-raw") as HTMLDivElement;
-        const dPreviewRaw: HTMLDivElement = document.getElementById("d-string-preview-raw") as HTMLDivElement;
-        const aPreviewRaw: HTMLDivElement = document.getElementById("a-string-preview-raw") as HTMLDivElement;
-        const ePreviewRaw: HTMLDivElement = document.getElementById("e-string-preview-raw") as HTMLDivElement;
-
-        highEPreviewRaw.innerHTML = rawTabData.highEString;
-        bPreviewRaw.innerHTML = rawTabData.bString;
-        gPreviewRaw.innerHTML = rawTabData.gString;
-        dPreviewRaw.innerHTML = rawTabData.dString;
-        aPreviewRaw.innerHTML = rawTabData.aString;
-        ePreviewRaw.innerHTML = rawTabData.eString;
 
         return returnTab;
     };
@@ -597,6 +567,58 @@ class Create {
 
             doc.save(this.tabTitle);
         });
+    };
+
+    private tutorial = () => {
+        if (this.tabTitle === "Tutorial") {
+            const newLineButton: HTMLButtonElement = document.getElementById("add-line-button") as HTMLButtonElement;
+            setTimeout(() => {
+                if (confirm("Stoked you're getting started on your first tab! Let's do a quick walk through so we can get the ropes. Let's get started by adding a new line!")) {
+                    setTimeout(() => {
+                        newLineButton.style.backgroundColor = "#23FE69";
+        
+                        setTimeout(() => {
+                            newLineButton.style.backgroundColor = "white";
+                        }, 1500);
+                    }, 0);
+
+                    newLineButton.addEventListener("click", () => {
+                        setTimeout(() => {
+                            if (confirm("Awesome! Now let's change a fret. Select any of the tab cells and update the fret!")) {
+                                setTimeout(() => {
+                                    const tabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell") as HTMLCollectionOf<HTMLDivElement>;
+                                    const changeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-container") as HTMLCollectionOf<HTMLDivElement>;
+
+                                    for (let i: number = 0; i < tabCells.length; i++) {
+                                        setTimeout(() => {
+                                            tabCells[i].style.backgroundColor = "#23FE69";
+                            
+                                            // TODO YOU NEED TO UPDATE THIS SO IT DOESN'T USE CONFIRMS OR ALERTS.
+                                            setTimeout(() => {
+                                                tabCells[i].style.backgroundColor = "white";
+                                                changeTabCells[0].addEventListener("click", () => {
+                                                        const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
+                                                        setTimeout(() => {
+                                                            saveButton.style.backgroundColor = "#23FE69";
+                                            
+                                                            setTimeout(() => {
+                                                                saveButton.style.backgroundColor = "white";
+                                                                saveButton.addEventListener("click", () => {
+                                                           
+                                                                })
+                                                            }, 2000);
+                                                        }, 0);
+                                                })
+                                            }, 2000);
+                                        }, 0);
+                                    }
+                                }, 500);
+                            };
+                        }, 0);
+                    });
+                }  
+            }, 2000);
+        }
     };
 
     private updateTabCell = (): void => {

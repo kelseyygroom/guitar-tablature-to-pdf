@@ -47,10 +47,11 @@ button {
     border-radius: 5px;
     border-width: 1px;
     white-space: nowrap;
-    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    box-shadow: -6px -6px 14px rgba(211, 104, 223, 0.2),
     -6px -6px 10px rgba(255, 255, 255, .2),
     6px 6px 8px rgba(255, 255, 255, .3),
     6px 6px 10px rgba(0, 0, 0, .05);
+    transition: all .5s;
 }
 
 button i {

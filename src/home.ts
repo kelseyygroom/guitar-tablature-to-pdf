@@ -81,6 +81,20 @@ class Home {
         window.location.href = "/create.html?username=" + this.user.username + "&title=" + title;
     };
 
+    private highlightTutorial = () => {
+        const tutorialBox: HTMLDivElement = document.getElementById("tab-title-Tutorial") as HTMLDivElement;
+
+        if (tutorialBox) {
+            setTimeout(() => {
+                tutorialBox.style.backgroundColor = "#23FE69";
+
+                setTimeout(() => {
+                    tutorialBox.style.backgroundColor = "white";
+                }, 2000);
+            }, 1500);
+        }
+    };
+
     private getUserAccount = async () => {
         const queryString = window.location.search; // For the current page
         const params = new URLSearchParams(queryString);
@@ -94,6 +108,7 @@ class Home {
         this.user = userAccountData;
         this.tabs = userAccountData.tabs
         this.displayTabsList();
+        this.highlightTutorial();
     }
 }
 

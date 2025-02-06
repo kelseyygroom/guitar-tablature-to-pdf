@@ -65,7 +65,9 @@ button {
 
 #failed-login-error {
     display: none;
-    color: chocolate;
+    color: white;
+    margin-top: 1rem;
+    animation: fadeIn 1s;
 }
 
 #logo {

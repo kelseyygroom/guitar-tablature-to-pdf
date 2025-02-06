@@ -14,7 +14,7 @@
       </div>
     </div>
     </div>
-    <div class="flex-column tab-cell-container">
+    <div id="tab-cell-container" class="flex-column tab-cell-container">
       <div class="flex-row tab-cell-row" id="high-e-string"></div>
       <div class="flex-row tab-cell-row" id="b-string"></div>
       <div class="flex-row tab-cell-row" id="g-string"></div>
@@ -30,32 +30,23 @@
         <div class="flex-row tab-cell-row" id="a-string-preview"></div>
         <div class="flex-row tab-cell-row" id="e-string-preview"></div>
       </div>
-      <div class="flex-column tab-preview-container">
-        Preview
-        <div class="flex-row tab-cell-row" id="high-e-string-preview-raw"></div>
-        <div class="flex-row tab-cell-row" id="b-string-preview-raw"></div>
-        <div class="flex-row tab-cell-row" id="g-string-preview-raw"></div>
-        <div class="flex-row tab-cell-row" id="d-string-preview-raw"></div>
-        <div class="flex-row tab-cell-row" id="a-string-preview-raw"></div>
-        <div class="flex-row tab-cell-row" id="e-string-preview-raw"></div>
-      </div>
     </div>
     <div class="button-bottom-container">
+      <button id="export-button">
+        <i style="height: 1rem; width: 1rem;" class="fas fa-file-pdf"></i>
+        Export
+      </button>
       <button id="add-line-button">
         <i style="height: 1rem; width: 1rem;" class="fas fa-plus"></i>
         Line
       </button>
-      <button id="remove-line-button">
-        <i style="height: 1rem; width: 1rem;" class="fas fa-minus"></i>
-        Line
-      </button>
-      <button id="export-button">
-        <i style="height: 1rem; width: 1rem;" class="fas fa-download"></i>
-        Export
-      </button>
       <button class="save-button" id="save-button">
         <i style="height: 1rem; width: 1rem;" class="fas fa-file"></i>
         Save
+      </button>
+      <button id="remove-line-button">
+        <i style="height: 1rem; width: 1rem;" class="fas fa-minus"></i>
+        Line
       </button>
     </div>
     <div id="change-fret-modal" class="flex-row tab-table">
