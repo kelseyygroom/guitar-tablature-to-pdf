@@ -122,12 +122,12 @@ button i {
 }
 
 .tab-cell-container {
-    top: 33vh;
-    width: calc(100vw - 3rem);
+    top: 30vh;
+    width: calc(70vw);
     position: fixed;
     position: fixed;
-    left: 1rem;
-    right: 1rem;
+    left: 15vw;
+    right: 15vw;
     overflow-x: scroll;
     height: fit-content;
     padding: .5rem;
@@ -141,8 +141,14 @@ button i {
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.tab-cell-container::-webkit-scrollbar {
+    display: none;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
 .tab-preview-container {
-    width: calc(100vw - 3rem);
+    width: calc(70vw);
     overflow-x: scroll;
     animation: fadeIn 1s;
     background: rgba(255, 255, 255, 0.2);
@@ -154,7 +160,14 @@ button i {
     padding: .5rem;
     position: fixed;
     top: 3.75rem;
-    left: 1rem;
+    left: 15vw;
+    right: 15vw;
+}
+
+.tab-preview-container::-webkit-scrollbar {
+    display: none;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 .tab-preview-container div {
@@ -276,7 +289,16 @@ select {
 
 @media (max-width: 600px) and (orientation:portrait) {
     .tab-cell-container {
-        top: 27.5vh;
+        top: 14.25rem;
+        width: calc(100vw - 3rem);
+        left: 1rem;
+        right: 1rem;
+    }
+
+    .tab-preview-container {
+        width: calc(100vw - 3rem);
+        left: 1rem;
+        right: 1rem;
     }
     
     #change-fret-modal {
