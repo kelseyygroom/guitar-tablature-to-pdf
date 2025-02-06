@@ -661,19 +661,9 @@ class Create {
                     const newFret: string = changeFretInput.value;
                     tabCell.innerHTML = newFret;
                     currentNoteDisplay.innerHTML = newFret;
-                    if (tabCell.innerHTML !== "-") {
-                        // tabCell.style.backgroundColor = "#1D1D1F";
-                    }
                 };
 
-                this.formatTabForPDFExport({
-                    highEString: this.highEString.join(""),
-                    bString: this.bString.join(""),
-                    gString: this.gString.join(""),
-                    dString: this.dString.join(""),
-                    aString: this.aString.join(""),
-                    eString: this.eString.join("")
-                });
+                this.formatTabForPDFExport(this.translateTabCellsToData());
             });
         }
     };
