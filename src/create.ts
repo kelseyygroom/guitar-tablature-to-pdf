@@ -89,7 +89,7 @@ class Create {
         usernameLabel.innerHTML = this.user.username + "<img id='home-button' style='margin-right: 0px; width: 2rem;' src='" + logo + "'></img>";
         this.exit();
         this.buildTabCellRows();
-        
+
         if (tab && tab.tabData) {
             this.formatTabForPDFExport(tab.tabData);
         }
@@ -667,13 +667,13 @@ class Create {
                 };
 
                 this.formatTabForPDFExport({
-                    highEString: this.highEString,
-                    bString: this.bString,
-                    gString: this.gString,
-                    dString: this.dString,
-                    aString: this.aString,
-                    eString: this.eString
-                })
+                    highEString: this.highEString.join(""),
+                    bString: this.bString.join(""),
+                    gString: this.gString.join(""),
+                    dString: this.dString.join(""),
+                    aString: this.aString.join(""),
+                    eString: this.eString.join("")
+                });
             });
         }
     };
