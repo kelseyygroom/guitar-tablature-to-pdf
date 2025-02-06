@@ -387,14 +387,29 @@ class Create {
             eString: tempTab.eString
         }
 
+        // Use the index of the last number to determine the length of the pdf doc.
+        let indexOfLastNumber = 0;
+
         // Second loop.
         for (let i: number = 0; i < tempTab.highEString.length; i++) {
-            const highE = tempTab.highEString[i];
-            const b = tempTab.bString[i];
-            const g = tempTab.gString[i];
-            const d = tempTab.dString[i];
-            const a = tempTab.aString[i];
-            const e = tempTab.eString[i];
+            const highE = tempTab.highEString[i] || "-";
+            const b = tempTab.bString[i] || "-";
+            const g = tempTab.gString[i] || "-";
+            const d = tempTab.dString[i] || "-";
+            const a = tempTab.aString[i] || "-";
+            const e = tempTab.eString[i] || "-";
+
+            if (
+                highE !== "-" ||
+                b !== "-" ||
+                g !== "-" ||
+                d !== "-" ||
+                a !== "-" ||
+                e !== "-"
+            ) {
+                console.log(i, highE, b, g, d, a ,e)
+                indexOfLastNumber = i;
+            }
 
             // High E
             if (
@@ -507,14 +522,14 @@ class Create {
                 }
             }
         }
-        
+
         const returnTab: any = {
-            highEString: tempTab.highEString.join(""),
-            bString: tempTab.bString.join(""),
-            gString: tempTab.gString.join(""),
-            dString: tempTab.dString.join(""),
-            aString: tempTab.aString.join(""),
-            eString: tempTab.eString.join("")
+            highEString: tempTab.highEString.slice(0, indexOfLastNumber + 4).join(""),
+            bString: tempTab.bString.slice(0, indexOfLastNumber + 4).join(""),
+            gString: tempTab.gString.slice(0, indexOfLastNumber + 4).join(""),
+            dString: tempTab.dString.slice(0, indexOfLastNumber + 4).join(""),
+            aString: tempTab.aString.slice(0, indexOfLastNumber + 4).join(""),
+            eString: tempTab.eString.slice(0, indexOfLastNumber + 4).join("")
         }
 
         // Display the Preview Tab.
@@ -862,7 +877,7 @@ class Create {
         tabCell.classList.add("tab-cell")
 
         if (tabCell.innerHTML === "-") {
-            tabCell.style.opacity = ".6";
+            tabCell.style.opacity = ".7";
         }
 
         tabCell.addEventListener("click", () => {

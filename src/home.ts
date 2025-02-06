@@ -33,7 +33,7 @@ class Home {
             const listItem = document.createElement("li");
             listItem.id = "tab-title-" + tab.tabTitle;
             listItem.className = "list-item"
-            listItem.innerHTML = '<i style="color: black; height: 1rem; width: 1rem; margin-right: 1rem;" class="fa-solid fa-guitar"></i>' + tab.tabTitle;
+            listItem.innerHTML = '<i style="height: 1rem; width: 1rem; margin-right: 1rem;" class="fa-solid fa-guitar"></i>' + tab.tabTitle;
             listItem.onclick = () => {
                 this.openCreatePage(tab.tabTitle);
             }
@@ -95,7 +95,7 @@ class Home {
                 tutorialBox.style.backgroundColor = "#23FE69";
 
                 setTimeout(() => {
-                    tutorialBox.style.backgroundColor = "white";
+                    tutorialBox.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
                 }, 2000);
             }, 1500);
         }
