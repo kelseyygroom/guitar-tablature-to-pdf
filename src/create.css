@@ -122,7 +122,7 @@ button i {
 }
 
 .tab-cell-container {
-    top: 30vh;
+    top: 33vh;
     width: calc(100vw - 3rem);
     position: fixed;
     position: fixed;
@@ -276,7 +276,7 @@ select {
 
 @media (max-width: 600px) and (orientation:portrait) {
     .tab-cell-container {
-        top: 25vh;
+        top: 27.5vh;
     }
     
     #change-fret-modal {

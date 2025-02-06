@@ -89,6 +89,10 @@ class Create {
         usernameLabel.innerHTML = this.user.username + "<img id='home-button' style='margin-right: 0px; width: 2rem;' src='" + logo + "'></img>";
         this.exit();
         this.buildTabCellRows();
+        
+        if (tab && tab.tabData) {
+            this.formatTabForPDFExport(tab.tabData);
+        }
     };
 
     private addLine = (): void => {
