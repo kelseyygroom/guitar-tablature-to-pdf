@@ -1,6 +1,7 @@
 import logo from "./images/logo.svg"
 import './create.css';
 import jsPDF from "jspdf";
+import emblem from './images/emblem.svg'
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 // const url = "http://localhost:5000/";
 
@@ -28,6 +29,11 @@ class Create {
     }
 
     public init = (): void => {
+        const body: HTMLBodyElement = document.querySelector("body") as HTMLBodyElement;
+        body.style.background = "url(" + emblem + ")";
+        body.style.backgroundRepeat = "no-repeat";
+        body.style.backgroundPosition = "center";
+        body.style.height = "100vh";
         this.getUserAccount();
         this.export();
         this.updateTabCell();
