@@ -201,7 +201,6 @@ class Create {
 
     // Format the tab & handle double digit tab cells.
     private formatTabForPDFExport = (rawTabData: any) => {
-        console.log("raw", rawTabData)
         const longestString = this.findLongestString(rawTabData);
         const formattedTab: any = {
             highEString: [],
@@ -211,6 +210,43 @@ class Create {
             aString: [],
             eString: []
         };
+
+        const highERawLength = rawTabData.highEString.split("");
+        const bRawLength = rawTabData.bString.split("");
+        const gRawLength = rawTabData.gString.split("");
+        const dRawLength = rawTabData.dString.split("");
+        const aRawLength = rawTabData.aString.split("");
+        const eRawLength = rawTabData.eString.split("");
+        const maxRawLength = Math.max(highERawLength.length, bRawLength.length, gRawLength.length, dRawLength.length, aRawLength.length, eRawLength.length)
+
+        for (let i: number = 0; i < maxRawLength; i++) {
+            if (rawTabData.highEString[i] === undefined) {
+                rawTabData.highEString += "-";
+            }
+
+            if (rawTabData.bString[i] === undefined) {
+                rawTabData.bString += "-";
+            }
+
+            if (rawTabData.gString[i] === undefined) {
+                rawTabData.gString += "-";
+            }
+
+            if (rawTabData.dString[i] === undefined) {
+                rawTabData.dString += "-";
+            }
+
+            if (rawTabData.aString[i] === undefined) {
+                rawTabData.aString += "-";
+            }
+
+            if (rawTabData.eString[i] === undefined) {
+                rawTabData.eString += "-";
+            }
+        };
+
+        console.log("raw", rawTabData)
+        console.log("formatted", formattedTab)
 
         for (let i: number = 0; i < longestString; i++) {
             const highE = rawTabData.highEString[i];
@@ -234,66 +270,60 @@ class Create {
 
             // High E
             if (
-                highE !== "}" &&
                 highE !== "{"
             ) {
                 formattedTab.highEString.push(highE);
-                if (prevHighE !== "{" && nextHighE !== "}") {
+                if (prevHighE !== "{" && nextHighE !== "}" && highE !== "}") {
                     formattedTab.highEString.push("-");
                 }
             }
 
             // B
             if (
-                b !== "}" &&
                 b !== "{"
             ) {
                 formattedTab.bString.push(b);
-                if (prevB !== "{" && nextB !== "}") {
+                if (prevB !== "{" && nextB !== "}" && b !== "}") {
                     formattedTab.bString.push("-");
                 }
             }
 
             // G
             if (
-                g !== "}" &&
                 g !== "{"
             ) {
                 formattedTab.gString.push(g);
-                if (prevG !== "{" && nextG !== "}") {
+                if (prevG !== "{" && nextG !== "}" && g !== "}") {
                     formattedTab.gString.push("-");
                 }
             }
 
             // D
             if (
-                d !== "}" &&
                 d !== "{"
             ) {
                 formattedTab.dString.push(d);
-                if (prevD !== "{" && nextD !== "}") {
+                if (prevD !== "{" && nextD !== "}" && d !== "}") {
                     formattedTab.dString.push("-");
                 }
             }
 
             // A
             if (
-                a !== "}" &&
                 a !== "{"
             ) {
                 formattedTab.aString.push(a);
-                if (prevA !== "{" && nextA !== "}") {
+                if (prevA !== "{" && nextA !== "}" && a !== "}") {
                     formattedTab.aString.push("-");
                 }
             }
 
             // E
             if (
-                e !== "}" &&
                 e !== "{"
             ) {
                 formattedTab.eString.push(e);
-                if (prevE !== "{" && nextE !== "}") {
+                if (prevE !== "{" && nextE !== "}" && e !== "}") {
                     formattedTab.eString.push("-");
                 }
             }
@@ -307,7 +337,7 @@ class Create {
         const eLength = formattedTab.eString.join("").split("");
         const maxLength = Math.max(highELength.length, bLength.length, gLength.length, dLength.length, aLength.length, eLength.length)
 
-        const tempTab = {
+        let tempTab = {
             highEString: [] as string[],
             bString: [] as string[],
             gString: [] as string[],
@@ -325,7 +355,170 @@ class Create {
             tempTab.eString.push(formattedTab.eString[i] || "-")
         };
 
-        const returnTab = {
+        tempTab = {
+            highEString: tempTab.highEString,
+            bString: tempTab.bString,
+            gString: tempTab.gString,
+            dString: tempTab.dString,
+            aString: tempTab.aString,
+            eString: tempTab.eString
+        }
+
+        console.log("temp", tempTab)
+
+        for (let i: number = 0; i < tempTab.highEString.length; i++) {
+            const highE = tempTab.highEString[i];
+            const b = tempTab.bString[i];
+            const g = tempTab.gString[i];
+            const d = tempTab.dString[i];
+            const a = tempTab.aString[i];
+            const e = tempTab.eString[i];
+
+            // High E
+            if (
+                highE === "}"
+            ) {
+                tempTab.highEString[i] = "-"
+                // tempTab.bString.splice(i, 0, "-");
+                // tempTab.gString.splice(i, 0, "-");
+                // tempTab.dString.splice(i, 0, "-");
+                // tempTab.aString.splice(i, 0, "-");
+                // tempTab.eString.splice(i, 0, "-");
+            }
+
+            // B
+            if (
+                b === "}"
+            ) {
+                tempTab.bString[i] = "-"
+                // tempTab.highEString.splice(i, 0, "-");
+                // tempTab.gString.splice(i, 0, "-");
+                // tempTab.dString.splice(i, 0, "-");
+                // tempTab.aString.splice(i, 0, "-");
+                // tempTab.eString.splice(i, 0, "-");
+            }
+
+            // G
+            if (
+                g === "}"
+            ) {
+                tempTab.gString[i] = "-"
+                // tempTab.highEString.splice(i, 0, "-");
+                // tempTab.bString.splice(i, 0, "-");
+                // tempTab.dString.splice(i, 0, "-");
+                // tempTab.aString.splice(i, 0, "-");
+                // tempTab.eString.splice(i, 0, "-");
+            }
+
+            // D
+            if (
+                d === "}"
+            ) {
+                tempTab.dString[i] = "-"
+                // tempTab.highEString.splice(i, 0, "-");
+                // tempTab.bString.splice(i, 0, "-");
+                // tempTab.gString.splice(i, 0, "-");
+                // tempTab.aString.splice(i, 0, "-");
+                // tempTab.eString.splice(i, 0, "-");
+            }
+
+            // A
+            if (
+                a === "}"
+            ) {
+                tempTab.aString[i] = "-"
+                // tempTab.highEString.splice(i, 0, "-");
+                // tempTab.bString.splice(i, 0, "-");
+                // tempTab.gString.splice(i, 0, "-");
+                // tempTab.dString.splice(i, 0, "-");
+                // tempTab.eString.splice(i, 0, "-");
+            }
+
+            // E
+            if (
+                e === "}"
+            ) {
+                tempTab.eString[i] = "-"
+                // tempTab.highEString.splice(i, 0, "-");
+                // tempTab.bString.splice(i, 0, "-");
+                // tempTab.gString.splice(i, 0, "-");
+                // tempTab.dString.splice(i, 0, "-");
+                // tempTab.aString.splice(i, 0, "-");
+            }
+
+            if (
+                highE === "}" ||
+                b  === "}" ||
+                g  === "}" ||
+                d  === "}" ||
+                a  === "}" ||
+                e === "}"
+            ) {
+                // High E
+                if (
+                    highE === "}"
+                ) {
+                    tempTab.highEString[i] = "-"
+                }
+                else {
+                    tempTab.highEString.splice(i, 0, "-");
+                }
+
+                // B
+                if (
+                    b === "}"
+                ) {
+                    tempTab.bString[i] = "-"
+                }
+                else {
+                    tempTab.bString.splice(i, 0, "-");
+                }
+
+                // G
+                if (
+                    g === "}"
+                ) {
+                    tempTab.gString[i] = "-"
+                }
+                else {
+                    tempTab.gString.splice(i, 0, "-");
+                }
+
+                // D
+                if (
+                    d === "}"
+                ) {
+                    tempTab.dString[i] = "-"
+                }
+                else {
+                    tempTab.dString.splice(i, 0, "-");
+                }
+
+                // A
+                if (
+                    a === "}"
+                ) {
+                    tempTab.aString[i] = "-"
+                }
+                else {
+                    tempTab.aString.splice(i, 0, "-");
+                }
+
+                // E
+                if (
+                    e === "}"
+                ) {
+                    tempTab.eString[i] = "-"
+                }
+                else {
+                    tempTab.eString.splice(i, 0, "-");
+                }
+                }
+        }
+        
+        console.log("temp", tempTab)
+
+        const returnTab: any = {
             highEString: tempTab.highEString.join(""),
             bString: tempTab.bString.join(""),
             gString: tempTab.gString.join(""),
@@ -334,6 +527,7 @@ class Create {
             eString: tempTab.eString.join("")
         }
 
+        // Display the Preview Tab.
         const highEPreview: HTMLDivElement = document.getElementById("high-e-string-preview") as HTMLDivElement;
         const bPreview: HTMLDivElement = document.getElementById("b-string-preview") as HTMLDivElement;
         const gPreview: HTMLDivElement = document.getElementById("g-string-preview") as HTMLDivElement;
@@ -341,13 +535,26 @@ class Create {
         const aPreview: HTMLDivElement = document.getElementById("a-string-preview") as HTMLDivElement;
         const ePreview: HTMLDivElement = document.getElementById("e-string-preview") as HTMLDivElement;
 
-        console.log("made it", returnTab, highEPreview)
         highEPreview.innerHTML = returnTab.highEString;
         bPreview.innerHTML = returnTab.bString;
         gPreview.innerHTML = returnTab.gString;
         dPreview.innerHTML = returnTab.dString;
         aPreview.innerHTML = returnTab.aString;
         ePreview.innerHTML = returnTab.eString;
+
+        const highEPreviewRaw: HTMLDivElement = document.getElementById("high-e-string-preview-raw") as HTMLDivElement;
+        const bPreviewRaw: HTMLDivElement = document.getElementById("b-string-preview-raw") as HTMLDivElement;
+        const gPreviewRaw: HTMLDivElement = document.getElementById("g-string-preview-raw") as HTMLDivElement;
+        const dPreviewRaw: HTMLDivElement = document.getElementById("d-string-preview-raw") as HTMLDivElement;
+        const aPreviewRaw: HTMLDivElement = document.getElementById("a-string-preview-raw") as HTMLDivElement;
+        const ePreviewRaw: HTMLDivElement = document.getElementById("e-string-preview-raw") as HTMLDivElement;
+
+        highEPreviewRaw.innerHTML = rawTabData.highEString;
+        bPreviewRaw.innerHTML = rawTabData.bString;
+        gPreviewRaw.innerHTML = rawTabData.gString;
+        dPreviewRaw.innerHTML = rawTabData.dString;
+        aPreviewRaw.innerHTML = rawTabData.aString;
+        ePreviewRaw.innerHTML = rawTabData.eString;
 
         return returnTab;
     };
