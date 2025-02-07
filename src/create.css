@@ -133,7 +133,7 @@ button i {
     padding: .5rem;
     animation: fadeIn 1s;
     /* From https://css.glass */
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(43, 43, 43, 0.2);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
@@ -151,7 +151,7 @@ button i {
     width: calc(70vw);
     overflow-x: scroll;
     animation: fadeIn 1s;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(43, 43, 43, 0.2);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
@@ -162,6 +162,7 @@ button i {
     top: 3.75rem;
     left: 15vw;
     right: 15vw;
+    color: white;
 }
 
 .tab-preview-container::-webkit-scrollbar {
@@ -176,6 +177,7 @@ button i {
     white-space: nowrap;
     font-size: 1rem;
     min-height: 0px;
+    color: white;
 }
 
 .button-bottom-container {
@@ -186,10 +188,11 @@ button i {
     width: 100vw;
     position: fixed;
     bottom: 0px;
+    top: auto;
     right: 0px;
     animation: fadeIn 1s;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
+    background: rgba(43, 43, 43, 0.2);
+    border-radius: 0px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -238,8 +241,8 @@ select {
 #username-label {
     color: inherit;
     position: fixed;
-    right: 0px;
-    top: 4px;
+    right: .5rem;
+    top: 5px;
     margin: .25rem;
     display: flex;
     justify-content: center;
@@ -318,6 +321,9 @@ select {
         margin: 1rem;
         left: 0rem;
         width: auto;
+        top: 26.75rem;
+        border-radius: 16px;
+        bottom: auto;
     }
 
     .button-bottom-container div {

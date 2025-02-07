@@ -63,12 +63,12 @@ app.post('/createAccount', async (req, res) => {
     try {
         const db = await connectToDatabase();
         const accountInfo = await db.collection('userAccount').insertOne({ username, password, email, tabs: [{ tabTitle: "Tutorial", tabData: {
-            highEString: "-",
-            bString: "-",
-            gString: "-",
-            dString: "-",
-            aString: "-",
-            eString: "-"
+            highEString: "-----",
+            bString: "-----",
+            gString: "-----",
+            dString: "-----",
+            aString: "-----",
+            eString: "-----"
         } }] });
 
         if (accountInfo) {
@@ -121,6 +121,34 @@ app.post('/saveTab', async (req, res) => {
             res.json(false);
         }
 
+    } catch (error) {
+        console.error('Error:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.post('/deleteTab', async (req, res) => {
+    const username = req.body.username;
+    const tabTitle = req.body.title;
+
+    try {
+        const db = await connectToDatabase();
+        const deleteTab = await db.collection('userAccount').updateOne(
+            {
+                username, // Match the user by username
+                'tabs.tabTitle': tabTitle // Check if a tab with the same title exists
+            },
+            { 
+                $pull: { tabs: { tabTitle: tabTitle } } 
+            }
+        );
+
+        if (deleteTab) {
+            res.json(true);
+        }
+        else {
+            res.json(false);
+        }
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });

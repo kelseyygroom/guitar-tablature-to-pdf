@@ -1,5 +1,4 @@
 import "./home.css"
-import logo from "./images/logo.svg"
 import emblem from './images/emblem.svg'
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 // const url = "http://localhost:5000/";
@@ -24,19 +23,38 @@ class Home {
         this.createNewTab();
     };
 
+    private addDeleteButtonListeners = () => {
+        const deleteButtons: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("delete-icon") as HTMLCollectionOf<HTMLElement>;
+
+        for (let i: number = 0; i < deleteButtons.length; i++) {
+            const deleteButton: HTMLElement = deleteButtons[i] as HTMLElement;
+
+            deleteButton.addEventListener("click", (event: any) => {
+                this.deleteTab(deleteButton);
+            });
+        }
+    };
+
     private displayTabsList = () => {
         const tabListContainer: HTMLDivElement = document.getElementById("tab-list-container") as HTMLDivElement;
         const loadingIcon: HTMLElement = document.getElementById("loading-icon") as HTMLElement;
 
         loadingIcon.style.display = "none";
+
         this.tabs.forEach(tab => {
             const listItem = document.createElement("li");
+
+            // Create the tab title list item.
             listItem.id = "tab-title-" + tab.tabTitle;
-            listItem.className = "list-item"
-            listItem.innerHTML = '<i style="height: 1rem; width: 1rem; margin-right: 1rem;" class="fa-solid fa-guitar"></i>' + tab.tabTitle;
-            listItem.onclick = () => {
+            listItem.className = "list-item";
+            listItem.innerHTML = '<i style="position: absolute; height: 1rem; width: 1rem; left: 1rem;" class="fa-solid fa-guitar"></i><p>' + tab.tabTitle + '</p><i id="' + tab.tabTitle + '-icon" style="position: absolute; height: 1rem; width: 1rem; right: 1rem;" class="delete-icon fas fa-trash-can"></i>';
+
+            // Open the create page when the Tab title is selected.
+            const openCreatePageButton = listItem.children[1] as HTMLElement;
+            openCreatePageButton.onclick = () => {
                 this.openCreatePage(tab.tabTitle);
             }
+
             tabListContainer.append(listItem);
         })
     };
@@ -44,7 +62,6 @@ class Home {
     private checkIfTabExists = (title: string) => {
         if (this.user.tabs.length > 1) {
             this.user.tabs.forEach((tab: any) => {
-                console.log(tab)
                 if (tab.tabTitle === title) {
                     tab
                 }
@@ -95,7 +112,7 @@ class Home {
                 tutorialBox.style.backgroundColor = "#23FE69";
 
                 setTimeout(() => {
-                    tutorialBox.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+                    tutorialBox.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
                 }, 2000);
             }, 1500);
         }
@@ -110,12 +127,33 @@ class Home {
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
 
         // Set user account image and name.
-        userAccountLabel.innerHTML = userAccountData.username + "'s Tabs" + "<i class='fas fa-bars'></i>";
+        userAccountLabel.innerHTML = userAccountData.username + "'s Tabs";
+        // Include this icon when you create the menu.
+        //  + "<i class='fas fa-bars'></i>";
         this.user = userAccountData;
         this.tabs = userAccountData.tabs
         this.displayTabsList();
         this.highlightTutorial();
+        this.addDeleteButtonListeners();
     }
+
+    // Delete the tab based on the list-item delete-icon that was clicked.
+    private deleteTab = async (deleteTabButton: HTMLElement) => {
+        const tabTitle: string = deleteTabButton.id.split("-")[0];
+        console.log("tabtitle", tabTitle)
+        const response = await fetch(url + "deleteTab", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: this.user.username, title: tabTitle })
+        })
+
+        if (response) {
+            const listItem: HTMLDataListElement = document.getElementById("tab-title-" + tabTitle) as HTMLDataListElement;
+            listItem.style.display = "none";
+        }
+    };
 }
 
 const home: Home = new Home();

@@ -34,6 +34,10 @@ class Create {
         body.style.backgroundRepeat = "no-repeat";
         body.style.backgroundPosition = "center";
         body.style.height = "100vh";
+        const tabCellContainer: HTMLDivElement = document.getElementById("tab-cell-container") as HTMLDivElement;
+        const tabPreviewContainer: HTMLDivElement = document.getElementById("tab-preview-container") as HTMLDivElement;
+        tabCellContainer.addEventListener("scroll", () => this.syncScroll(tabCellContainer, tabPreviewContainer));
+        tabPreviewContainer.addEventListener("scroll", () => this.syncScroll(tabCellContainer, tabPreviewContainer));
         this.getUserAccount();
         this.export();
         this.updateTabCell();
@@ -86,7 +90,9 @@ class Create {
         }
 
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
-        usernameLabel.innerHTML = this.tabTitle + "<i style='padding-top: .2rem;' class='fas fa-bars'></i>";
+        usernameLabel.innerHTML = this.tabTitle 
+        // Include this when you create the menu.
+        // + "<i style='padding-top: .2rem;' class='fas fa-bars'></i>";
         this.exit();
         this.buildTabCellRows();
 
@@ -411,7 +417,6 @@ class Create {
                 a !== "-" ||
                 e !== "-"
             ) {
-                console.log(i, highE, b, g, d, a ,e)
                 indexOfLastNumber = i;
             }
 
@@ -596,6 +601,11 @@ class Create {
             doc.save(this.tabTitle);
         });
     };
+
+    private syncScroll = (source: any, target: any) => {
+        console.log(source.scrollLeft, target.scrollLeft)
+        target.scrollLeft = source.scrollLeft;
+    }
 
     private tutorial = () => {
         if (this.tabTitle === "Tutorial") {
