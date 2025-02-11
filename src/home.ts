@@ -23,6 +23,16 @@ class Home {
         this.createNewTab();
     };
 
+    private openPopUpModal = (htmlString: string, callback: Function) => {
+        const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex"
+        popupModalOverlay.style.display = "flex"
+        callback();
+    };
+
     private addDeleteButtonListeners = () => {
         const deleteButtons: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("delete-icon") as HTMLCollectionOf<HTMLElement>;
 
@@ -60,44 +70,73 @@ class Home {
     };
 
     private checkIfTabExists = (title: string) => {
+        let tabExists = false;
+
         if (this.user.tabs.length > 1) {
             this.user.tabs.forEach((tab: any) => {
                 if (tab.tabTitle === title) {
-                    tab
+                    tabExists = true;
                 }
             })
         }
+
+        return tabExists;
     };
 
     private createNewTab = () => {
         const createNewTabButton: HTMLButtonElement = document.getElementById('create-tab-button') as HTMLButtonElement;
 
         createNewTabButton.addEventListener("click", () => {
-            const title: string | null = prompt("Enter Title", "");
+            const createLabel: HTMLInputElement = document.createElement("h4") as HTMLInputElement;
+            const createErrorLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+            const createInput: HTMLInputElement = document.createElement("input") as HTMLInputElement;
+            const createButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+            createErrorLabel.innerHTML = "This Title is already taken.";
+            createErrorLabel.id = "create-error-label";
+            createButton.innerHTML = "Create";
+            createButton.id = "create-button";
+            createLabel.innerHTML = "What would you like to name your tab?";
+            createLabel.id = "create-label";
+            createInput.id = "create-new-tab-input";
+            createInput.placeholder = "Title";
+            const callback = () => {
+                const createButton: HTMLButtonElement = document.getElementById("create-button") as HTMLButtonElement;
 
-            if (title) {
-                this.checkIfTabExists(title)
-                fetch(url + "saveTab", {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        username: this.user.username,
-                        tabData: {
-                            highEString: "-----",
-                            bString: "-----",
-                            gString: "-----",
-                            dString: "-----",
-                            aString: "-----",
-                            eString: "-----"
-                        }, 
-                        title,
-                    })
+                createButton.addEventListener("click", () => {
+                    const createInput: HTMLInputElement = document.getElementById("create-new-tab-input") as HTMLInputElement;
+                    const title = createInput.value;
+
+                    if (title.length > 1) {
+                        if (this.checkIfTabExists(title)) {
+                            const createErrorLabel: HTMLLabelElement = document.getElementById("create-error-label") as HTMLLabelElement;
+                            createErrorLabel.style.display = "flex";
+                            return
+                        }
+
+                        fetch(url + "saveTab", {
+                            method: 'POST',
+                            headers: {
+                            'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ 
+                                username: this.user.username,
+                                tabData: {
+                                    highEString: "-----",
+                                    bString: "-----",
+                                    gString: "-----",
+                                    dString: "-----",
+                                    aString: "-----",
+                                    eString: "-----"
+                                }, 
+                                title,
+                            })
+                        });
+                        window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
+                    };
                 });
-                window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
-            }
-        })
+            };
+            this.openPopUpModal(createLabel.outerHTML + createInput.outerHTML + createErrorLabel.outerHTML + createButton.outerHTML, callback);
+        });
     };
 
     private openCreatePage = (title: string) => {
