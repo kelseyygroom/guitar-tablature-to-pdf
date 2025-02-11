@@ -131,6 +131,7 @@ class Create {
             this.eString = tabData.eString.split("");
             this.eString.push("-");
             this.buildTabCellRows();
+            this.formatTabForPDFExport(this.translateTabCellsToData());
         });
     }
 
@@ -164,6 +165,7 @@ class Create {
             this.eString = tabData.eString.split("");
             this.eString.pop();
             this.buildTabCellRows();
+            this.formatTabForPDFExport(this.translateTabCellsToData());
         });
     }
 
@@ -565,12 +567,12 @@ class Create {
         const aPreview: HTMLDivElement = document.getElementById("a-string-preview") as HTMLDivElement;
         const ePreview: HTMLDivElement = document.getElementById("e-string-preview") as HTMLDivElement;
 
-        highEPreview.innerHTML = returnTab.highEString;
-        bPreview.innerHTML = returnTab.bString;
-        gPreview.innerHTML = returnTab.gString;
-        dPreview.innerHTML = returnTab.dString;
-        aPreview.innerHTML = returnTab.aString;
-        ePreview.innerHTML = returnTab.eString;
+        highEPreview.innerHTML = tempTab.highEString.join("");
+        bPreview.innerHTML = tempTab.bString.join("");
+        gPreview.innerHTML = tempTab.gString.join("");
+        dPreview.innerHTML = tempTab.dString.join("");
+        aPreview.innerHTML = tempTab.aString.join("");
+        ePreview.innerHTML = tempTab.eString.join("");
 
         return returnTab;
     };
@@ -993,27 +995,8 @@ class Create {
 
     private listenForModalClose = () => {
         const changeFretModal: HTMLDivElement = document.getElementById("change-fret-modal") as HTMLDivElement;
-        const changeFretModalIcon: HTMLDivElement = document.getElementById("exit-change-fret-modal-icon") as HTMLDivElement;
 
         if (this.tabTitle === "Tutorial") {
-            changeFretModalIcon.addEventListener("click", (event) => {
-                const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
-                for (let i: number = 0; i < activeTabCells.length; i++) {
-                    if (activeTabCells[i].innerHTML !== "-") {
-                        activeTabCells[i].style.opacity = "1";
-                    }
-    
-                    activeTabCells[i].classList.remove("tab-cell-active")
-                }
-    
-                changeFretModal.style.display = "none";
-                setTimeout(() => {
-                    this.displayFretChangeModal = false;
-                }, 500);
-
-                this.initSaveTutorialFlow();
-            });
-    
             window.addEventListener("click", (event) => {
                 const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
     
@@ -1038,22 +1021,6 @@ class Create {
             });
         }
         else {
-            changeFretModalIcon.addEventListener("click", (event) => {
-                const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
-                for (let i: number = 0; i < activeTabCells.length; i++) {
-                    if (activeTabCells[i].innerHTML !== "-") {
-                        activeTabCells[i].style.opacity = "1";
-                    }
-    
-                    activeTabCells[i].classList.remove("tab-cell-active")
-                }
-    
-                changeFretModal.style.display = "none";
-                setTimeout(() => {
-                    this.displayFretChangeModal = false;
-                }, 500);
-            });
-    
             window.addEventListener("click", (event) => {
                 const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
     
