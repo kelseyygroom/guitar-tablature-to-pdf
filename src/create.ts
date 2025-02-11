@@ -567,12 +567,54 @@ class Create {
         const aPreview: HTMLDivElement = document.getElementById("a-string-preview") as HTMLDivElement;
         const ePreview: HTMLDivElement = document.getElementById("e-string-preview") as HTMLDivElement;
 
-        highEPreview.innerHTML = tempTab.highEString.join("");
-        bPreview.innerHTML = tempTab.bString.join("");
-        gPreview.innerHTML = tempTab.gString.join("");
-        dPreview.innerHTML = tempTab.dString.join("");
-        aPreview.innerHTML = tempTab.aString.join("");
-        ePreview.innerHTML = tempTab.eString.join("");
+        highEPreview.innerHTML = tempTab.highEString.slice(0, Math.min(
+            tempTab.highEString.length, 
+            tempTab.bString.length, 
+            tempTab.gString.length,
+            tempTab.dString.length,
+            tempTab.aString.length,
+            tempTab.eString.length
+        )).join("");
+        bPreview.innerHTML = tempTab.bString.slice(0, Math.min(
+            tempTab.highEString.length, 
+            tempTab.bString.length, 
+            tempTab.gString.length,
+            tempTab.dString.length,
+            tempTab.aString.length,
+            tempTab.eString.length
+        )).join("");
+        gPreview.innerHTML = tempTab.gString.slice(0, Math.min(
+            tempTab.highEString.length, 
+            tempTab.bString.length, 
+            tempTab.gString.length,
+            tempTab.dString.length,
+            tempTab.aString.length,
+            tempTab.eString.length
+        )).join("");
+        dPreview.innerHTML = tempTab.dString.slice(0, Math.min(
+            tempTab.highEString.length, 
+            tempTab.bString.length, 
+            tempTab.gString.length,
+            tempTab.dString.length,
+            tempTab.aString.length,
+            tempTab.eString.length
+        )).join("");
+        aPreview.innerHTML = tempTab.aString.slice(0, Math.min(
+            tempTab.highEString.length, 
+            tempTab.bString.length, 
+            tempTab.gString.length,
+            tempTab.dString.length,
+            tempTab.aString.length,
+            tempTab.eString.length
+        )).join("");
+        ePreview.innerHTML = tempTab.eString.slice(0, Math.min(
+            tempTab.highEString.length, 
+            tempTab.bString.length, 
+            tempTab.gString.length,
+            tempTab.dString.length,
+            tempTab.aString.length,
+            tempTab.eString.length
+        )).join("");
 
         return returnTab;
     };
