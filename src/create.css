@@ -129,19 +129,12 @@ button i {
     animation: grow-shrink 1.5s infinite ease-in-out;
 }
 
-@keyframes grow-shrink {
-    0%, 100% {
-        background-color: #1D1D1F;
-        transform: scale(1); /* Original size */
-        border-color: #1D1D1F;
-        color: white;
-    }
-    50% {
-        background-color: #0171E2;
-        transform: scale(1.25); /* Grows to 1.5x size */
-        border-color: #F0f8ff;
-        color: white;
-    }
+.tab-cell-active-tutorial {
+    animation: grow-shrink-green 1.5s infinite ease-in-out !important;
+}
+
+.tab-cell-active-tutorial-icon {
+    animation: grow-shrink-green-icon 1.5s infinite ease-in-out !important;
 }
 
 .tab-cell-container {
@@ -292,6 +285,103 @@ select {
     color: #0171E2;
 }
 
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    grid-gap: 10px; /* add 10px gap between rows and columns */
+    width: 90%;
+}
+
+.button-grid button {
+    padding: .25rem;
+    margin: .25rem;
+    height: 100%;
+    width: 100%;
+}
+
+.button-grid button:active {
+    background-color: #0171E2;
+}
+
+#current-note {
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #1D1D1F;
+    background-color: #964FF6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    box-sizing: border-box;
+    padding: .25rem;
+    margin-top: .25rem;
+    margin-left: .25rem;
+    height: 100%;
+    width: 100%;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
+}
+
+.save-button {
+    transition: background-color;
+    transition-duration: .5s;
+}
+
+.save-button i {
+    transition: color;
+    transition-duration: .5s;
+}
+
+@keyframes fadeIn {
+    from {
+      opacity: 0; /* Optional: Start with transparent */
+    }
+    to {
+      opacity: 1; /* Optional: Fully visible */
+    }
+}
+
+@keyframes grow-shrink {
+    0%, 100% {
+        background-color: #1D1D1F;
+        transform: scale(1); /* Original size */
+        border-color: #1D1D1F;
+        color: white;
+    }
+    50% {
+        background-color: #0171E2;
+        transform: scale(1.25); /* Grows to 1.5x size */
+        border-color: #F0f8ff;
+        color: white;
+    }
+}
+
+@keyframes grow-shrink-green {
+    0%, 100% {
+        background-color: white;
+        transform: scale(1); /* Original size */
+        color: #1D1D1F;
+    }
+    50% {
+        background-color: #23FE69;
+        transform: scale(1.05); /* Grows to 1.5x size */
+        border-color: #F0f8ff;
+    }
+}
+
+@keyframes grow-shrink-green-icon {
+    0%, 100% {
+        transform: scale(1); /* Original size */
+        color: #1D1D1F;
+    }
+    50% {
+        color: #23FE69;
+        transform: scale(1.05); /* Grows to 1.5x size */
+    }
+}
+
 @keyframes slideInFromRight {
     from {
       transform: translateX(100%); /* Start off-screen to the right */
@@ -363,60 +453,43 @@ select {
     }
 }
 
-.button-grid {
-    display: grid;
-    grid-template-columns: repeat(6, auto);
-    grid-gap: 10px; /* add 10px gap between rows and columns */
-    width: 90%;
-}
-
-.button-grid button {
-    padding: .25rem;
-    margin: .25rem;
-    height: 100%;
-    width: 100%;
-}
-
-.button-grid button:active {
-    background-color: #0171E2;
-}
-
-#current-note {
-    border-radius: 5px;
-    border-style: solid;
-    border-color: #1D1D1F;
-    background-color: #964FF6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    box-sizing: border-box;
-    padding: .25rem;
-    margin-top: .25rem;
-    margin-left: .25rem;
-    height: 100%;
-    width: 100%;
-    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
-    -6px -6px 10px rgba(255, 255, 255, .2),
-    6px 6px 8px rgba(255, 255, 255, .3),
-    6px 6px 10px rgba(0, 0, 0, .05);
-}
-
-.save-button {
-    transition: background-color;
-    transition-duration: .5s;
-}
-
-.save-button i {
-    transition: color;
-    transition-duration: .5s;
-}
-
-@keyframes fadeIn {
-    from {
-      opacity: 0; /* Optional: Start with transparent */
+@media (orientation:landscape) {
+    .tab-cell-container {
+        top: 18vh;
+        width: calc(46vw);
+        position: fixed;
+        position: fixed;
+        left: 2vw;
+        right: 48vw;
+        overflow-x: scroll;
+        height: fit-content;
+        padding: .5rem;
+        animation: fadeIn 1s;
+        /* From https://css.glass */
+        background: rgba(43, 43, 43, 0.2);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
-    to {
-      opacity: 1; /* Optional: Fully visible */
+
+    .tab-preview-container {
+        top: 18vh;
+        width: calc(44vw);
+        position: fixed;
+        left: 52vw;
+        right: 2vw;
+        overflow-x: scroll;
+        height: fit-content;
+        padding: .5rem;
+        animation: fadeIn 1s;
+        /* From https://css.glass */
+        background: rgba(43, 43, 43, 0.2);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 }

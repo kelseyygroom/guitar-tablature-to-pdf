@@ -171,6 +171,22 @@ class Create {
         const saveTabButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
 
         saveTabButton.addEventListener("click", async () => {
+            if (this.tabTitle === "Tutorial") {
+                saveTabButton.style.backgroundColor = "#964FF6";
+                saveTabButton.classList.add("save-button-acitve");
+                saveTabButton.innerHTML = '<i style="color: white; height: 1rem; width: 1rem;" class="fas fa-file"></i>Saved!';
+                saveTabButton.style.color = "white";
+
+                setTimeout(() => {
+                    saveTabButton.style.color = "black";
+                    saveTabButton.style.backgroundColor = "white";
+                    saveTabButton.innerHTML = '<i style="height: 1rem; width: 1rem;" class="fas fa-file"></i> Save';
+                    const tabData: any = this.translateTabCellsToData();
+                    this.formatTabForPDFExport(tabData)
+                }, 1000);
+                return;
+            }
+            
             const tabData: any = this.translateTabCellsToData();
             const response = await fetch(url + "saveTab", {
                 method: 'POST',
@@ -623,21 +639,19 @@ class Create {
             popupModalOverlay.style.display = "none";
 
             setTimeout(() => {
-                newLineButton.style.backgroundColor = "#23FE69";
-
-                setTimeout(() => {
-                    newLineButton.style.backgroundColor = "white";
-                }, 1500);
+                newLineButton.classList.add("tab-cell-active-tutorial");
             }, 500);
         })
     };
 
     private openNewLinePopupModal = (htmlString: string) => {
+        const newLineButton: HTMLButtonElement = document.getElementById("add-line-button") as HTMLButtonElement;
         const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
         const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
         popupModal.innerHTML = htmlString;
         popupModal.style.display = "flex";
         popupModalOverlay.style.display = "flex";
+        newLineButton.classList.remove("tab-cell-active-tutorial");
 
         const confirmNewLineButton: HTMLButtonElement = document.getElementById("new-line-confirm-button") as HTMLButtonElement;
         confirmNewLineButton.addEventListener("click", () => {
@@ -652,12 +666,81 @@ class Create {
     };
 
     // Tutorial Welcome.
+    private initSaveTutorialFlow = () => {
+        const saveLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const saveButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        saveButton.id = "save-confirm-button";
+        saveButton.innerHTML = "Got it!";
+        saveLabel.innerHTML = "Excellent! Now let's save our tab.";
+        
+        this.openSavePopupModal(saveLabel.outerHTML + saveButton.outerHTML);
+    };
+
+    private openSavePopupModal = (htmlString: string) => {
+        const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
+        const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+        popupModal.innerHTML = htmlString;
+        saveButton.classList.add("tab-cell-active-tutorial");
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+        const confirmSaveButton: HTMLButtonElement = document.getElementById("save-confirm-button") as HTMLButtonElement;
+
+        confirmSaveButton.addEventListener("click", () => {
+            const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+        });
+
+        saveButton.addEventListener("click", () => {
+            // Save Flow -> Export Flow.
+            this.initExportTutorialFlow();
+        });
+    };
+
+    private openExportPopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+        const exportButton: HTMLButtonElement = document.getElementById("export-confirm-button") as HTMLButtonElement;
+
+        exportButton.addEventListener("click", () => {
+            const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+
+            const backIcon: HTMLElement = document.getElementById("back-button") as HTMLElement;
+            backIcon.classList.add("tab-cell-active-tutorial-icon");
+            // Done with tutorial (for now).
+        })
+    };
+
+    // Tutorial Export.
+    private initExportTutorialFlow = () => {
+        const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
+        const exportLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const exportButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        saveButton.classList.remove("tab-cell-active-tutorial");
+        exportButton.id = "export-confirm-button";
+        exportButton.innerHTML = "Got it!";
+        exportLabel.innerHTML = "Excellent! Now that your tab has been saved, you can export it if you'd like! If not, return back to the home page. (Changes to \"Tutorial\" tab will not be recorded).";
+
+        setTimeout(() => {
+            this.openExportPopupModal(exportLabel.outerHTML + exportButton.outerHTML);
+        }, 1500);
+    };
+
+    // Tutorial Welcome.
     private initWelcomeTutorialFlow = () => {
         const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Stoked you're getting started on your first tab! Let's do a quick walk through so we can get the ropes. Let's get started by adding a new line!";
+        welcomeLabel.innerHTML = "Welcome to the tutorial! Let's do a quick walk through so we can get the ropes. Let's get started by adding a new line!";
 
         setTimeout(() => {
             this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -687,29 +770,21 @@ class Create {
 
         for (let i: number = 0; i < tabCellButtons.length; i++) {
             const tabCell: HTMLDivElement = tabCellButtons[i] as HTMLDivElement;
-
-            setTimeout(() => {
-                tabCell.style.backgroundColor = "#23FE69";
-                tabCell.style.borderColor = "#23FE69";
-
-                setTimeout(() => {
-                    tabCell.style.backgroundColor = "white";
-                    tabCell.style.borderColor = "black";
-                }, 2000);
-            }, 500);
+            tabCell.classList.add("tab-cell-active-tutorial");
 
             tabCell.addEventListener("click", () => {
-                console.log("click")
-                
-                // const newLineLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
-                // const newLineButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
-                // newLineButton.id = "new-line-confirm-button";
-                // newLineButton.innerHTML = "Got it!";
-                // newLineLabel.innerHTML = "Nice! Now let's save our tab, so we don't lose any progress. Click the save button at the bottom!";
-                
-                // setTimeout(() => {
-                //     this.openNewLinePopupModal(newLineLabel.outerHTML + newLineButton.outerHTML);
-                // }, 1500);
+                const tabCellButtons: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell") as HTMLCollectionOf<HTMLDivElement>;
+        
+                for (let i: number = 0; i < tabCellButtons.length; i++) {
+                    const tabCell: HTMLDivElement = tabCellButtons[i] as HTMLDivElement;
+                    tabCell.classList.remove("tab-cell-active-tutorial");
+                    const zeroButton: HTMLDivElement = document.getElementById("0-button") as HTMLDivElement;
+                    zeroButton.classList.add("tab-cell-active-tutorial");
+                    zeroButton.addEventListener("click", () => {
+                        zeroButton.classList.remove("tab-cell-active-tutorial");
+                        this.initSaveTutorialFlow();
+                    });
+                }
             });
         };
     };
@@ -722,38 +797,6 @@ class Create {
 
             // New Line -> Change Fret Flow.
             this.initNewLineTutorialFlow();
-
-
-            // if (confirm("Awesome! Now let's change a fret. Select any of the tab cells and update the fret!")) {
-            //     setTimeout(() => {
-            //         const tabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell") as HTMLCollectionOf<HTMLDivElement>;
-            //         const changeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-container") as HTMLCollectionOf<HTMLDivElement>;
-
-            //         for (let i: number = 0; i < tabCells.length; i++) {
-            //             setTimeout(() => {
-            //                 tabCell.style.backgroundColor = "#23FE69";
-            
-            //                 // TODO YOU NEED TO UPDATE THIS SO IT DOESN'T USE CONFIRMS OR ALERTS.
-            //                 setTimeout(() => {
-            //                     tabCells[i].style.backgroundColor = "white";
-            //                     changeTabCells[0].addEventListener("click", () => {
-            //                             const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
-            //                             setTimeout(() => {
-            //                                 saveButton.style.backgroundColor = "#23FE69";
-                            
-            //                                 setTimeout(() => {
-            //                                     saveButton.style.backgroundColor = "white";
-            //                                     saveButton.addEventListener("click", () => {
-                                            
-            //                                     })
-            //                                 }, 2000);
-            //                             }, 0);
-            //                     })
-            //                 }, 2000);
-            //             }, 0);
-            //         }
-            //     }, 500);
-            // };
         }
     };
 
@@ -950,26 +993,88 @@ class Create {
 
     private listenForModalClose = () => {
         const changeFretModal: HTMLDivElement = document.getElementById("change-fret-modal") as HTMLDivElement;
+        const changeFretModalIcon: HTMLDivElement = document.getElementById("exit-change-fret-modal-icon") as HTMLDivElement;
 
-        window.addEventListener("click", (event) => {
-            const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
-
-            // @ts-ignore
-            if (!changeFretModal.contains(event.target) && this.displayFretChangeModal) {
+        if (this.tabTitle === "Tutorial") {
+            changeFretModalIcon.addEventListener("click", (event) => {
+                const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
                 for (let i: number = 0; i < activeTabCells.length; i++) {
                     if (activeTabCells[i].innerHTML !== "-") {
                         activeTabCells[i].style.opacity = "1";
                     }
-
+    
                     activeTabCells[i].classList.remove("tab-cell-active")
                 }
-
-                // Click occurred outside the element
+    
                 changeFretModal.style.display = "none";
-            setTimeout(() => {
-                this.displayFretChangeModal = false;
-            }, 500);            }
-        })
+                setTimeout(() => {
+                    this.displayFretChangeModal = false;
+                }, 500);
+
+                this.initSaveTutorialFlow();
+            });
+    
+            window.addEventListener("click", (event) => {
+                const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
+    
+                // @ts-ignore
+                if (!changeFretModal.contains(event.target) && this.displayFretChangeModal) {
+                    for (let i: number = 0; i < activeTabCells.length; i++) {
+                        if (activeTabCells[i].innerHTML !== "-") {
+                            activeTabCells[i].style.opacity = "1";
+                        }
+    
+                        activeTabCells[i].classList.remove("tab-cell-active")
+                    }
+    
+                    // Click occurred outside the element
+                    changeFretModal.style.display = "none";
+                    setTimeout(() => {
+                        this.displayFretChangeModal = false;
+                    }, 500);            
+                }
+
+                this.initSaveTutorialFlow();
+            });
+        }
+        else {
+            changeFretModalIcon.addEventListener("click", (event) => {
+                const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
+                for (let i: number = 0; i < activeTabCells.length; i++) {
+                    if (activeTabCells[i].innerHTML !== "-") {
+                        activeTabCells[i].style.opacity = "1";
+                    }
+    
+                    activeTabCells[i].classList.remove("tab-cell-active")
+                }
+    
+                changeFretModal.style.display = "none";
+                setTimeout(() => {
+                    this.displayFretChangeModal = false;
+                }, 500);
+            });
+    
+            window.addEventListener("click", (event) => {
+                const activeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-active") as HTMLCollectionOf<HTMLDivElement>;
+    
+                // @ts-ignore
+                if (!changeFretModal.contains(event.target) && this.displayFretChangeModal) {
+                    for (let i: number = 0; i < activeTabCells.length; i++) {
+                        if (activeTabCells[i].innerHTML !== "-") {
+                            activeTabCells[i].style.opacity = "1";
+                        }
+    
+                        activeTabCells[i].classList.remove("tab-cell-active")
+                    }
+    
+                    // Click occurred outside the element
+                    changeFretModal.style.display = "none";
+                    setTimeout(() => {
+                        this.displayFretChangeModal = false;
+                    }, 500);            
+                }
+            });
+        }
     }
 
     // Builds the individual Tab Cell element and appends it to its corresponding string container.

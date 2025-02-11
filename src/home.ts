@@ -44,6 +44,13 @@ class Home {
         }
     };
 
+    private checkForEmptyTabs = () => {
+        if (this.user.tabs.length === 0) {
+            const createNewTabButton: HTMLElement = document.getElementById("create-tab-button") as HTMLElement;
+            createNewTabButton.classList.add("notify");
+        }
+    };
+
     private displayTabsList = () => {
         const tabListContainer: HTMLDivElement = document.getElementById("tab-list-container") as HTMLDivElement;
         const loadingIcon: HTMLElement = document.getElementById("loading-icon") as HTMLElement;
@@ -175,6 +182,7 @@ class Home {
         this.displayTabsList();
         this.highlightTutorial();
         this.addDeleteButtonListeners();
+        this.checkForEmptyTabs();
     }
 
     // Delete the tab based on the list-item delete-icon that was clicked.
