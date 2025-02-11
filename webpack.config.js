@@ -81,7 +81,7 @@ module.exports = {
           compress: {
             drop_console: true, // Removes console.log
             drop_debugger: true,
-            passes: 3, // More passes for better compression
+            passes: 6, // More passes for better compression
           },
           mangle: true, // Shortens variable names
           format: {
