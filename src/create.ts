@@ -607,55 +607,153 @@ class Create {
         target.scrollLeft = source.scrollLeft;
     }
 
+    private openWelcomePopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+
+        const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
+        confirmWelcomeButton.addEventListener("click", () => {
+            const newLineButton: HTMLButtonElement = document.getElementById("add-line-button") as HTMLButtonElement;
+            const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+
+            setTimeout(() => {
+                newLineButton.style.backgroundColor = "#23FE69";
+
+                setTimeout(() => {
+                    newLineButton.style.backgroundColor = "white";
+                }, 1500);
+            }, 500);
+        })
+    };
+
+    private openNewLinePopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+
+        const confirmNewLineButton: HTMLButtonElement = document.getElementById("new-line-confirm-button") as HTMLButtonElement;
+        confirmNewLineButton.addEventListener("click", () => {
+            const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+
+            // Change Fret -> Save Flow.
+            this.initChangeFretTutorialFlow();
+        })
+    };
+
+    // Tutorial Welcome.
+    private initWelcomeTutorialFlow = () => {
+        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        welcomeButton.id = "welcome-confirm-button";
+        welcomeButton.innerHTML = "Got it!";
+        welcomeLabel.innerHTML = "Stoked you're getting started on your first tab! Let's do a quick walk through so we can get the ropes. Let's get started by adding a new line!";
+
+        setTimeout(() => {
+            this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
+        }, 1500);
+    };
+
+    // Tutorial New Line.
+    private initNewLineTutorialFlow = () => {
+        const newLineButton: HTMLButtonElement = document.getElementById("add-line-button") as HTMLButtonElement;
+        newLineButton.addEventListener("click", () => {
+            const newLineLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+            const newLineButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+            newLineButton.id = "new-line-confirm-button";
+            newLineButton.innerHTML = "Got it!";
+            newLineLabel.innerHTML = "Awesome! Now let's change one of the frets to a new number. Let's add a zero to one of our frets!";
+            
+            setTimeout(() => {
+                this.openNewLinePopupModal(newLineLabel.outerHTML + newLineButton.outerHTML);
+            }, 1000);
+        });
+    };
+
+    // Tutorial Change Fret.
+    private initChangeFretTutorialFlow = () => {
+        const tabCellButtons: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell") as HTMLCollectionOf<HTMLDivElement>;
+        // const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
+
+        for (let i: number = 0; i < tabCellButtons.length; i++) {
+            const tabCell: HTMLDivElement = tabCellButtons[i] as HTMLDivElement;
+
+            setTimeout(() => {
+                tabCell.style.backgroundColor = "#23FE69";
+                tabCell.style.borderColor = "#23FE69";
+
+                setTimeout(() => {
+                    tabCell.style.backgroundColor = "white";
+                    tabCell.style.borderColor = "black";
+                }, 2000);
+            }, 500);
+
+            tabCell.addEventListener("click", () => {
+                console.log("click")
+                
+                // const newLineLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+                // const newLineButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+                // newLineButton.id = "new-line-confirm-button";
+                // newLineButton.innerHTML = "Got it!";
+                // newLineLabel.innerHTML = "Nice! Now let's save our tab, so we don't lose any progress. Click the save button at the bottom!";
+                
+                // setTimeout(() => {
+                //     this.openNewLinePopupModal(newLineLabel.outerHTML + newLineButton.outerHTML);
+                // }, 1500);
+            });
+        };
+    };
+
+    // TODO Parse out the Tutorial into it's own class, in it's own directory.
     private tutorial = () => {
         if (this.tabTitle === "Tutorial") {
-            const newLineButton: HTMLButtonElement = document.getElementById("add-line-button") as HTMLButtonElement;
-            setTimeout(() => {
-                if (confirm("Stoked you're getting started on your first tab! Let's do a quick walk through so we can get the ropes. Let's get started by adding a new line!")) {
-                    setTimeout(() => {
-                        newLineButton.style.backgroundColor = "#23FE69";
-        
-                        setTimeout(() => {
-                            newLineButton.style.backgroundColor = "white";
-                        }, 1500);
-                    }, 0);
+            // Welcome -> New Line Flow.
+            this.initWelcomeTutorialFlow();
 
-                    newLineButton.addEventListener("click", () => {
-                        setTimeout(() => {
-                            if (confirm("Awesome! Now let's change a fret. Select any of the tab cells and update the fret!")) {
-                                setTimeout(() => {
-                                    const tabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell") as HTMLCollectionOf<HTMLDivElement>;
-                                    const changeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-container") as HTMLCollectionOf<HTMLDivElement>;
+            // New Line -> Change Fret Flow.
+            this.initNewLineTutorialFlow();
 
-                                    for (let i: number = 0; i < tabCells.length; i++) {
-                                        setTimeout(() => {
-                                            tabCells[i].style.backgroundColor = "#23FE69";
+
+            // if (confirm("Awesome! Now let's change a fret. Select any of the tab cells and update the fret!")) {
+            //     setTimeout(() => {
+            //         const tabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell") as HTMLCollectionOf<HTMLDivElement>;
+            //         const changeTabCells: HTMLCollectionOf<HTMLDivElement> = document.getElementsByClassName("tab-cell-container") as HTMLCollectionOf<HTMLDivElement>;
+
+            //         for (let i: number = 0; i < tabCells.length; i++) {
+            //             setTimeout(() => {
+            //                 tabCell.style.backgroundColor = "#23FE69";
+            
+            //                 // TODO YOU NEED TO UPDATE THIS SO IT DOESN'T USE CONFIRMS OR ALERTS.
+            //                 setTimeout(() => {
+            //                     tabCells[i].style.backgroundColor = "white";
+            //                     changeTabCells[0].addEventListener("click", () => {
+            //                             const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
+            //                             setTimeout(() => {
+            //                                 saveButton.style.backgroundColor = "#23FE69";
                             
-                                            // TODO YOU NEED TO UPDATE THIS SO IT DOESN'T USE CONFIRMS OR ALERTS.
-                                            setTimeout(() => {
-                                                tabCells[i].style.backgroundColor = "white";
-                                                changeTabCells[0].addEventListener("click", () => {
-                                                        const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
-                                                        setTimeout(() => {
-                                                            saveButton.style.backgroundColor = "#23FE69";
+            //                                 setTimeout(() => {
+            //                                     saveButton.style.backgroundColor = "white";
+            //                                     saveButton.addEventListener("click", () => {
                                             
-                                                            setTimeout(() => {
-                                                                saveButton.style.backgroundColor = "white";
-                                                                saveButton.addEventListener("click", () => {
-                                                           
-                                                                })
-                                                            }, 2000);
-                                                        }, 0);
-                                                })
-                                            }, 2000);
-                                        }, 0);
-                                    }
-                                }, 500);
-                            };
-                        }, 0);
-                    });
-                }  
-            }, 2000);
+            //                                     })
+            //                                 }, 2000);
+            //                             }, 0);
+            //                     })
+            //                 }, 2000);
+            //             }, 0);
+            //         }
+            //     }, 500);
+            // };
         }
     };
 

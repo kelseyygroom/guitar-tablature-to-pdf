@@ -23,14 +23,13 @@ class Home {
         this.createNewTab();
     };
 
-    private openPopUpModal = (htmlString: string, callback: Function) => {
+    private openPopUpModal = (htmlString: string) => {
         const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
         const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
 
         popupModal.innerHTML = htmlString;
-        popupModal.style.display = "flex"
-        popupModalOverlay.style.display = "flex"
-        callback();
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
     };
 
     private addDeleteButtonListeners = () => {
@@ -83,6 +82,42 @@ class Home {
         return tabExists;
     };
 
+    private addNewTabToDb = () => {
+        const createButton: HTMLButtonElement = document.getElementById("create-button") as HTMLButtonElement;
+        createButton.addEventListener("click", () => {
+            const createInput: HTMLInputElement = document.getElementById("create-new-tab-input") as HTMLInputElement;
+            const title = createInput.value;
+
+            if (title.length > 1) {
+                if (this.checkIfTabExists(title)) {
+                    const createErrorLabel: HTMLLabelElement = document.getElementById("create-error-label") as HTMLLabelElement;
+                    createErrorLabel.style.display = "flex";
+                    return
+                }
+
+                fetch(url + "saveTab", {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        username: this.user.username,
+                        tabData: {
+                            highEString: "-----",
+                            bString: "-----",
+                            gString: "-----",
+                            dString: "-----",
+                            aString: "-----",
+                            eString: "-----"
+                        }, 
+                        title,
+                    })
+                });
+                window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
+            };
+        });
+    }
+
     private createNewTab = () => {
         const createNewTabButton: HTMLButtonElement = document.getElementById('create-tab-button') as HTMLButtonElement;
 
@@ -99,43 +134,9 @@ class Home {
             createLabel.id = "create-label";
             createInput.id = "create-new-tab-input";
             createInput.placeholder = "Title";
-            const callback = () => {
-                const createButton: HTMLButtonElement = document.getElementById("create-button") as HTMLButtonElement;
+            this.openPopUpModal(createLabel.outerHTML + createInput.outerHTML + createErrorLabel.outerHTML + createButton.outerHTML);
+            this.addNewTabToDb();
 
-                createButton.addEventListener("click", () => {
-                    const createInput: HTMLInputElement = document.getElementById("create-new-tab-input") as HTMLInputElement;
-                    const title = createInput.value;
-
-                    if (title.length > 1) {
-                        if (this.checkIfTabExists(title)) {
-                            const createErrorLabel: HTMLLabelElement = document.getElementById("create-error-label") as HTMLLabelElement;
-                            createErrorLabel.style.display = "flex";
-                            return
-                        }
-
-                        fetch(url + "saveTab", {
-                            method: 'POST',
-                            headers: {
-                            'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ 
-                                username: this.user.username,
-                                tabData: {
-                                    highEString: "-----",
-                                    bString: "-----",
-                                    gString: "-----",
-                                    dString: "-----",
-                                    aString: "-----",
-                                    eString: "-----"
-                                }, 
-                                title,
-                            })
-                        });
-                        window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
-                    };
-                });
-            };
-            this.openPopUpModal(createLabel.outerHTML + createInput.outerHTML + createErrorLabel.outerHTML + createButton.outerHTML, callback);
         });
     };
 
