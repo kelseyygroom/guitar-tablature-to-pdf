@@ -1,5 +1,5 @@
 import "./signup.css";
-import logo from './images/logo.svg'
+import logo from "./images/emblem.svg"
 
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 // const url = "http://localhost:5000/";

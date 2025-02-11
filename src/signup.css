@@ -93,7 +93,7 @@ button {
     color: white;
     display: flex;
     flex-direction: row;
-    margin-left: 2rem;
+    margin-left: 1rem;
 }
 
 #failed-password-error-label {
@@ -137,7 +137,7 @@ button {
         border-radius: 10px;
     }
 
-    #failed-password-error-label {
+    #failed-password-error-label, #failed-username-error-label {
         width: 100%;
     }
 }
@@ -149,6 +149,7 @@ a {
 
 #logo {
     width: 25vw;
+    margin-bottom: 1rem;
 }
 
 .layout-container {
