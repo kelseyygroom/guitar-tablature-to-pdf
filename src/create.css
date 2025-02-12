@@ -1,6 +1,7 @@
 html {
     height: 100vh;
     margin: 0px;
+    overflow-y: hidden;
 }
 
 body {
@@ -37,13 +38,13 @@ h1, h2, h3, input, button, p, div {
 button {
     box-sizing: border-box;
     width: 100%;
-    padding: 1rem;
+    padding: .5rem;
     background: white;
     border: none;
     border-radius: .5rem;
     color: #444;
     margin-inline: .5rem;
-    margin-block: 1rem;
+    margin-block: .5rem;
     border-radius: 5px;
     border-width: 1px;
     white-space: nowrap;
@@ -72,7 +73,6 @@ button i {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     z-index: 9999;
-    display: none;
 }
 
 .popup-modal {
@@ -111,7 +111,7 @@ button i {
     border-width: 1px;
     width: .75rem;
     height: .75rem;
-    background: white;
+    background:#F0f8ff;
     color: #1D1D1F;
     transition: all;
     transition-duration: 1s;
@@ -126,7 +126,7 @@ button i {
 }
 
 .tab-cell-active {
-    animation: grow-shrink 1.5s infinite ease-in-out;
+    animation: grow-shrink 1.5s infinite ease-in-out !important;
 }
 
 .tab-cell-active-tutorial {
@@ -175,7 +175,7 @@ button i {
     border: 1px solid rgba(255, 255, 255, 0.3);
     padding: .5rem;
     position: fixed;
-    top: 3.75rem;
+    top: 3rem;
     left: 15vw;
     right: 15vw;
     color: white;
@@ -191,9 +191,11 @@ button i {
     width: calc(100vw - 2rem);
     font-family: monospace, monospace;
     white-space: nowrap;
-    font-size: 1rem;
+    font-size: 1.1rem;
     min-height: 0px;
     color: white;
+    animation: fadeIn 1s;
+    height: 1.4rem;
 }
 
 .button-bottom-container {
@@ -203,6 +205,7 @@ button i {
     align-items: center;
     width: 100vw;
     position: fixed;
+    padding: .25rem;
     bottom: 0px;
     top: auto;
     right: 0px;
@@ -434,7 +437,7 @@ select {
         margin: 1rem;
         left: 0rem;
         width: auto;
-        top: 26.75rem;
+        top: 26.1rem;
         border-radius: 16px;
         bottom: auto;
     }

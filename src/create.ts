@@ -74,6 +74,12 @@ class Create {
     };
 
     private loadTab = () => {
+        const overlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+
+        setTimeout(() => {
+            overlay.style.display = "none";
+        }, 100);
+
         const queryString = window.location.search;
         const params = new URLSearchParams(queryString);
         const title = params.get('title');
@@ -628,12 +634,13 @@ class Create {
             const doc = new jsPDF();
             doc.setFont("courier", "normal");
             let index: number = 0;
-            const initialRange: number = 60
+            const initialRange: number = 50
             let range: number = initialRange;
             const loopRange: number = Math.ceil(tabData.highEString.length / range);
-            doc.text([
-                this.tabTitle
-            ], 10, 10);
+            // Adds the title if this is a feature we want.
+            // doc.text([
+            //     this.tabTitle
+            // ], 10, 10);
             for (let i: number = 0; i < loopRange; i++) {
 
                 doc.text([
@@ -1096,7 +1103,7 @@ class Create {
         tabCell.classList.add("tab-cell")
 
         if (tabCell.innerHTML === "-") {
-            tabCell.style.opacity = ".7";
+            tabCell.style.opacity = "1";
         }
 
         tabCell.addEventListener("click", () => {

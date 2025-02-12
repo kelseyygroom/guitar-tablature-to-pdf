@@ -25,7 +25,8 @@ html {
 
 body {
     margin: 0px;
-    overscroll-behavior-y: none;
+    overflow-y: hidden;
+    height: 100%;
 }
 
 #tab-list-container {
@@ -35,6 +36,7 @@ body {
     margin-left: 0px;
     overflow: scroll;
     padding-bottom: 10rem;
+    height: 90vh;
 }
 
 .popup-modal-overlay {
@@ -164,6 +166,7 @@ body {
     margin: 1rem;
     border-radius: 1.5rem;
     background-color: #1D1D1F;
+    z-index: 99999;
     color: #F0f8ff;
     box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
     -6px -6px 10px rgba(255, 255, 255, .2),
