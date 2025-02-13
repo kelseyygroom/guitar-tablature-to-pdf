@@ -6,12 +6,11 @@ const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 class UploadVideo {
     user: any;
     tabTitle: string;
-    tab: any;
+    private static tab: any;
 
     constructor() {
         this.user = {};
         this.tabTitle = "";
-        this.tab = {};
     }
 
     public init = () => {
@@ -60,17 +59,19 @@ class UploadVideo {
 
                 mediaRecorder.onstop = saveRecordedVideo;
                 mediaRecorder.start();
+                
+                const highEStringText: HTMLDivElement = document.getElementById("tab-text-highEString") as HTMLDivElement;
+                const bStringText: HTMLDivElement = document.getElementById("tab-text-bString") as HTMLDivElement;
+                const gStringText: HTMLDivElement = document.getElementById("tab-text-gString") as HTMLDivElement;
+                const dStringText: HTMLDivElement = document.getElementById("tab-text-dString") as HTMLDivElement;
+                const aStringText: HTMLDivElement = document.getElementById("tab-text-aString") as HTMLDivElement;
+                const eStringText: HTMLDivElement = document.getElementById("tab-text-eString") as HTMLDivElement;
+
                 drawFrame();
             });
         });
 
         function drawFrame(): void {
-            const highEStringText: HTMLDivElement = document.getElementById("tab-text-highEString") as HTMLDivElement;
-            const bStringText: HTMLDivElement = document.getElementById("tab-text-bString") as HTMLDivElement;
-            const gStringText: HTMLDivElement = document.getElementById("tab-text-gString") as HTMLDivElement;
-            const dStringText: HTMLDivElement = document.getElementById("tab-text-dString") as HTMLDivElement;
-            const aStringText: HTMLDivElement = document.getElementById("tab-text-aString") as HTMLDivElement;
-            const eStringText: HTMLDivElement = document.getElementById("tab-text-eString") as HTMLDivElement;
 
             if (video.paused || video.ended) {
                 return;
@@ -86,18 +87,23 @@ class UploadVideo {
             ctx.lineWidth = 2;
             ctx.textAlign = 'left';
             // High E Text Fill
-            ctx.fillText(highEStringText.innerHTML, 50, canvas.height - 300);
-            ctx.strokeText(highEStringText.innerHTML, 50, canvas.height - 300);
-            ctx.fillText(bStringText.innerHTML, 50, canvas.height - 250);
-            ctx.strokeText(bStringText.innerHTML, 50, canvas.height - 250);
-            ctx.fillText(gStringText.innerHTML, 50, canvas.height - 200);
-            ctx.strokeText(gStringText.innerHTML, 50, canvas.height - 200);
-            ctx.fillText(dStringText.innerHTML, 50, canvas.height - 150);
-            ctx.strokeText(dStringText.innerHTML, 50, canvas.height - 150);
-            ctx.fillText(aStringText.innerHTML, 50, canvas.height - 100);
-            ctx.strokeText(aStringText.innerHTML, 50, canvas.height - 100);
-            ctx.fillText(eStringText.innerHTML, 50, canvas.height - 50);
-            ctx.strokeText(eStringText.innerHTML, 50, canvas.height - 50);
+            ctx.fillText(UploadVideo.tab.highEString[0], 50, canvas.height - 500);
+            ctx.strokeText(UploadVideo.tab.highEString[0], 50, canvas.height - 500);
+            // B Text Fill
+            ctx.fillText(UploadVideo.tab.bString[0], 50, canvas.height - 450);
+            ctx.strokeText(UploadVideo.tab.bString[0], 50, canvas.height - 450);
+            // G Text Fill
+            ctx.fillText(UploadVideo.tab.gString[0], 50, canvas.height - 400);
+            ctx.strokeText(UploadVideo.tab.gString[0], 50, canvas.height - 400);
+            // D Text Fill
+            ctx.fillText(UploadVideo.tab.dString[0], 50, canvas.height - 350);
+            ctx.strokeText(UploadVideo.tab.dString[0], 50, canvas.height - 350);
+            // A Text Fill
+            ctx.fillText(UploadVideo.tab.aString[0], 50, canvas.height - 300);
+            ctx.strokeText(UploadVideo.tab.aString[0], 50, canvas.height - 300);
+            // E Text Fill
+            ctx.fillText(UploadVideo.tab.eString[0], 50, canvas.height - 250);
+            ctx.strokeText(UploadVideo.tab.eString[0], 50, canvas.height - 250);
 
             requestAnimationFrame(drawFrame);
         }
@@ -129,17 +135,66 @@ class UploadVideo {
 
         // Get individual parameters by name
         const username = params.get('username');
-
         const userAccount = await fetch(url + "getUserAccount?username=" + username)
         const userAccountData = await userAccount.json()
+
         // Separate into new function.
         const title = params.get('title');
         this.tabTitle = title!;
         this.user = userAccountData;
         const tab = this.user.tabs.find((tab: any) => { return tab.tabTitle === title});
-        this.tab = tab.tabData;
-        this.formatTabForPDFExport(tab.tabData);
+        UploadVideo.tab = this.splitTabIntoChunks(this.formatTabForPDFExport(tab.tabData));
+        console.log(UploadVideo.tab)
     }
+
+    private splitTabIntoChunks = (tab: any) => {
+        const chunkLength = 10;
+        const highESplitArray: string [] = tab.highEString.split("");
+        const bSplitArray: string [] = tab.bString.split("");
+        const gSplitArray: string [] = tab.gString.split("");
+        const dSplitArray: string [] = tab.dString.split("");
+        const aSplitArray: string [] = tab.aString.split("");
+        const eSplitArray: string [] = tab.eString.split("");
+
+        const highEReturnArray: string [] = [];
+        const bReturnArray: string [] = [];
+        const gReturnArray: string [] = [];
+        const dReturnArray: string [] = [];
+        const aReturnArray: string [] = [];
+        const eReturnArray: string [] = [];
+
+        const returnObj: any = {
+            highEString: [],
+            bString: [],
+            gString: [],
+            dString: [],
+            aString: [],
+            eString: []
+        };
+
+        let counter: number = 33;
+
+        for (let i: number = 0; i < highESplitArray.length; i++) {
+            highEReturnArray.push(highESplitArray[i]);
+            bReturnArray.push(bSplitArray[i]);
+            gReturnArray.push(gSplitArray[i]);
+            dReturnArray.push(dSplitArray[i]);
+            aReturnArray.push(aSplitArray[i]);
+            eReturnArray.push(eSplitArray[i]);
+
+            if (i === counter) {
+                returnObj.highEString.push(highEReturnArray.join(""));
+                returnObj.bString.push(bReturnArray.join(""));
+                returnObj.gString.push(gReturnArray.join(""));
+                returnObj.dString.push(dReturnArray.join(""));
+                returnObj.aString.push(aReturnArray.join(""));
+                returnObj.eString.push(eReturnArray.join(""));
+                counter += counter;
+            }
+        }
+
+        return returnObj;
+    };
 
     // Format the tab & handle double digit tab cells.
     private formatTabForPDFExport = (rawTabData: any) => {
