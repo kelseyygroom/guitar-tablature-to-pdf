@@ -9,7 +9,8 @@ module.exports = {
     index: './src/main.ts',
     create: './src/create.ts',
     home: './src/home.ts',
-    signup: './src/signup.ts'
+    signup: './src/signup.ts',
+    uploadVideo: './src/uploadVideo.ts'
   },
   output: {
     filename: '[name].bundle.js',
@@ -64,6 +65,11 @@ module.exports = {
       template: './src/signup.html',
       filename: 'signup.html',
       chunks: ['signup'], // Specify the chunks for this HTML
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/uploadVideo.html',
+      filename: 'uploadVideo.html',
+      chunks: ['uploadVideo'], // Specify the chunks for this HTML
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css', // Output CSS file names
