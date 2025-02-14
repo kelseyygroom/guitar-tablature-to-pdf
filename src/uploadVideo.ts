@@ -15,64 +15,102 @@ class UploadVideo {
 
     public init = () => {
         this.getUserAccount();
-        this.initVideoUpload();
     }
 
+    private getVideoText = (string: any[]) => {
+        const returnArray: string[] = [];
+
+        string.forEach(element => {
+            returnArray.push(element.text);
+        });
+
+        return returnArray;
+    };
+
+    private getVideoTime = (string: any[]) => {
+        const returnArray: any[] = [];
+
+        string.forEach(element => {
+            returnArray.push(element.time);
+        });
+
+        return returnArray;
+    };
+
     private initVideoUpload = () => {
+        // Get HTML elements
         const videoInput = document.getElementById('video-upload') as HTMLInputElement;
         const canvas = document.getElementById('video-canvas') as HTMLCanvasElement;
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-        const saveButton = document.getElementById('save-video') as HTMLButtonElement;
-        let video = document.createElement('video');
-        let mediaRecorder: MediaRecorder;
-        let recordedChunks: BlobPart[] = [];
+        const ctx = canvas.getContext('2d')!;
+        const video = document.createElement('video');
 
-        videoInput.addEventListener('change', (event: Event) => {
-            const target = event.target as HTMLInputElement;
-            const file = target.files?.[0];
-            if (!file) return;
+        // Six string arrays with different text
+        const strings1 = this.getVideoText(UploadVideo.tab.highEString);
+        const strings2 = this.getVideoText(UploadVideo.tab.bString);
+        const strings3 = this.getVideoText(UploadVideo.tab.gString);
+        const strings4 = this.getVideoText(UploadVideo.tab.dString);
+        const strings5 = this.getVideoText(UploadVideo.tab.aString);
+        const strings6 = this.getVideoText(UploadVideo.tab.eString);
 
-            const uploadButtonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
-            uploadButtonContainer.style.display = "none";
-            // Load the selected video
-            const url = URL.createObjectURL(file);
-            video.src = url;
-            video.load();
-            video.play();
+        // Corresponding time arrays (start and end times for each string)
+        const times1 = this.getVideoTime(UploadVideo.tab.highEString);
+        const times2 = this.getVideoTime(UploadVideo.tab.bString);
+        const times3 = this.getVideoTime(UploadVideo.tab.gString);
+        const times4 = this.getVideoTime(UploadVideo.tab.dString);
+        const times5 = this.getVideoTime(UploadVideo.tab.aString);
+        const times6 = this.getVideoTime(UploadVideo.tab.eString);
 
-            video.addEventListener('loadedmetadata', () => {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-            });
+        // Settings
+        const lineHeight = 50; // Space between lines
 
-            video.addEventListener('play', () => {
-                const stream = canvas.captureStream(30); // 30 FPS
-                mediaRecorder = new MediaRecorder(stream, {
-                mimeType: 'video/webm; codecs=vp9'
+        // Track current text for each line
+        let currentText = ['', '', '', '', '', ''];
+
+        // Handle file upload and video load
+        videoInput.addEventListener('change', (event) => {
+            const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
+            buttonContainer.style.display = "none";
+            const file = (event.target as HTMLInputElement).files?.[0];
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                video.src = fileURL;
+                video.load();
+                video.play();
+                video.muted = true; // Optional: Mute video by default
+
+                video.addEventListener('loadedmetadata', () => {
+                    // Set canvas dimensions to match video
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+
+                    // Start drawing frames
+                    requestAnimationFrame(drawFrame);
                 });
+            }
+        });
 
-                mediaRecorder.ondataavailable = (event: BlobEvent) => {
-                if (event.data.size > 0) {
-                    recordedChunks.push(event.data);
+        // Function to update text for each line based on video time
+        function updateText(strings: string[], times: { start: number; end: number }[], lineIndex: number) {
+            const currentTime = video.currentTime;
+            currentText[lineIndex] = '';
+            times.forEach((time, index) => {
+                if (currentTime >= time.start && currentTime < time.end) {
+                    currentText[lineIndex] = strings[index];
                 }
-                };
-
-                mediaRecorder.onstop = saveRecordedVideo;
-                mediaRecorder.start();
-                
-                const highEStringText: HTMLDivElement = document.getElementById("tab-text-highEString") as HTMLDivElement;
-                const bStringText: HTMLDivElement = document.getElementById("tab-text-bString") as HTMLDivElement;
-                const gStringText: HTMLDivElement = document.getElementById("tab-text-gString") as HTMLDivElement;
-                const dStringText: HTMLDivElement = document.getElementById("tab-text-dString") as HTMLDivElement;
-                const aStringText: HTMLDivElement = document.getElementById("tab-text-aString") as HTMLDivElement;
-                const eStringText: HTMLDivElement = document.getElementById("tab-text-eString") as HTMLDivElement;
-
-                drawFrame();
             });
+        }
+
+        // Update text for all six lines
+        video.addEventListener('timeupdate', () => {
+            updateText(strings1, times1, 0);
+            updateText(strings2, times2, 1);
+            updateText(strings3, times3, 2);
+            updateText(strings4, times4, 3);
+            updateText(strings5, times5, 4);
+            updateText(strings6, times6, 5);
         });
 
         function drawFrame(): void {
-
             if (video.paused || video.ended) {
                 return;
             }
@@ -80,49 +118,24 @@ class UploadVideo {
             // Draw video frame to canvas
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Add overlay text
+            // Set text style
             ctx.font = '48px Monospace';
             ctx.fillStyle = 'white';
             ctx.strokeStyle = 'white';
             ctx.lineWidth = 2;
             ctx.textAlign = 'left';
-            // High E Text Fill
-            ctx.fillText(UploadVideo.tab.highEString[0], 50, canvas.height - 500);
-            ctx.strokeText(UploadVideo.tab.highEString[0], 50, canvas.height - 500);
-            // B Text Fill
-            ctx.fillText(UploadVideo.tab.bString[0], 50, canvas.height - 450);
-            ctx.strokeText(UploadVideo.tab.bString[0], 50, canvas.height - 450);
-            // G Text Fill
-            ctx.fillText(UploadVideo.tab.gString[0], 50, canvas.height - 400);
-            ctx.strokeText(UploadVideo.tab.gString[0], 50, canvas.height - 400);
-            // D Text Fill
-            ctx.fillText(UploadVideo.tab.dString[0], 50, canvas.height - 350);
-            ctx.strokeText(UploadVideo.tab.dString[0], 50, canvas.height - 350);
-            // A Text Fill
-            ctx.fillText(UploadVideo.tab.aString[0], 50, canvas.height - 300);
-            ctx.strokeText(UploadVideo.tab.aString[0], 50, canvas.height - 300);
-            // E Text Fill
-            ctx.fillText(UploadVideo.tab.eString[0], 50, canvas.height - 250);
-            ctx.strokeText(UploadVideo.tab.eString[0], 50, canvas.height - 250);
+
+            // Display all six strings stacked vertically
+            currentText.forEach((text, index) => {
+                if (text) {
+                    const textX = 50;
+                    const textY = canvas.height - (6 - index) * lineHeight;
+                    ctx.fillText(text, textX, textY);
+                    ctx.strokeText(text, textX, textY);
+                }
+            });
 
             requestAnimationFrame(drawFrame);
-        }
-
-        saveButton.addEventListener('click', () => {
-            mediaRecorder.stop();
-        });
-
-        function saveRecordedVideo(): void {
-            const blob = new Blob(recordedChunks, { type: 'video/webm' });
-            const url = URL.createObjectURL(blob);
-
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = 'edited-video.webm';
-            document.body.appendChild(a);
-            a.click();
-            URL.revokeObjectURL(url);
         }
     };
 
@@ -144,11 +157,10 @@ class UploadVideo {
         this.user = userAccountData;
         const tab = this.user.tabs.find((tab: any) => { return tab.tabTitle === title});
         UploadVideo.tab = this.splitTabIntoChunks(this.formatTabForPDFExport(tab.tabData));
-        console.log(UploadVideo.tab)
+        this.initVideoUpload();
     }
 
     private splitTabIntoChunks = (tab: any) => {
-        const chunkLength = 10;
         const highESplitArray: string [] = tab.highEString.split("");
         const bSplitArray: string [] = tab.bString.split("");
         const gSplitArray: string [] = tab.gString.split("");
@@ -173,8 +185,15 @@ class UploadVideo {
         };
 
         let counter: number = 33;
+        let timer: number = 5;
 
         for (let i: number = 0; i < highESplitArray.length; i++) {
+            let temphighEArray = [];
+            let tempbArray = [];
+            let tempgArray = [];
+            let tempdArray = [];
+            let tempaArray = [];
+            let tempeArray = [];
             highEReturnArray.push(highESplitArray[i]);
             bReturnArray.push(bSplitArray[i]);
             gReturnArray.push(gSplitArray[i]);
@@ -183,13 +202,20 @@ class UploadVideo {
             eReturnArray.push(eSplitArray[i]);
 
             if (i === counter) {
-                returnObj.highEString.push(highEReturnArray.join(""));
-                returnObj.bString.push(bReturnArray.join(""));
-                returnObj.gString.push(gReturnArray.join(""));
-                returnObj.dString.push(dReturnArray.join(""));
-                returnObj.aString.push(aReturnArray.join(""));
-                returnObj.eString.push(eReturnArray.join(""));
+                returnObj.highEString.push({text: highEReturnArray.join(""), time: { start: timer, end: timer + timer }});
+                returnObj.bString.push({text: bReturnArray.join(""), time: { start: timer, end: timer + timer }});
+                returnObj.gString.push({text: gReturnArray.join(""), time: { start: timer, end: timer + timer }});
+                returnObj.dString.push({text: dReturnArray.join(""), time: { start: timer, end: timer + timer }});
+                returnObj.aString.push({text: aReturnArray.join(""), time: { start: timer, end: timer + timer }});
+                returnObj.eString.push({text: eReturnArray.join(""), time: { start: timer, end: timer + timer }});
                 counter += counter;
+                timer += timer
+                highEReturnArray.splice(0, i)
+                bReturnArray.splice(0, i)
+                gReturnArray.splice(0, i)
+                dReturnArray.splice(0, i)
+                aReturnArray.splice(0, i)
+                eReturnArray.splice(0, i)
             }
         }
 
