@@ -665,7 +665,8 @@ class Create {
                 range = range + initialRange;
             }
 
-            doc.save(this.tabTitle);
+            // doc.save(this.tabTitle);
+            window.location.href = "uploadVideo.html?username=" + this.user.username + "&title=" + this.tabTitle;
         });
     };
 
