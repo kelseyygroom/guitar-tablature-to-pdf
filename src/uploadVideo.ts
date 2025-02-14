@@ -69,7 +69,12 @@ class UploadVideo {
         // Handle file upload and video load
         videoInput.addEventListener('change', (event) => {
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
+            const videoCanvas: HTMLDivElement = document.getElementById("video-canvas") as HTMLDivElement;
+            const videoIcon: HTMLElement = document.getElementById("video-icon") as HTMLElement;
+            videoIcon.style.display = "none";
             buttonContainer.style.display = "none";
+            videoCanvas.style.display = "block";
+
             const file = (event.target as HTMLInputElement).files?.[0];
             if (file) {
                 const fileURL = URL.createObjectURL(file);

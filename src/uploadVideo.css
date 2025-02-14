@@ -2,6 +2,7 @@ html {
     height: 100vh;
     background: linear-gradient(to right, #5DCCF5, #964FF6);
     margin: 0px;
+    animation: fadeIn 1s;
 }
 
 label, button {
@@ -111,6 +112,7 @@ a {
     left: 0px;
     top: 0px;
     background-color: #1D1D1F;
+    display: none;
 }
 
 input[type="file"] {
@@ -149,13 +151,25 @@ input[type="file"] {
     transition: all .5s;
 }
 
+.fa-video {
+    position: fixed;
+    width: calc(90vw - 2rem);
+    text-align: center;
+    height: calc(25vh - 2rem);
+    left: 10vw;
+    top: 18.5vh;
+    font-size: 10rem;
+    color: white;
+}
+
 #upload-video-buttons-container {
     position: fixed;
     width: calc(90vw - 2rem);
+    height: calc(25vh - 2rem);
     left: 5vw;
+    bottom: 22vh;
     border-radius: 5px;
     border-style: solid;
-    bottom: 2rem;
     padding: 1rem;
     display: flex;
     justify-content: center;
