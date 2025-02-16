@@ -6,14 +6,13 @@ const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 class UploadVideo {
     user: any;
     tabTitle: string;
-    private static tab: any;
     private TIMER: number = 3;
-    private tabChunks: any[];
+    private static tab: any;
+    private static tabChunks: any;
 
     constructor() {
         this.user = {};
         this.tabTitle = "";
-        this.tabChunks = [];
     }
 
     public init = () => {
@@ -38,6 +37,56 @@ class UploadVideo {
         });
 
         return returnArray;
+    };
+
+    private buildTabChunkHTML = () => {
+        let returnString = "";
+
+        // HERE SEAN FIX THIS UP
+        UploadVideo.tabChunks.highEString.forEach((chunk: any) => {
+            const tabChunkTextHighEContainer = document.createElement("div");
+            tabChunkTextHighEContainer.classList.add("tab-chunk-text");
+            tabChunkTextHighEContainer.innerHTML = chunk.text;
+            returnString += tabChunkTextHighEContainer.outerHTML;
+        });
+
+        UploadVideo.tabChunks.bString.forEach((chunk: any) => {
+            console.log(chunk)
+            const tabChunkTextBContainer = document.createElement("div");
+            tabChunkTextBContainer.classList.add("tab-chunk-text");
+            tabChunkTextBContainer.innerHTML = chunk.text;
+            returnString += tabChunkTextBContainer.outerHTML;
+        });
+
+        UploadVideo.tabChunks.gString.forEach((chunk: any) => {
+            const tabChunkTextGContainer = document.createElement("div");
+            tabChunkTextGContainer.classList.add("tab-chunk-text");
+            tabChunkTextGContainer.innerHTML = chunk.text;
+            returnString += tabChunkTextGContainer.outerHTML;
+        });
+
+        UploadVideo.tabChunks.dString.forEach((chunk: any) => {
+            const tabChunkTextDContainer = document.createElement("div");
+            tabChunkTextDContainer.classList.add("tab-chunk-text");
+            tabChunkTextDContainer.innerHTML = chunk.text;
+            returnString += tabChunkTextDContainer.outerHTML;
+        });
+
+        UploadVideo.tabChunks.aString.forEach((chunk: any) => {
+            const tabChunkTextAContainer = document.createElement("div");
+            tabChunkTextAContainer.classList.add("tab-chunk-text");
+            tabChunkTextAContainer.innerHTML = chunk.text;
+            returnString += tabChunkTextAContainer.outerHTML;
+        });
+
+        UploadVideo.tabChunks.eString.forEach((chunk: any) => {
+            const tabChunkTextEContainer = document.createElement("div");
+            tabChunkTextEContainer.classList.add("tab-chunk-text");
+            tabChunkTextEContainer.innerHTML = chunk.text;
+            returnString += tabChunkTextEContainer.outerHTML;
+        });
+
+        return returnString;
     };
 
     private initVideoUpload = () => {
@@ -92,6 +141,7 @@ class UploadVideo {
 
                 tabChunksIcon.addEventListener("click", () => {
                     const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
+                    popupModal.innerHTML = this.buildTabChunkHTML();
 
                     if (tabChunkContainerOpen) {
                         popupModal.style.display = "none";
@@ -239,6 +289,7 @@ class UploadVideo {
         this.user = userAccountData;
         const tab = this.user.tabs.find((tab: any) => { return tab.tabTitle === title});
         UploadVideo.tab = this.splitTabIntoChunks(this.formatTabForPDFExport(tab.tabData));
+        UploadVideo.tabChunks = this.splitTabIntoChunks(this.formatTabForPDFExport(tab.tabData));
         this.initVideoUpload();
     }
 
@@ -278,14 +329,14 @@ class UploadVideo {
             aReturnArray.push(aSplitArray[i]);
             eReturnArray.push(eSplitArray[i]);
 
-            if (i === counter) {
+            if (i === counter || i === highESplitArray.length - 1) {
                 returnObj.highEString.push({text: highEReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
                 returnObj.bString.push({text: bReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
                 returnObj.gString.push({text: gReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
                 returnObj.dString.push({text: dReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
                 returnObj.aString.push({text: aReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
                 returnObj.eString.push({text: eReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
-                counter += counter;
+                counter += 33;
                 timer += this.TIMER;
                 highEReturnArray.splice(0, i);
                 bReturnArray.splice(0, i);
