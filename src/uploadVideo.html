@@ -7,6 +7,12 @@
 </head>
 <body>
   <div class="layout-container">
+    <div id="video-editing-tool-container" class="video-editing-tool-container">
+        <i id="unmount-video-button" class="fas fa-arrow-left"></i>
+        <i id="view-tab-chunks-button" class="fas fa-table-list"></i>
+        <input type="range" id="video-timeline" value="0" min="0" max="100" step="0.1">
+        <div id="pause-icon" class="fas fa-play"></div>
+    </div>
     <canvas id="video-canvas"></canvas>
     <i id="video-icon" class="fas fa-video"></i>
     <div id="upload-video-buttons-container">
@@ -20,6 +26,7 @@
     <div style="display: none;" id="tab-text-dString"></div>
     <div style="display: none;" id="tab-text-aString"></div>
     <div style="display: none;" id="tab-text-eString"></div>
+    <div id="popup-modal" class="popup-modal"></div>
 
     <script src="script.js"></script>
   </div>

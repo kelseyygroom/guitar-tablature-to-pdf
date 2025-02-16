@@ -7,10 +7,13 @@ class UploadVideo {
     user: any;
     tabTitle: string;
     private static tab: any;
+    private TIMER: number = 3;
+    private tabChunks: any[];
 
     constructor() {
         this.user = {};
         this.tabTitle = "";
+        this.tabChunks = [];
     }
 
     public init = () => {
@@ -39,10 +42,14 @@ class UploadVideo {
 
     private initVideoUpload = () => {
         // Get HTML elements
+        const videoEditingToolsContainer: HTMLDivElement = document.getElementById("video-editing-tool-container") as HTMLDivElement;
         const videoInput = document.getElementById('video-upload') as HTMLInputElement;
         const canvas = document.getElementById('video-canvas') as HTMLCanvasElement;
         const ctx = canvas.getContext('2d')!;
         const video = document.createElement('video');
+        const timeline = document.getElementById("video-timeline") as HTMLInputElement;
+        const pauseIcon: HTMLElement = document.getElementById("pause-icon") as HTMLElement;
+        const tabChunksIcon: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
 
         // Six string arrays with different text
         const strings1 = this.getVideoText(UploadVideo.tab.highEString);
@@ -64,19 +71,51 @@ class UploadVideo {
         const lineHeight = 50; // Space between lines
 
         // Track current text for each line
-        let currentText = ['', '', '', '', '', ''];
+        let currentText = ["", "", "", "", "", ""];
 
         // Handle file upload and video load
-        videoInput.addEventListener('change', (event) => {
+        videoInput.addEventListener("change", (event) => {
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
             const videoCanvas: HTMLDivElement = document.getElementById("video-canvas") as HTMLDivElement;
             const videoIcon: HTMLElement = document.getElementById("video-icon") as HTMLElement;
+            
             videoIcon.style.display = "none";
             buttonContainer.style.display = "none";
             videoCanvas.style.display = "block";
 
             const file = (event.target as HTMLInputElement).files?.[0];
             if (file) {
+                videoEditingToolsContainer.style.display = "block";
+                const unloadVideoButton: HTMLElement = document.getElementById("unmount-video-button") as HTMLElement;
+                unloadVideoButton.style.display = "block";
+                let tabChunkContainerOpen = false;
+
+                tabChunksIcon.addEventListener("click", () => {
+                    const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
+
+                    if (tabChunkContainerOpen) {
+                        popupModal.style.display = "none";
+                        tabChunkContainerOpen = false;
+                    }
+                    else {
+                        popupModal.style.display = "flex";
+                        tabChunkContainerOpen = true;
+                    }
+                });
+
+                unloadVideoButton.addEventListener("click", () => {
+                    if (video !== null && video !== undefined) {
+                        video.pause(); // Stop playback
+                        video.removeAttribute('src'); // Remove the src attribute
+                        video.load();  // Unload the video
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+                        videoEditingToolsContainer.style.display = "none";
+                        videoCanvas.style.display = "none";
+                        buttonContainer.style.display = "flex";
+                        videoIcon.style.display = "block";
+                    }
+                });
+
                 const fileURL = URL.createObjectURL(file);
                 video.src = fileURL;
                 video.load();
@@ -105,8 +144,46 @@ class UploadVideo {
             });
         }
 
+        // Toggle play/pause on click
+        videoEditingToolsContainer.addEventListener("click", () => {
+            if (!video.src) {
+                return;
+            }
+
+            if (video.paused) {
+                requestAnimationFrame(drawFrame)
+                video.play();
+                pauseIcon.style.display = "none";
+            } else {
+                video.pause();
+                pauseIcon.style.display = "flex";
+            }
+        });
+
+        timeline.addEventListener("change", () => {
+            console.log("change", timeline)
+            drawFrame();
+        })
+
+        function drawSingleFrame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        }
+
+        // Seek video to the corresponding time when dragging the scroll bar
+        timeline.addEventListener("input", () => {
+            console.log("click")
+            const seekTime = (Number(timeline.value) / 100) * video.duration;
+            video.currentTime = seekTime;
+            drawSingleFrame(); // Draw the current frame
+            video.pause(); // Pause the video
+            pauseIcon.style.display = "flex";
+        });
+
         // Update text for all six lines
         video.addEventListener('timeupdate', () => {
+            const progress = (video.currentTime / video.duration) * 100;
+            timeline.value = progress.toString();
             updateText(strings1, times1, 0);
             updateText(strings2, times2, 1);
             updateText(strings3, times3, 2);
@@ -134,7 +211,7 @@ class UploadVideo {
             currentText.forEach((text, index) => {
                 if (text) {
                     const textX = 50;
-                    const textY = canvas.height - (6 - index) * lineHeight;
+                    const textY = canvas.height - (6 - index) * lineHeight - 100;
                     ctx.fillText(text, textX, textY);
                     ctx.strokeText(text, textX, textY);
                 }
@@ -189,16 +266,11 @@ class UploadVideo {
             eString: []
         };
 
+        // The counter doubles as the length of the string that gets displayed on the video.
         let counter: number = 33;
-        let timer: number = 5;
+        let timer: number = this.TIMER;
 
         for (let i: number = 0; i < highESplitArray.length; i++) {
-            let temphighEArray = [];
-            let tempbArray = [];
-            let tempgArray = [];
-            let tempdArray = [];
-            let tempaArray = [];
-            let tempeArray = [];
             highEReturnArray.push(highESplitArray[i]);
             bReturnArray.push(bSplitArray[i]);
             gReturnArray.push(gSplitArray[i]);
@@ -207,20 +279,20 @@ class UploadVideo {
             eReturnArray.push(eSplitArray[i]);
 
             if (i === counter) {
-                returnObj.highEString.push({text: highEReturnArray.join(""), time: { start: timer, end: timer + timer }});
-                returnObj.bString.push({text: bReturnArray.join(""), time: { start: timer, end: timer + timer }});
-                returnObj.gString.push({text: gReturnArray.join(""), time: { start: timer, end: timer + timer }});
-                returnObj.dString.push({text: dReturnArray.join(""), time: { start: timer, end: timer + timer }});
-                returnObj.aString.push({text: aReturnArray.join(""), time: { start: timer, end: timer + timer }});
-                returnObj.eString.push({text: eReturnArray.join(""), time: { start: timer, end: timer + timer }});
+                returnObj.highEString.push({text: highEReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
+                returnObj.bString.push({text: bReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
+                returnObj.gString.push({text: gReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
+                returnObj.dString.push({text: dReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
+                returnObj.aString.push({text: aReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
+                returnObj.eString.push({text: eReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
                 counter += counter;
-                timer += timer
-                highEReturnArray.splice(0, i)
-                bReturnArray.splice(0, i)
-                gReturnArray.splice(0, i)
-                dReturnArray.splice(0, i)
-                aReturnArray.splice(0, i)
-                eReturnArray.splice(0, i)
+                timer += this.TIMER;
+                highEReturnArray.splice(0, i);
+                bReturnArray.splice(0, i);
+                gReturnArray.splice(0, i);
+                dReturnArray.splice(0, i);
+                aReturnArray.splice(0, i);
+                eReturnArray.splice(0, i);
             }
         }
 
