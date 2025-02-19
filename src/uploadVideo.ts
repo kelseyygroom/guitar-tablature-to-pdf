@@ -9,6 +9,7 @@ class UploadVideo {
     private TIMER: number = 3;
     private static tab: any;
     private static tabChunks: any;
+    private static selectedTabChunkId: any;
 
     constructor() {
         this.user = {};
@@ -17,6 +18,7 @@ class UploadVideo {
 
     public init = () => {
         this.getUserAccount();
+        this.addTabSegmentListeners();
     }
 
     private getVideoText = (string: any[]) => {
@@ -45,6 +47,7 @@ class UploadVideo {
 
         for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks).length; i++) {
             const tabChunk = document.createElement("div");
+            tabChunk.id = "tab-chunk-" + UploadVideo.tabChunks.highEString[i].id;
             tabChunk.classList.add("tab-chunk-text");
             
             // High E String
@@ -75,9 +78,77 @@ class UploadVideo {
             tabChunkContainer.append(tabChunk);
         };
 
-        console.log(tabChunkContainer.outerHTML)
-
         return tabChunkContainer.outerHTML;
+    };
+
+    private adjustTabChunkTime = (tabChunk: any) => {
+        const tabChunkId: string = tabChunk.id.split("-")[2];
+        UploadVideo.selectedTabChunkId = tabChunkId;
+    };
+
+    private addTabSegmentListeners = () => {
+        const tabSegmentStartButton: HTMLDivElement = document.getElementById("start-tab-segment-button") as HTMLDivElement;
+        const tabSegmentEndButton: HTMLDivElement = document.getElementById("end-tab-segment-button") as HTMLDivElement;
+        const timeline = document.getElementById("video-timeline") as HTMLInputElement;
+        
+        tabSegmentStartButton.addEventListener("click", () => {
+            for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks).length; i++) {
+                if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.highEString[i].time.start = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.bString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.bString[i].time.start = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.gString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.gString[i].time.start = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.dString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.dString[i].time.start = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.aString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.aString[i].time.start = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.eString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.eString[i].time.start = Math.round(parseInt(timeline.value));
+                }
+            };
+            
+            this.initVideoUpload();
+        });
+
+        tabSegmentEndButton.addEventListener("click", () => {
+            for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks).length; i++) {
+                if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.highEString[i].time.end = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.bString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.bString[i].time.end = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.gString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.gString[i].time.end = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.dString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.dString[i].time.end = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.aString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.aString[i].time.end = Math.round(parseInt(timeline.value));
+                }
+
+                if (UploadVideo.tabChunks.eString[i].id === Number(UploadVideo.selectedTabChunkId)) {
+                    UploadVideo.tabChunks.eString[i].time.end = Math.round(parseInt(timeline.value));
+                }
+            };
+            this.initVideoUpload();
+        });
     };
 
     private initVideoUpload = () => {
@@ -100,12 +171,13 @@ class UploadVideo {
         const strings6 = this.getVideoText(UploadVideo.tab.eString);
 
         // Corresponding time arrays (start and end times for each string)
-        const times1 = this.getVideoTime(UploadVideo.tab.highEString);
-        const times2 = this.getVideoTime(UploadVideo.tab.bString);
-        const times3 = this.getVideoTime(UploadVideo.tab.gString);
-        const times4 = this.getVideoTime(UploadVideo.tab.dString);
-        const times5 = this.getVideoTime(UploadVideo.tab.aString);
-        const times6 = this.getVideoTime(UploadVideo.tab.eString);
+        const times1 = this.getVideoTime(UploadVideo.tabChunks.highEString);
+        const times2 = this.getVideoTime(UploadVideo.tabChunks.bString);
+        const times3 = this.getVideoTime(UploadVideo.tabChunks.gString);
+        const times4 = this.getVideoTime(UploadVideo.tabChunks.dString);
+        const times5 = this.getVideoTime(UploadVideo.tabChunks.aString);
+        const times6 = this.getVideoTime(UploadVideo.tabChunks.eString);
+        console.log("t1", times1)
 
         // Settings
         const lineHeight = 50; // Space between lines
@@ -133,13 +205,24 @@ class UploadVideo {
                 tabChunksIcon.addEventListener("click", () => {
                     const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
                     popupModal.innerHTML = this.buildTabChunkHTML();
+                    const tabChunks: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;
 
-                    console.log("pop", popupModal.innerHTML)
                     if (tabChunkContainerOpen) {
                         popupModal.style.display = "none";
                         tabChunkContainerOpen = false;
                     }
                     else {
+                        for (let i: number = 0; i < tabChunks.length; i++) {
+                            tabChunks[i].addEventListener("click", () => {
+                                this.adjustTabChunkTime(tabChunks[i]);
+                                
+                                for (let i: number = 0; i < tabChunks.length; i++) {
+                                    tabChunks[i].classList.remove("tab-segment-selected");
+                                };
+
+                                tabChunks[i].classList.add("tab-segment-selected");
+                            });
+                        };
                         popupModal.style.display = "flex";
                         tabChunkContainerOpen = true;
                     }
@@ -203,7 +286,6 @@ class UploadVideo {
         });
 
         timeline.addEventListener("change", () => {
-            console.log("change", timeline)
             drawFrame();
         })
 
@@ -214,8 +296,10 @@ class UploadVideo {
 
         // Seek video to the corresponding time when dragging the scroll bar
         timeline.addEventListener("input", () => {
-            console.log("click")
             const seekTime = (Number(timeline.value) / 100) * video.duration;
+            if (Number.isNaN(seekTime)) {
+                return;
+            }
             video.currentTime = seekTime;
             drawSingleFrame(); // Draw the current frame
             video.pause(); // Pause the video
@@ -238,6 +322,7 @@ class UploadVideo {
             if (video.paused || video.ended) {
                 return;
             }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw video frame to canvas
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -322,12 +407,12 @@ class UploadVideo {
             eReturnArray.push(eSplitArray[i]);
 
             if (i === counter || i === highESplitArray.length - 1) {
-                returnObj.highEString.push({text: highEReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
-                returnObj.bString.push({text: bReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
-                returnObj.gString.push({text: gReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
-                returnObj.dString.push({text: dReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
-                returnObj.aString.push({text: aReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
-                returnObj.eString.push({text: eReturnArray.join(""), time: { start: timer, end: timer + this.TIMER }});
+                returnObj.highEString.push({text: highEReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
+                returnObj.bString.push({text: bReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
+                returnObj.gString.push({text: gReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
+                returnObj.dString.push({text: dReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
+                returnObj.aString.push({text: aReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
+                returnObj.eString.push({text: eReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 counter += 33;
                 timer += this.TIMER;
                 highEReturnArray.splice(0, i);
