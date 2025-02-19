@@ -40,53 +40,44 @@ class UploadVideo {
     };
 
     private buildTabChunkHTML = () => {
-        let returnString = "";
+        const tabChunkContainer = document.createElement("div");
+        tabChunkContainer.classList.add("tab-chunk-container");
 
-        // HERE SEAN FIX THIS UP
-        UploadVideo.tabChunks.highEString.forEach((chunk: any) => {
-            const tabChunkTextHighEContainer = document.createElement("div");
-            tabChunkTextHighEContainer.classList.add("tab-chunk-text");
-            tabChunkTextHighEContainer.innerHTML = chunk.text;
-            returnString += tabChunkTextHighEContainer.outerHTML;
-        });
+        for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks).length; i++) {
+            const tabChunk = document.createElement("div");
+            tabChunk.classList.add("tab-chunk-text");
+            
+            // High E String
+            const tabChunkTextHighEContainer = document.createElement("p");
+            tabChunkTextHighEContainer.innerHTML = UploadVideo.tabChunks.highEString[i].text;
+            tabChunk.append(tabChunkTextHighEContainer);
 
-        UploadVideo.tabChunks.bString.forEach((chunk: any) => {
-            console.log(chunk)
-            const tabChunkTextBContainer = document.createElement("div");
-            tabChunkTextBContainer.classList.add("tab-chunk-text");
-            tabChunkTextBContainer.innerHTML = chunk.text;
-            returnString += tabChunkTextBContainer.outerHTML;
-        });
+            const tabChunkTextBContainer = document.createElement("p");
+            tabChunkTextBContainer.innerHTML = UploadVideo.tabChunks.bString[i].text;
+            tabChunk.append(tabChunkTextBContainer);
 
-        UploadVideo.tabChunks.gString.forEach((chunk: any) => {
-            const tabChunkTextGContainer = document.createElement("div");
-            tabChunkTextGContainer.classList.add("tab-chunk-text");
-            tabChunkTextGContainer.innerHTML = chunk.text;
-            returnString += tabChunkTextGContainer.outerHTML;
-        });
+            const tabChunkTextGContainer = document.createElement("p");
+            tabChunkTextGContainer.innerHTML = UploadVideo.tabChunks.gString[i].text;
+            tabChunk.append(tabChunkTextGContainer);
 
-        UploadVideo.tabChunks.dString.forEach((chunk: any) => {
-            const tabChunkTextDContainer = document.createElement("div");
-            tabChunkTextDContainer.classList.add("tab-chunk-text");
-            tabChunkTextDContainer.innerHTML = chunk.text;
-            returnString += tabChunkTextDContainer.outerHTML;
-        });
+            const tabChunkTextDContainer = document.createElement("p");
+            tabChunkTextDContainer.innerHTML = UploadVideo.tabChunks.dString[i].text;
+            tabChunk.append(tabChunkTextDContainer);
 
-        UploadVideo.tabChunks.aString.forEach((chunk: any) => {
-            const tabChunkTextAContainer = document.createElement("div");
-            tabChunkTextAContainer.classList.add("tab-chunk-text");
-            tabChunkTextAContainer.innerHTML = chunk.text;
-            returnString += tabChunkTextAContainer.outerHTML;
-        });
+            const tabChunkTextAContainer = document.createElement("p");
+            tabChunkTextAContainer.innerHTML = UploadVideo.tabChunks.aString[i].text;
+            tabChunk.append(tabChunkTextAContainer);
 
-        UploadVideo.tabChunks.eString.forEach((chunk: any) => {
-            const tabChunkTextEContainer = document.createElement("div");
-            tabChunkTextEContainer.classList.add("tab-chunk-text");
-            tabChunkTextEContainer.innerHTML = chunk.text;
-            returnString += tabChunkTextEContainer.outerHTML;
-        });
+            const tabChunkTextEContainer = document.createElement("p");
+            tabChunkTextEContainer.innerHTML = UploadVideo.tabChunks.eString[i].text;
+            tabChunk.append(tabChunkTextEContainer);
 
-        return returnString;
+            tabChunkContainer.append(tabChunk);
+        };
+
+        console.log(tabChunkContainer.outerHTML)
+
+        return tabChunkContainer.outerHTML;
     };
 
     private initVideoUpload = () => {
@@ -143,6 +134,7 @@ class UploadVideo {
                     const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
                     popupModal.innerHTML = this.buildTabChunkHTML();
 
+                    console.log("pop", popupModal.innerHTML)
                     if (tabChunkContainerOpen) {
                         popupModal.style.display = "none";
                         tabChunkContainerOpen = false;
