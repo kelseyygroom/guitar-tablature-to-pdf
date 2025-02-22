@@ -132,6 +132,11 @@ class UploadVideo {
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
         
         tabSegmentStartButton.addEventListener("click", () => {
+            tabSegmentStartButton.style.backgroundColor = "#23FE69";
+            setTimeout(() => {
+                tabSegmentStartButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
+            }, 1000);
+
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
                     UploadVideo.tabChunks.highEString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
@@ -163,6 +168,11 @@ class UploadVideo {
         });
 
         tabSegmentEndButton.addEventListener("click", () => {
+            tabSegmentEndButton.style.backgroundColor = "#23FE69";
+            setTimeout(() => {
+                tabSegmentStartButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
+            }, 1000);
+
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
                     UploadVideo.tabChunks.highEString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
@@ -245,6 +255,10 @@ class UploadVideo {
                 let tabChunkContainerOpen = false;
 
                 tabChunksIcon.addEventListener("click", () => {
+                    tabChunksIcon.style.backgroundColor = "#23FE69";
+                    setTimeout(() => {
+                        tabChunksIcon.style.backgroundColor = "rgb(29, 29, 31, .75)";
+                    }, 500);
                     const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
                     popupModal.innerHTML = this.buildTabChunkHTML();
                     const tabChunks: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;

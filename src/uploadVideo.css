@@ -201,20 +201,28 @@ input[type="file"] {
 .fa-arrow-right-to-bracket {
     position: absolute;
     right: 5vw;
-    bottom: 10vh;
+    bottom: 17.5vh;
     z-index: 99999;
+    background-color: rgb(29, 29, 31, .75);
+    padding: .5rem;
+    border-radius: 10px;
+    transition: all .5s;
 }
 
 .fa-arrow-right-from-bracket {
     position: absolute;
     left: 5vw;
-    bottom: 10vh;
+    bottom: 17.5vh;
     z-index: 99999;
+    background-color: rgb(29, 29, 31, .75);
+    padding: .5rem;
+    border-radius: 10px;
+    transition: all .5s;
 }
 
 .tab-segment-selected {
     border-style: solid;
-    border-color: #23FE69;
+    border-color: white;
     background-color: rgb(35, 254, 105, .5);
 }
 
@@ -270,6 +278,10 @@ input[type="file"] {
     top: 1rem;
     display: none;
     z-index: 99999;
+    background-color: rgb(29, 29, 31, .75);
+    padding: .5rem;
+    border-radius: 10px;
+    transition: all .25s;
 }
 
 #pause-icon {
@@ -293,7 +305,7 @@ input[type="file"] {
 
 /* Chrome, Safari, Edge */
 #video-timeline::-webkit-slider-runnable-track {
-    background: linear-gradient(to left, #5DCCF5, #964FF6);
+    background: #5DCCF5;
     height: 8px;
     border-radius: 4px;
   }
@@ -320,12 +332,14 @@ input[type="file"] {
 }
 
 .slider-container {
-    width: 100%;    
+    width: calc(90vw - 1rem);    
     position: absolute;
-    bottom: 5vh;
+    bottom: 10vh;
     left: 5vw;
-    width: 90vw;
     overflow: hidden;
+    background-color: rgb(29, 29, 31, .75);
+    padding: .5rem;
+    border-radius: 10px;
 }
 
 #video-seek {
@@ -347,7 +361,7 @@ input[type="file"] {
 .marker {
     position: absolute;
     width: 2px;
-    height: 10px;
+    height: 11px;
     top: -2px;
     border-radius: 10px;
 }
