@@ -170,7 +170,7 @@ class UploadVideo {
         tabSegmentEndButton.addEventListener("click", () => {
             tabSegmentEndButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
-                tabSegmentStartButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
+                tabSegmentEndButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
             }, 1000);
 
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
