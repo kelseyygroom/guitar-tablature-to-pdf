@@ -16,7 +16,7 @@ class UploadVideo {
     constructor() {
         this.user = {};
         this.tabTitle = "";
-        this.tabClipSegmentColors = ["#23FE69", "#FF1493", "#00FFFF", "#9400D3"]
+        this.tabClipSegmentColors = ["#23FE69", "#FF1493", "#00FFFF", "#9400D3", "#FDFD00", "#FF073A", "#FDFD00"]
     }
 
     public init = () => {
@@ -35,6 +35,7 @@ class UploadVideo {
             markerTimes.push(time.start);
             markerEndTimes.push(time.end);
         });
+        console.log(markerTimes, markerEndTimes)
 
         // Function to create markers
         markersContainer.innerHTML = ""; // Clear existing markers
@@ -108,7 +109,7 @@ class UploadVideo {
             const tabChunkTextEContainer = document.createElement("p");
             tabChunkTextEContainer.innerHTML = UploadVideo.tabChunks.eString[i].text;
             tabChunk.append(tabChunkTextEContainer);
-
+            tabChunk.style.backgroundColor = this.tabClipSegmentColors[i];
             tabChunkContainer.append(tabChunk);
         };
 
@@ -292,7 +293,7 @@ class UploadVideo {
                     // Set canvas dimensions to match video
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
-                    console.log(video.duration)
+                    this.TIMER = Math.round(UploadVideo.tabChunks.highEString.length * UploadVideo.videoDuration / 100)
                     this.addMarkers();
                     // Start drawing frames
                     requestAnimationFrame(drawFrame);
