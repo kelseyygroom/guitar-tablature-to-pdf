@@ -10,10 +10,13 @@ class UploadVideo {
     private static tab: any;
     private static tabChunks: any;
     private static selectedTabChunkId: any;
+    private static videoDuration: number;
+    private tabClipSegmentColors: string[];
 
     constructor() {
         this.user = {};
         this.tabTitle = "";
+        this.tabClipSegmentColors = ["#23FE69", "#FF1493", "#00FFFF", "#9400D3"]
     }
 
     public init = () => {
@@ -21,27 +24,33 @@ class UploadVideo {
         this.addTabSegmentListeners();
     }
 
-    private addMarkers = (duration: number) => {
-        console.log("add")
-        const videoDuration = duration; // Adjust based on actual video duration
+    private addMarkers = () => {
+        const videoDuration = UploadVideo.videoDuration;
         const markersContainer = document.querySelector(".markers")!;
         const startEndTimes = this.getVideoTime(UploadVideo.tabChunks.highEString);
         const markerTimes: number[] = []; // Example timestamps (percentage of range max)
+        const markerEndTimes: number[] = []; // Example timestamps (percentage of range max)
+
         startEndTimes.forEach(time => {
             markerTimes.push(time.start);
+            markerEndTimes.push(time.end);
         });
 
         // Function to create markers
         markersContainer.innerHTML = ""; // Clear existing markers
     
-        markerTimes.forEach(time => {
+        markerTimes.forEach((time: any, index: number) => {
             const marker = document.createElement("div");
             marker.classList.add("marker");
-    
+
             // Position the marker based on time
             const percent = (time / videoDuration) * 100;
+            const percentEnd = (markerEndTimes[index] / videoDuration) * 100;
             marker.style.left = `${percent}%`;
-    
+            marker.style.width = `${percentEnd - percent}%`;
+            marker.style.backgroundColor = `${this.tabClipSegmentColors[index]}`;
+            marker.style.opacity = ".5";
+
             markersContainer.appendChild(marker);
         });
     };
@@ -70,7 +79,7 @@ class UploadVideo {
         const tabChunkContainer = document.createElement("div");
         tabChunkContainer.classList.add("tab-chunk-container");
 
-        for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks).length; i++) {
+        for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
             const tabChunk = document.createElement("div");
             tabChunk.id = "tab-chunk-" + UploadVideo.tabChunks.highEString[i].id;
             tabChunk.classList.add("tab-chunk-text");
@@ -106,11 +115,15 @@ class UploadVideo {
         return tabChunkContainer.outerHTML;
     };
 
-    private adjustTabChunkTime = (tabChunk: any, videoDuration: number) => {
+    private adjustTabChunkTime = (tabChunk: any) => {
         const tabChunkId: string = tabChunk.id.split("-")[2];
         UploadVideo.selectedTabChunkId = tabChunkId;
-        this.addMarkers(videoDuration);
     };
+
+    // Translates the timeline value into the video length base unit (ie. videolength is 20 seconds so 10 of 20 is 50%).
+    private calculateClipToVideoRatio = () => {
+
+    }
 
     private addTabSegmentListeners = () => {
         const tabSegmentStartButton: HTMLDivElement = document.getElementById("start-tab-segment-button") as HTMLDivElement;
@@ -118,61 +131,64 @@ class UploadVideo {
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
         
         tabSegmentStartButton.addEventListener("click", () => {
-            for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks).length; i++) {
+            for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.highEString[i].time.start = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.highEString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.bString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.bString[i].time.start = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.bString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.gString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.gString[i].time.start = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.gString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.dString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.dString[i].time.start = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.dString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.aString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.aString[i].time.start = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.aString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.eString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.eString[i].time.start = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.eString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
             };
-            
+
+            this.addMarkers();
             this.initVideoUpload();
         });
 
         tabSegmentEndButton.addEventListener("click", () => {
-            for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks).length; i++) {
+            for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.highEString[i].time.end = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.highEString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.bString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.bString[i].time.end = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.bString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.gString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.gString[i].time.end = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.gString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.dString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.dString[i].time.end = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.dString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.aString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.aString[i].time.end = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.aString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
 
                 if (UploadVideo.tabChunks.eString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.eString[i].time.end = Math.round(parseInt(timeline.value));
+                    UploadVideo.tabChunks.eString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
             };
+
+            this.addMarkers();
             this.initVideoUpload();
         });
     };
@@ -243,6 +259,7 @@ class UploadVideo {
                                     tabChunks[i].classList.remove("tab-segment-selected");
                                 };
 
+                                this.adjustTabChunkTime(tabChunks[i]);
                                 tabChunks[i].classList.add("tab-segment-selected");
                             });
                         };
@@ -271,11 +288,12 @@ class UploadVideo {
                 video.muted = false; // Optional: Mute video by default
 
                 video.addEventListener('loadedmetadata', () => {
+                    UploadVideo.videoDuration = Number(video.duration.toFixed(0))
                     // Set canvas dimensions to match video
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     console.log(video.duration)
-                    this.addMarkers(Number(video.duration.toFixed(0)));
+                    this.addMarkers();
                     // Start drawing frames
                     requestAnimationFrame(drawFrame);
                 });
@@ -332,6 +350,7 @@ class UploadVideo {
 
         // Update text for all six lines
         video.addEventListener('timeupdate', () => {
+            console.log(video.currentTime)
             const progress = (video.currentTime / video.duration) * 100;
             timeline.value = progress.toString();
             updateText(strings1, times1, 0);
