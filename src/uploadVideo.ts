@@ -6,7 +6,7 @@ const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 class UploadVideo {
     user: any;
     tabTitle: string;
-    private TIMER: number = 3;
+    private TIMER: number = 5;
     private static tab: any;
     private static tabChunks: any;
     private static selectedTabChunkId: any;
@@ -20,6 +20,31 @@ class UploadVideo {
         this.getUserAccount();
         this.addTabSegmentListeners();
     }
+
+    private addMarkers = (duration: number) => {
+        console.log("add")
+        const videoDuration = duration; // Adjust based on actual video duration
+        const markersContainer = document.querySelector(".markers")!;
+        const startEndTimes = this.getVideoTime(UploadVideo.tabChunks.highEString);
+        const markerTimes: number[] = []; // Example timestamps (percentage of range max)
+        startEndTimes.forEach(time => {
+            markerTimes.push(time.start);
+        });
+
+        // Function to create markers
+        markersContainer.innerHTML = ""; // Clear existing markers
+    
+        markerTimes.forEach(time => {
+            const marker = document.createElement("div");
+            marker.classList.add("marker");
+    
+            // Position the marker based on time
+            const percent = (time / videoDuration) * 100;
+            marker.style.left = `${percent}%`;
+    
+            markersContainer.appendChild(marker);
+        });
+    };
 
     private getVideoText = (string: any[]) => {
         const returnArray: string[] = [];
@@ -81,9 +106,10 @@ class UploadVideo {
         return tabChunkContainer.outerHTML;
     };
 
-    private adjustTabChunkTime = (tabChunk: any) => {
+    private adjustTabChunkTime = (tabChunk: any, videoDuration: number) => {
         const tabChunkId: string = tabChunk.id.split("-")[2];
         UploadVideo.selectedTabChunkId = tabChunkId;
+        this.addMarkers(videoDuration);
     };
 
     private addTabSegmentListeners = () => {
@@ -177,7 +203,6 @@ class UploadVideo {
         const times4 = this.getVideoTime(UploadVideo.tabChunks.dString);
         const times5 = this.getVideoTime(UploadVideo.tabChunks.aString);
         const times6 = this.getVideoTime(UploadVideo.tabChunks.eString);
-        console.log("t1", times1)
 
         // Settings
         const lineHeight = 50; // Space between lines
@@ -214,8 +239,6 @@ class UploadVideo {
                     else {
                         for (let i: number = 0; i < tabChunks.length; i++) {
                             tabChunks[i].addEventListener("click", () => {
-                                this.adjustTabChunkTime(tabChunks[i]);
-                                
                                 for (let i: number = 0; i < tabChunks.length; i++) {
                                     tabChunks[i].classList.remove("tab-segment-selected");
                                 };
@@ -245,13 +268,14 @@ class UploadVideo {
                 video.src = fileURL;
                 video.load();
                 video.play();
-                video.muted = true; // Optional: Mute video by default
+                video.muted = false; // Optional: Mute video by default
 
                 video.addEventListener('loadedmetadata', () => {
                     // Set canvas dimensions to match video
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
-
+                    console.log(video.duration)
+                    this.addMarkers(Number(video.duration.toFixed(0)));
                     // Start drawing frames
                     requestAnimationFrame(drawFrame);
                 });

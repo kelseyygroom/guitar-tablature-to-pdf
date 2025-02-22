@@ -216,7 +216,7 @@ input[type="file"] {
 .tab-segment-selected {
     border-style: solid;
     border-color: #23FE69;
-    background-color: #23FE69;
+    background-color: rgb(35, 254, 105, .5);
 }
 
 #upload-video-buttons-container {
@@ -284,15 +284,12 @@ input[type="file"] {
 
 #video-timeline {
     -webkit-appearance: none; /* Remove default styling */
-    position: absolute;
-    top: 95vh;
-    left: 5vw;
-    width: 90vw;
     background: #ddd; /* Track color */
     border-radius: 4px;
     outline: none;
     opacity: 0.9;
     transition: opacity 0.2s;
+    width: 100%;
 }
 
 /* Chrome, Safari, Edge */
@@ -320,6 +317,38 @@ input[type="file"] {
     height: 100vh;
     width: 100vw;
     display: none;
+}
+
+.slider-container {
+    width: 100%;    
+    position: fixed;
+    top: 95vh;
+    left: 5vw;
+    width: 90vw;
+}
+
+#video-seek {
+    width: 100%;
+    position: relative;
+    z-index: 2; /* Ensure the slider is above the markers */
+}
+
+.markers {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    transform: translateY(-50%);
+    pointer-events: none; /* Allows clicking the range input */
+}
+
+.marker {
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background-color: #23FE69;
+    top: -3px;
 }
 
 /** Responsive **/
