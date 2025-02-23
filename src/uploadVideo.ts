@@ -112,6 +112,7 @@ class UploadVideo {
             tabChunkTextEContainer.innerHTML = UploadVideo.tabChunks.eString[i].text;
             tabChunk.append(tabChunkTextEContainer);
             tabChunk.style.backgroundColor = this.tabClipSegmentColors[i];
+            tabChunk.setAttribute("color", this.tabClipSegmentColors[i]);
             tabChunkContainer.append(tabChunk);
         };
 
@@ -220,6 +221,7 @@ class UploadVideo {
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
         const pauseIcon: HTMLElement = document.getElementById("pause-icon") as HTMLElement;
         const tabChunksIcon: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
+        videoIcon.src = logo;
 
         // Six string arrays with different text
         const strings1 = this.getVideoText(UploadVideo.tab.highEString);
@@ -237,7 +239,6 @@ class UploadVideo {
         const times5 = this.getVideoTime(UploadVideo.tabChunks.aString);
         const times6 = this.getVideoTime(UploadVideo.tabChunks.eString);
 
-        videoIcon.src = logo;
         // Settings
         const lineHeight = 50; // Space between lines
 
@@ -263,9 +264,11 @@ class UploadVideo {
 
                 tabChunksIcon.addEventListener("click", () => {
                     tabChunksIcon.style.backgroundColor = "#23FE69";
+
                     setTimeout(() => {
                         tabChunksIcon.style.backgroundColor = "rgb(29, 29, 31, .75)";
                     }, 500);
+
                     const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
                     popupModal.innerHTML = this.buildTabChunkHTML();
                     const tabChunks: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;
@@ -276,11 +279,17 @@ class UploadVideo {
                     }
                     else {
                         for (let i: number = 0; i < tabChunks.length; i++) {
-                            tabChunks[i].addEventListener("click", () => {
+                            tabChunks[i].addEventListener("click", (event) => {
+                                const selectedTabIndicator: HTMLDivElement = document.getElementById("selected-tab-indicator") as HTMLDivElement;
+
+                                console.log("sel", tabChunks[i])
                                 for (let i: number = 0; i < tabChunks.length; i++) {
                                     tabChunks[i].classList.remove("tab-segment-selected");
                                 };
 
+                                // selectedTabIndicator.style.color = tabChunks[i].getAttribute("color")!;
+                                selectedTabIndicator.style.backgroundColor = tabChunks[i].getAttribute("color")!;
+                                selectedTabIndicator.innerHTML = "Clip " + (i + 1); 
                                 this.adjustTabChunkTime(tabChunks[i]);
                                 tabChunks[i].classList.add("tab-segment-selected");
                             });
