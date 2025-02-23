@@ -1,4 +1,5 @@
 import "./uploadVideo.css";
+import logo from "./images/emblem.svg"
 
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 // const url = "http://localhost:5000/";
@@ -22,6 +23,7 @@ class UploadVideo {
     public init = () => {
         this.getUserAccount();
         this.addTabSegmentListeners();
+        this.addBackButtonListener();
     }
 
     private addMarkers = () => {
@@ -121,10 +123,13 @@ class UploadVideo {
         UploadVideo.selectedTabChunkId = tabChunkId;
     };
 
-    // Translates the timeline value into the video length base unit (ie. videolength is 20 seconds so 10 of 20 is 50%).
-    private calculateClipToVideoRatio = () => {
-
-    }
+    private addBackButtonListener = () => {
+        const backButton: HTMLElement = document.getElementById("return-to-tab-button") as HTMLElement;
+        
+        backButton.addEventListener("click", () => {
+            window.location.href = "create.html?username=" + this.user.username + "&title=" + this.tabTitle;
+        });
+    };
 
     private addTabSegmentListeners = () => {
         const tabSegmentStartButton: HTMLDivElement = document.getElementById("start-tab-segment-button") as HTMLDivElement;
@@ -206,6 +211,7 @@ class UploadVideo {
 
     private initVideoUpload = () => {
         // Get HTML elements
+        const videoIcon: HTMLImageElement = document.getElementById("video-icon") as HTMLImageElement;
         const videoEditingToolsContainer: HTMLDivElement = document.getElementById("video-editing-tool-container") as HTMLDivElement;
         const videoInput = document.getElementById('video-upload') as HTMLInputElement;
         const canvas = document.getElementById('video-canvas') as HTMLCanvasElement;
@@ -231,6 +237,7 @@ class UploadVideo {
         const times5 = this.getVideoTime(UploadVideo.tabChunks.aString);
         const times6 = this.getVideoTime(UploadVideo.tabChunks.eString);
 
+        videoIcon.src = logo;
         // Settings
         const lineHeight = 50; // Space between lines
 
@@ -241,7 +248,7 @@ class UploadVideo {
         videoInput.addEventListener("change", (event) => {
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
             const videoCanvas: HTMLDivElement = document.getElementById("video-canvas") as HTMLDivElement;
-            const videoIcon: HTMLElement = document.getElementById("video-icon") as HTMLElement;
+            const videoIcon: HTMLImageElement = document.getElementById("video-icon") as HTMLImageElement;
             
             videoIcon.style.display = "none";
             buttonContainer.style.display = "none";
@@ -293,6 +300,7 @@ class UploadVideo {
                         videoCanvas.style.display = "none";
                         buttonContainer.style.display = "flex";
                         videoIcon.style.display = "block";
+                        videoIcon.src = logo;
                     }
                 });
 

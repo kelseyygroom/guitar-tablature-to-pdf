@@ -30,6 +30,7 @@ body {
 }
 
 #tab-list-container {
+    position: fixed;
     margin-top: 2.5rem;
     padding: 0px;
     width: 100vw;
