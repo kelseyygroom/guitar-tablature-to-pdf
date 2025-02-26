@@ -1,3 +1,4 @@
+import { createFFmpeg, FFmpeg } from '@ffmpeg/ffmpeg';
 import "./uploadVideo.css";
 import logo from "./images/emblem.svg"
 
@@ -24,6 +25,14 @@ class UploadVideo {
         this.getUserAccount();
         this.addTabSegmentListeners();
         this.addBackButtonListener();
+    }
+
+    private addClosePopupListener = () => {
+        const closeIcon: HTMLElement = document.getElementById("close-tab-chunk-container-icon") as HTMLElement;
+        closeIcon.addEventListener("click", () => {
+            const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
+            popupModal.style.display = "none";
+        });
     }
 
     private addMarkers = () => {
@@ -115,6 +124,12 @@ class UploadVideo {
             tabChunk.setAttribute("color", this.tabClipSegmentColors[i]);
             tabChunkContainer.append(tabChunk);
         };
+
+        const closeIcon = document.createElement("i");
+        closeIcon.classList.add("fas");
+        closeIcon.classList.add("fa-angle-down");
+        closeIcon.id = "close-tab-chunk-container-icon"
+        tabChunkContainer.prepend(closeIcon);
 
         return tabChunkContainer.outerHTML;
     };
@@ -210,6 +225,127 @@ class UploadVideo {
         });
     };
 
+    private saveVideo = (src: any, tabTitle: string) => {
+        const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
+        const video = document.createElement("video"); // Hidden video element
+        const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
+        const ctx = canvas.getContext("2d")!;
+    
+        // Track current text for each line
+        let currentText = ["", "", "", "", "", ""];
+        const lineHeight = 50; // Space between lines
+    
+        video.style.display = "none";
+        const fileURL = URL.createObjectURL(src);
+        video.src = fileURL;
+        let recorder: any, chunks: any[] = [], stream;
+        let isRecording = false;
+    
+        async function drawFrame(): Promise<void> {
+            if (!isRecording) return;
+    
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+            // Draw video frame to canvas
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+            // Set text style
+            ctx.font = '48px Monospace';
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.textAlign = 'left';
+    
+            // Display all six strings stacked vertically
+            currentText.forEach((text, index) => {
+                if (text) {
+                    const textX = 50;
+                    const textY = canvas.height - (6 - index) * lineHeight - 100;
+                    ctx.fillText(text, textX, textY);
+                    ctx.strokeText(text, textX, textY);
+                }
+            });
+    
+            // Stop recording when the video ends
+            if (video.currentTime >= video.duration) {
+                recorder.stop();  // Stop recording
+                isRecording = false;
+                return;
+            }
+    
+            requestAnimationFrame(drawFrame);
+        }
+    
+        // Start recording the canvas
+        async function startRecording() {
+            const loadingIcon: HTMLDivElement = document.getElementById("loading-modal") as HTMLDivElement;
+            loadingIcon.style.display = "flex";
+            if (isRecording) return;
+            chunks = [];
+    
+            const estimatedFrameRate = 30; // Default to 30 FPS if unknown
+            stream = canvas.captureStream(estimatedFrameRate);
+            recorder = new MediaRecorder(stream, { mimeType: "video/webm; codecs=vp9" });
+    
+            recorder.ondataavailable = (e: any) => {
+                if (e.data && e.data.size > 0) {
+                    chunks.push(e.data);
+                }
+            };
+    
+            recorder.onstop = saveVideo;
+            recorder.start();
+    
+            isRecording = true;
+            video.play();
+            drawFrame();
+        }
+    
+        // Save the recorded video as MP4 using FFmpeg.wasm (H.264 codec)
+        async function saveVideo() {
+            const blob = new Blob(chunks, { type: "video/webm" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = tabTitle + ".webm"; // Download as WebM initially
+            document.body.appendChild(a);
+            a.click();
+    
+            // Convert WebM to MP4 using FFmpeg.wasm with H.264 codec
+            const ffmpeg = createFFmpeg({ log: true }); // Use createFFmpeg to instantiate FFmpeg
+            await ffmpeg.load();
+    
+            // Write WebM file to FFmpeg virtual file system
+            ffmpeg.FS('writeFile', 'input.webm', new Uint8Array(await blob.arrayBuffer()));
+    
+            // Run FFmpeg command to convert WebM to MP4 with H.264 codec (compatible with Safari)
+            await ffmpeg.run('-i', 'input.webm', '-c:v', 'libx264', '-preset', 'fast', '-crf', '23', 'output.mp4');
+    
+            // Read the MP4 file from FFmpeg virtual file system
+            const mp4Data = ffmpeg.FS('readFile', 'output.mp4');
+    
+            // Create a Blob from the MP4 data and initiate download
+            const mp4Blob = new Blob([mp4Data.buffer], { type: 'video/mp4' });
+            const mp4Url = URL.createObjectURL(mp4Blob);
+            const mp4Link = document.createElement('a');
+            mp4Link.href = mp4Url;
+            mp4Link.download = tabTitle + ".mp4";
+            document.body.appendChild(mp4Link);
+            mp4Link.click();
+            URL.revokeObjectURL(mp4Url);
+    
+            // Cleanup
+            URL.revokeObjectURL(url);
+            chunks = [];
+            isRecording = false;
+            const loadingIcon: HTMLDivElement = document.getElementById("loading-modal") as HTMLDivElement;
+            loadingIcon.style.display = "none";
+        }
+    
+        startButton.addEventListener('click', startRecording);
+    };
+
     private initVideoUpload = () => {
         // Get HTML elements
         const videoIcon: HTMLImageElement = document.getElementById("video-icon") as HTMLImageElement;
@@ -220,10 +356,10 @@ class UploadVideo {
         const video = document.createElement('video');
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
         const pauseIcon: HTMLElement = document.getElementById("pause-icon") as HTMLElement;
-        const tabChunksIcon: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
+        const tabSegmentsDisplay: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
         videoIcon.src = logo;
 
-        // Six string arrays with different text
+        // Six string arrays with different text.
         const strings1 = this.getVideoText(UploadVideo.tab.highEString);
         const strings2 = this.getVideoText(UploadVideo.tab.bString);
         const strings3 = this.getVideoText(UploadVideo.tab.gString);
@@ -257,46 +393,39 @@ class UploadVideo {
 
             const file = (event.target as HTMLInputElement).files?.[0];
             if (file) {
+                // Initialize save video button.
+                this.saveVideo(file, this.tabTitle);
                 videoEditingToolsContainer.style.display = "block";
                 const unloadVideoButton: HTMLElement = document.getElementById("unmount-video-button") as HTMLElement;
                 unloadVideoButton.style.display = "block";
-                let tabChunkContainerOpen = false;
 
-                tabChunksIcon.addEventListener("click", () => {
-                    tabChunksIcon.style.backgroundColor = "#23FE69";
+                tabSegmentsDisplay.addEventListener("click", () => {
+                    tabSegmentsDisplay.style.backgroundColor = "#23FE69";
 
                     setTimeout(() => {
-                        tabChunksIcon.style.backgroundColor = "rgb(29, 29, 31, .75)";
+                        tabSegmentsDisplay.style.backgroundColor = "rgb(29, 29, 31, .75)";
                     }, 500);
 
                     const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
                     popupModal.innerHTML = this.buildTabChunkHTML();
+                    this.addClosePopupListener();
                     const tabChunks: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;
 
-                    if (tabChunkContainerOpen) {
-                        popupModal.style.display = "none";
-                        tabChunkContainerOpen = false;
-                    }
-                    else {
-                        for (let i: number = 0; i < tabChunks.length; i++) {
-                            tabChunks[i].addEventListener("click", (event) => {
-                                const selectedTabIndicator: HTMLDivElement = document.getElementById("selected-tab-indicator") as HTMLDivElement;
+                    for (let i: number = 0; i < tabChunks.length; i++) {
+                        tabChunks[i].addEventListener("click", (event) => {
+                            const selectedTabIndicator: HTMLDivElement = document.getElementById("selected-tab-indicator") as HTMLDivElement;
 
-                                console.log("sel", tabChunks[i])
-                                for (let i: number = 0; i < tabChunks.length; i++) {
-                                    tabChunks[i].classList.remove("tab-segment-selected");
-                                };
+                            for (let i: number = 0; i < tabChunks.length; i++) {
+                                tabChunks[i].classList.remove("tab-segment-selected");
+                            };
 
-                                // selectedTabIndicator.style.color = tabChunks[i].getAttribute("color")!;
-                                selectedTabIndicator.style.backgroundColor = tabChunks[i].getAttribute("color")!;
-                                selectedTabIndicator.innerHTML = "Clip " + (i + 1); 
-                                this.adjustTabChunkTime(tabChunks[i]);
-                                tabChunks[i].classList.add("tab-segment-selected");
-                            });
-                        };
-                        popupModal.style.display = "flex";
-                        tabChunkContainerOpen = true;
-                    }
+                            selectedTabIndicator.style.backgroundColor = tabChunks[i].getAttribute("color")!;
+                            selectedTabIndicator.innerHTML = "Clip " + (i + 1); 
+                            this.adjustTabChunkTime(tabChunks[i]);
+                            tabChunks[i].classList.add("tab-segment-selected");
+                        });
+                    };
+                    popupModal.style.display = "flex";
                 });
 
                 unloadVideoButton.addEventListener("click", () => {
@@ -310,7 +439,7 @@ class UploadVideo {
                         buttonContainer.style.display = "flex";
                         videoIcon.style.display = "block";
                         videoIcon.src = logo;
-                    }
+                    };
                 });
 
                 const fileURL = URL.createObjectURL(file);
@@ -382,7 +511,6 @@ class UploadVideo {
 
         // Update text for all six lines
         video.addEventListener('timeupdate', () => {
-            console.log(video.currentTime)
             const progress = (video.currentTime / video.duration) * 100;
             timeline.value = progress.toString();
             updateText(strings1, times1, 0);
@@ -397,6 +525,7 @@ class UploadVideo {
             if (video.paused || video.ended) {
                 return;
             }
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw video frame to canvas

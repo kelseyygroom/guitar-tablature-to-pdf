@@ -1,9 +1,12 @@
 {
     "compilerOptions": {
-      "target": "es6",
-      "module": "es6",
+      "moduleResolution": "node", // This ensures TypeScript resolves modules using Node.js style
+      "esModuleInterop": true,    // This allows default imports from CommonJS modules
+      "allowSyntheticDefaultImports": true, // This allows imports like "import * as ffmpeg from '@ffmpeg/ffmpeg'"
+      "module": "ESNext", // Or "CommonJS" depending on your setup
+      "target": "ES6",    // Or higher, based on your setup
+      "resolveJsonModule": true, // This allows importing JSON files if needed
       "strict": true,
-      "esModuleInterop": true,
       "outDir": "./dist",
       "sourceMap": true,
       "types": ["undici-types"],
