@@ -1,9 +1,9 @@
-import { createFFmpeg, FFmpeg } from '@ffmpeg/ffmpeg';
 import "./uploadVideo.css";
 import logo from "./images/emblem.svg"
 
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
-// const url = "http://localhost:5000/";
+// const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = "http://localhost:5000/";
+const apiKey = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzBjYWM3ZjY2YWRkYWE3ZTFiNjY1ZjI5YzRkNzliZjQyZjk5NzhiZDZlYTBmMmFmN2Y5ZmRhZDc1ZDNiZTk2YWJkNjI0MjhjZDc3ZTkzNTIiLCJpYXQiOjE3NDA1NjY0MDQuODE3MjY5LCJuYmYiOjE3NDA1NjY0MDQuODE3MjcxLCJleHAiOjQ4OTYyNDAwMDQuODExNjM5LCJzdWIiOiI3MTE3MTY1MyIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSIsIndlYmhvb2sucmVhZCIsIndlYmhvb2sud3JpdGUiLCJwcmVzZXQucmVhZCIsInByZXNldC53cml0ZSJdfQ.B8py_YqzZMacZP2WnSQHJm_Gh97EvSz1j1g4nvGOsGd9DvxqUha3ZOuiSZsOD-0bItKPBFJP7PLILZd1K5YCJwvSV1e5XkmaUM4_QYo870xi8DfmNR6bN5zf5nquwj7aVORirv6_q1pzjV5tg3j0RXSMV-GSsBA4wCE3oLEOg6GtcEVdV5soLv5jwbWhauDSuFoXiZI61bQut2TsAngVUlN0wyLr3ufH68izMwRRlPJdpHh_D7KfjTdMN5Gxb9QKUGjJ0ekdw5e5JZKACSGZNJAdcHeEElcTHnFLnjn0I-4edwQaBbu1qwvEF8ZvFN0ZrPvBEUtkd5bzyuT60NOzensyfnHyYaiZd1FaiGN_bLIsW_vCfUfDWOiOAEeRHb_mpwj64y2sLT1HGFqi6rWFS3b4uNxD22TF7DM62PiS6AzCljhG4n8fScdncLmT6DuqQ7PPcj4HfE5ixd8QuuES7ZwP05RDmTeNgN-lYZ-Kkb-5l06ElwOc9K7-ORSU_iPp0pCJtf5KrtVcdqd4HZ3zgCZ7EBczKbTMusP4eCKo0r-TmoZCx0grJ83MBoPkgtRrQwzyyaLl-qq4_eSvmelYLsYS6BwLIE_YF-ljXf90JkuQIFZpCpHKICebrbGiCVrr93WTqvUz4hmrqEuilbwh-etxjF_Nd-Kq5hJ9RjZSz5s';
 
 class UploadVideo {
     user: any;
@@ -225,38 +225,33 @@ class UploadVideo {
         });
     };
 
-    private saveVideo = (src: any, tabTitle: string) => {
+    private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
         const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
-        const video = document.createElement("video"); // Hidden video element
+        const video = document.createElement("video");
         const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
         const ctx = canvas.getContext("2d")!;
     
-        // Track current text for each line
         let currentText = ["", "", "", "", "", ""];
-        const lineHeight = 50; // Space between lines
-    
+        const lineHeight = 50;
+
         video.style.display = "none";
-        const fileURL = URL.createObjectURL(src);
-        video.src = fileURL;
-        let recorder: any, chunks: any[] = [], stream;
+        video.src = URL.createObjectURL(src);
+
+        let recorder: MediaRecorder, chunks: Blob[] = [], stream: MediaStream;
         let isRecording = false;
-    
-        async function drawFrame(): Promise<void> {
+
+        function drawFrame(): void {
             if (!isRecording) return;
-    
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-            // Draw video frame to canvas
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-            // Set text style
+
             ctx.font = '48px Monospace';
             ctx.fillStyle = 'white';
             ctx.strokeStyle = 'white';
             ctx.lineWidth = 2;
             ctx.textAlign = 'left';
-    
-            // Display all six strings stacked vertically
+
             currentText.forEach((text, index) => {
                 if (text) {
                     const textX = 50;
@@ -265,84 +260,139 @@ class UploadVideo {
                     ctx.strokeText(text, textX, textY);
                 }
             });
-    
-            // Stop recording when the video ends
+
             if (video.currentTime >= video.duration) {
-                recorder.stop();  // Stop recording
+                recorder.stop();
                 isRecording = false;
                 return;
             }
-    
+
             requestAnimationFrame(drawFrame);
         }
-    
-        // Start recording the canvas
-        async function startRecording() {
-            const loadingIcon: HTMLDivElement = document.getElementById("loading-modal") as HTMLDivElement;
-            loadingIcon.style.display = "flex";
+
+        function startRecording(): void {
             if (isRecording) return;
+
             chunks = [];
-    
-            const estimatedFrameRate = 30; // Default to 30 FPS if unknown
+            const estimatedFrameRate = 30;
             stream = canvas.captureStream(estimatedFrameRate);
-            recorder = new MediaRecorder(stream, { mimeType: "video/webm; codecs=vp9" });
-    
-            recorder.ondataavailable = (e: any) => {
+            recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+
+            recorder.ondataavailable = (e: BlobEvent) => {
                 if (e.data && e.data.size > 0) {
                     chunks.push(e.data);
                 }
             };
-    
-            recorder.onstop = saveVideo;
+
+            recorder.onstop = async () => {
+                const webmBlob = new Blob(chunks, { type: "video/webm" });
+                await uploadAndConvert(webmBlob, tabTitle);
+            };
+
             recorder.start();
-    
             isRecording = true;
             video.play();
             drawFrame();
         }
-    
-        // Save the recorded video as MP4 using FFmpeg.wasm (H.264 codec)
-        async function saveVideo() {
-            const blob = new Blob(chunks, { type: "video/webm" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.style.display = "none";
-            a.href = url;
-            a.download = tabTitle + ".webm"; // Download as WebM initially
-            document.body.appendChild(a);
-            a.click();
-    
-            // Convert WebM to MP4 using FFmpeg.wasm with H.264 codec
-            const ffmpeg = createFFmpeg({ log: true }); // Use createFFmpeg to instantiate FFmpeg
-            await ffmpeg.load();
-    
-            // Write WebM file to FFmpeg virtual file system
-            ffmpeg.FS('writeFile', 'input.webm', new Uint8Array(await blob.arrayBuffer()));
-    
-            // Run FFmpeg command to convert WebM to MP4 with H.264 codec (compatible with Safari)
-            await ffmpeg.run('-i', 'input.webm', '-c:v', 'libx264', '-preset', 'fast', '-crf', '23', 'output.mp4');
-    
-            // Read the MP4 file from FFmpeg virtual file system
-            const mp4Data = ffmpeg.FS('readFile', 'output.mp4');
-    
-            // Create a Blob from the MP4 data and initiate download
-            const mp4Blob = new Blob([mp4Data.buffer], { type: 'video/mp4' });
-            const mp4Url = URL.createObjectURL(mp4Blob);
-            const mp4Link = document.createElement('a');
-            mp4Link.href = mp4Url;
-            mp4Link.download = tabTitle + ".mp4";
-            document.body.appendChild(mp4Link);
-            mp4Link.click();
-            URL.revokeObjectURL(mp4Url);
-    
-            // Cleanup
-            URL.revokeObjectURL(url);
-            chunks = [];
-            isRecording = false;
-            const loadingIcon: HTMLDivElement = document.getElementById("loading-modal") as HTMLDivElement;
-            loadingIcon.style.display = "none";
+
+        async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
+            try {
+                console.log("Starting upload and conversion process...");
+        
+                // Step 1: Create CloudConvert Job
+                const jobResponse = await fetch("https://api.cloudconvert.com/v2/jobs", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${apiKey}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        tasks: {
+                            "upload": { "operation": "import/upload" },
+                            "convert": {
+                                "operation": "convert",
+                                "input": ["upload"],
+                                "output_format": "mp4",
+                                "options": { "video_codec": "h264" }
+                            },
+                            "export": { "operation": "export/url", "input": ["convert"] }
+                        }
+                    })
+                });
+        
+                if (!jobResponse.ok) throw new Error(`Job Creation Error: ${jobResponse.statusText}`);
+        
+                const jobData = await jobResponse.json();
+                console.log("CloudConvert Job Created:", jobData);
+        
+                // Step 2: Extract Upload Task & Parameters
+                const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
+                if (!uploadTask || !uploadTask.result?.form?.url) {
+                    throw new Error("Upload URL not found in CloudConvert response.");
+                }
+        
+                const uploadUrl = uploadTask.result.form.url;
+                const parameters = uploadTask.result.form.parameters || {}; // Ensure parameters exist
+        
+                console.log("Upload URL:", uploadUrl);
+                console.log("Upload Parameters:", parameters);
+        
+                // Step 3: Prepare Form Data (Including Required Parameters)
+                const formData = new FormData();
+                
+                // Append all required parameters from CloudConvert's response
+                for (const [key, value] of Object.entries(parameters)) {
+                    formData.append(key, value as string);
+                }
+        
+                formData.append("file", blob, filename + ".webm");
+        
+                // Step 4: Upload File
+                const uploadFileResponse = await fetch(uploadUrl, { method: "POST", body: formData });
+        
+                if (!uploadFileResponse.ok) {
+                    const errorText = await uploadFileResponse.text();
+                    throw new Error(`File Upload Error: ${errorText}`);
+                }
+        
+                console.log("File uploaded successfully. Waiting for conversion...");
+        
+                // Step 5: Poll for Conversion Status
+                const jobId = jobData.data.id;
+                let convertedFileUrl: string | null = null;
+        
+                while (!convertedFileUrl) {
+                    await new Promise(res => setTimeout(res, 5000)); // Wait 5 seconds before checking status
+        
+                    const jobStatusResponse = await fetch(`https://api.cloudconvert.com/v2/jobs/${jobId}`, {
+                        headers: { "Authorization": `Bearer ${apiKey}` }
+                    });
+        
+                    const jobStatusData = await jobStatusResponse.json();
+                    console.log("Conversion Status:", jobStatusData);
+        
+                    const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
+                    convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
+                }
+        
+                if (convertedFileUrl) {
+                    console.log("Conversion completed. Downloading MP4...");
+                    const a = document.createElement("a");
+                    a.href = convertedFileUrl;
+                    a.download = filename + ".mp4";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    console.log("Download link triggered:", convertedFileUrl);
+                } else {
+                    throw new Error("Conversion failed. No MP4 file available.");
+                }
+        
+            } catch (error) {
+                console.error("Error during WebM to MP4 conversion:", error);
+            }
         }
-    
+
         startButton.addEventListener('click', startRecording);
     };
 

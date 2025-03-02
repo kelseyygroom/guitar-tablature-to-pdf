@@ -1,10 +1,17 @@
 const express = require('express');
 const { connectToDatabase } = require('./config/db');
 const cors = require('cors');
-
-
+const multer = require('multer');
+const { webmToMp4 } = require('webm-to-mp4'); // Import the webm-to-mp4 package
+const path = require('path');
+const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 5000;
+const uploadsDir = 'uploads/';
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
 
 app.use(express.json());
 app.use(cors({ origin: '*' }));
@@ -12,6 +19,37 @@ app.options('*', cors());
 
 app.get('/', (req, res) => {
     res.send('Hello from Heroku!');
+});
+
+const upload = multer({ dest: 'uploads/' }); // Set a destination for uploaded files
+
+app.post('/upload-video', upload.single('video'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  const inputPath = path.join(__dirname, req.file.path);
+  const outputPath = path.join(__dirname, 'uploads', `${Date.now()}.mp4`);
+
+  // Convert WebM to MP4
+  webmToMp4(inputPath, outputPath)
+    .then(() => {
+      // Once conversion is complete, send the MP4 file back to the client
+      res.download(outputPath, (err) => {
+        if (err) {
+          console.log("Error during file download:", err);
+          return res.status(500).send("Failed to download the converted video.");
+        }
+
+        // Clean up by removing the input WebM and output MP4 files
+        fs.unlinkSync(inputPath);
+        fs.unlinkSync(outputPath);
+      });
+    })
+    .catch((error) => {
+      console.error("Error during WebM to MP4 conversion:", error);
+      res.status(500).send("Error during video conversion.");
+    });
 });
 
 app.get('/login', async (req, res) => {
