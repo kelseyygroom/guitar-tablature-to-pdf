@@ -380,10 +380,10 @@ class UploadVideo {
                 creatingVideoText.innerHTML = `timeout begins...`;
 
                 let uploadFileResponse;
-                creatingVideoText.innerHTML = `before try block...`;
+                creatingVideoText.innerHTML = `ERROR: Stalled before uploadVideo.`;
 
                 try {
-                    creatingVideoText.innerHTML = `Attempting fetch for uploadURL. IN TRY BLOCK`;
+                    creatingVideoText.innerHTML = `Uploading video...`;
 
                     uploadFileResponse = await fetch(uploadUrl, { 
                         method: "POST", 
@@ -405,7 +405,6 @@ class UploadVideo {
                     creatingVideoText.innerHTML = `File Upload Error: ${errorText}`;
                 }
 
-                creatingVideoText.innerHTML = `uploadFileResponse successful!`;
                 creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion...";
 
                 // Step 5: Poll for Conversion Status
@@ -434,10 +433,8 @@ class UploadVideo {
                     else {
                         creatingVideoText.innerHTML += "(Filename: " + exportTask.result.files[0].filename + ")";
                     }
+
                     creatingVideoText.innerHTML += "(ExportTask Status: " + exportTask.status + ")";
-
-
-console.log("ex", exportTask)
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
                 }
         
@@ -448,7 +445,7 @@ console.log("ex", exportTask)
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
-                    creatingVideoText.innerHTML = "Downloading...";
+                    creatingVideoText.innerHTML = "Downloading " + UploadVideo.tab.tabtitle + ".mp4";
                     const loadingIcon: HTMLElement = document.getElementById("loading-icon") as HTMLElement;
                     loadingIcon.style.display = "none";
 
