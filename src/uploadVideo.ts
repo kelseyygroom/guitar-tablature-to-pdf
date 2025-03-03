@@ -380,7 +380,7 @@ class UploadVideo {
         
                     const jobStatusData = await jobStatusResponse.json();
                     console.log("Conversion Status:", jobStatusData);
-                    creatingVideoText.innerHTML = "Conversion Status:", jobStatusData.data.tasks[jobStatusData.data.tasks.length - 1].status;
+                    creatingVideoText.innerHTML = 'Conversion Status: "' + jobStatusData.data.status + '"';
         
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
@@ -394,11 +394,13 @@ class UploadVideo {
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
-                    creatingVideoText.innerHTML = "Conversion completed! Your MP4 should now be downloading!";
+                    creatingVideoText.innerHTML = "Conversion completed!";
                     console.log("Download link triggered:", convertedFileUrl);
 
                     setTimeout(() => {
                         creatingVideoDisplay.style.display = "none";
+                        const backButton: HTMLElement = document.getElementById("return-to-tab-button") as HTMLElement;
+                        backButton.click();
                     }, 5000);
                 } else {
                     throw new Error("Conversion failed. No MP4 file available.");
