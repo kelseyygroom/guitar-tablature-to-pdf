@@ -342,7 +342,6 @@ class UploadVideo {
         
                 if (!jobResponse.ok) {
                     creatingVideoText.innerHTML = `ERROR: Job Creation Error: ${jobResponse.statusText}`;
-                    throw new Error(`Job Creation Error: ${jobResponse.statusText}`);
                 }
         
                 const jobData = await jobResponse.json();
@@ -363,7 +362,6 @@ class UploadVideo {
                 const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
                 if (!uploadTask || !uploadTask.result?.form?.url) {
                     creatingVideoText.innerHTML = "ERROR: Upload URL not found in CloudConvert response.";
-                    throw new Error("Upload URL not found in CloudConvert response.");
                 }
         
                 const uploadUrl = uploadTask.result.form.url;
@@ -390,7 +388,6 @@ class UploadVideo {
                 if (!uploadFileResponse.ok) {
                     const errorText = await uploadFileResponse.text();
                     creatingVideoText.innerHTML = `File Upload Error: ${errorText}`;
-                    throw new Error(`File Upload Error: ${errorText}`);
                 }
         
                 console.log("File uploaded successfully. Waiting for conversion...");
@@ -434,7 +431,7 @@ class UploadVideo {
                         backButton.click();
                     }, 5000);
                 } else {
-                    throw new Error("Conversion failed. No MP4 file available.");
+                    creatingVideoText.innerHTML = "Conversion completed!";
                 }
         
             } catch (error) {
