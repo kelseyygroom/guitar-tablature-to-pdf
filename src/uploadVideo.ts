@@ -234,33 +234,33 @@ class UploadVideo {
 
     private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
         const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
-        const video = document.createElement("video");
+        const video = document.createElement("video") as HTMLVideoElement & { captureStream: () => MediaStream }; // Cast here
         const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
         const ctx = canvas.getContext("2d")!;
         const creatingVideoDisplay: HTMLElement = document.getElementById("loading-modal") as HTMLElement;
         const creatingVideoText: HTMLElement = document.getElementById("loading-message") as HTMLElement;
-
+    
         let currentText = ["", "", "", "", "", ""];
         const lineHeight = 50;
-
+    
         video.style.display = "none";
         video.src = URL.createObjectURL(src);
-
+    
         let recorder: MediaRecorder, chunks: Blob[] = [], stream: MediaStream;
         let isRecording = false;
-
+    
         function drawFrame(): void {
             if (!isRecording) return;
-
+    
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
+    
             ctx.font = '48px Monospace';
             ctx.fillStyle = 'white';
             ctx.strokeStyle = 'white';
             ctx.lineWidth = 2;
             ctx.textAlign = 'left';
-
+    
             currentText.forEach((text, index) => {
                 if (text) {
                     const textX = 50;
@@ -269,16 +269,16 @@ class UploadVideo {
                     ctx.strokeText(text, textX, textY);
                 }
             });
-
+    
             if (video.currentTime >= video.duration) {
                 recorder.stop();
                 isRecording = false;
                 return;
             }
-
+    
             requestAnimationFrame(drawFrame);
         }
-
+    
         function resetTimeline() {
             const timelineInput = document.getElementById("video-timeline") as HTMLInputElement;
             if (timelineInput) {
@@ -286,38 +286,46 @@ class UploadVideo {
                 timelineInput.dispatchEvent(new Event("input")); // Simulate user interaction
             }
         }
-
+    
         function startRecording(): void {
             if (isRecording) return;
             creatingVideoDisplay.style.display = "flex";
             resetTimeline();
-
+    
             chunks = [];
             const estimatedFrameRate = 30;
             stream = canvas.captureStream(estimatedFrameRate);
-            recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
-
+    
+            // Capture audio from the video stream
+            const audioStream = video.captureStream(); // Now it's recognized because of the type assertion
+            const combinedStream = new MediaStream([
+                ...stream.getTracks(),
+                ...audioStream.getTracks()  // Add audio tracks
+            ]);
+    
+            recorder = new MediaRecorder(combinedStream, { mimeType: "video/webm" });
+    
             recorder.ondataavailable = (e: BlobEvent) => {
                 if (e.data && e.data.size > 0) {
                     chunks.push(e.data);
                 }
             };
-
+    
             recorder.onstop = async () => {
                 const webmBlob = new Blob(chunks, { type: "video/webm" });
                 await uploadAndConvert(webmBlob, tabTitle);
             };
-
+    
             recorder.start();
             isRecording = true;
             video.play();
             drawFrame();
         }
-
+    
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
             try {
                 creatingVideoText.innerHTML = "Starting upload and conversion process...";
-
+    
                 // Step 1: Create CloudConvert Job
                 const jobResponse = await fetch("https://api.cloudconvert.com/v2/jobs", {
                     method: "POST",
@@ -334,7 +342,7 @@ class UploadVideo {
                                 "output_format": "mp4",
                                 "options": { 
                                     "video_codec": "h264",     
-                                    "audio_codec": "aac",  // Ensure audio is processed with AAC code                                
+                                    "audio_codec": "aac",  // Ensure audio is processed with AAC codec
                                 }
                             },
                             "export": { "operation": "export/url", "input": ["convert"] }
@@ -348,7 +356,7 @@ class UploadVideo {
         
                 const jobData = await jobResponse.json();
                 creatingVideoText.innerHTML = "MP4 Conversion in progress...";
-
+    
                 // Step 2: Extract Upload Task & Parameters
                 const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
                 if (!uploadTask || !uploadTask.result?.form?.url) {
@@ -357,7 +365,7 @@ class UploadVideo {
         
                 const uploadUrl = uploadTask.result.form.url;
                 const parameters = uploadTask.result.form.parameters || {}; // Ensure parameters exist
-
+    
                 // Step 3: Prepare Form Data (Including Required Parameters)
                 const formData = new FormData();
                 
@@ -377,7 +385,7 @@ class UploadVideo {
                 }
         
                 creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion...";
-
+    
                 // Step 5: Poll for Conversion Status
                 const jobId = jobData.data.id;
                 let convertedFileUrl: string | null = null;
@@ -405,7 +413,7 @@ class UploadVideo {
                     creatingVideoText.innerHTML = "Downloading...";
                     const loadingIcon: HTMLElement = document.getElementById("loading-icon") as HTMLElement;
                     loadingIcon.style.display = "none";
-
+    
                     setTimeout(() => {
                         creatingVideoDisplay.style.display = "none";
                         const backButton: HTMLElement = document.getElementById("return-to-tab-button") as HTMLElement;
@@ -419,9 +427,9 @@ class UploadVideo {
                 console.error("Error during WebM to MP4 conversion:", error);
             }
         }
-
+    
         startButton.addEventListener('click', startRecording);
-    };
+    };    
 
     private initVideoUpload = () => {
         // Get HTML elements
