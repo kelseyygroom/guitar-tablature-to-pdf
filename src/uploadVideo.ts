@@ -482,9 +482,6 @@ class UploadVideo {
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
             const videoCanvas: HTMLDivElement = document.getElementById("video-canvas") as HTMLDivElement;
             const videoIcon: HTMLImageElement = document.getElementById("video-icon") as HTMLImageElement;
-            videoCanvas.addEventListener("touchstart", (event) => {
-                event.preventDefault();  // Prevent Safari from handling it as a video tap
-            }, { passive: false });
 
             videoIcon.style.display = "none";
             buttonContainer.style.display = "none";
