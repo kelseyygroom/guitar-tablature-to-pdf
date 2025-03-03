@@ -332,7 +332,6 @@ input[type="file"] {
     position: absolute;
     right: 1rem;
     top: 1rem;
-    display: none;
     z-index: 99999;
     background-color: rgb(29, 29, 31, .75);
     padding: .5rem;

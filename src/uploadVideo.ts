@@ -140,7 +140,8 @@ class UploadVideo {
 
     private addBackButtonListener = () => {
         const backButton: HTMLElement = document.getElementById("return-to-tab-button") as HTMLElement;
-        
+        if (!backButton) return;
+
         backButton.addEventListener("click", () => {
             window.location.href = "create.html?username=" + this.user.username + "&title=" + this.tabTitle;
         });
@@ -151,6 +152,7 @@ class UploadVideo {
         const tabSegmentEndButton: HTMLDivElement = document.getElementById("end-tab-segment-button") as HTMLDivElement;
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
         
+        if (!tabSegmentStartButton || !tabSegmentEndButton) return;
         tabSegmentStartButton.addEventListener("click", () => {
             tabSegmentStartButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
