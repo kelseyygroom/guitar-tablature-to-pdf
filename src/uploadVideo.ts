@@ -347,7 +347,7 @@ class UploadVideo {
                 }
         
                 const jobData = await jobResponse.json();
-                creatingVideoText.innerHTML = "MP4 Conversion in progress..";
+                creatingVideoText.innerHTML = "MP4 Conversion in progress.....";
 
                 // Step 2: Extract Upload Task & Parameters
                 const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
