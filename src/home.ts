@@ -133,7 +133,9 @@ class Home {
             const createErrorLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
             const createInput: HTMLInputElement = document.createElement("input") as HTMLInputElement;
             const createButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+            const cancelButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
             createErrorLabel.innerHTML = "This Title is already taken.";
+            cancelButton.innerHTML = "Cancel";
             createErrorLabel.id = "create-error-label";
             createButton.innerHTML = "Create";
             createButton.id = "create-button";
@@ -143,7 +145,9 @@ class Home {
             createInput.placeholder = "Title";
             this.openPopUpModal(createLabel.outerHTML + createInput.outerHTML + createErrorLabel.outerHTML + createButton.outerHTML);
             this.addNewTabToDb();
-
+            cancelButton.addEventListener("click", () => {
+                // TODO
+            })
         });
     };
 
