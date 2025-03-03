@@ -348,15 +348,6 @@ class UploadVideo {
         
                 const jobData = await jobResponse.json();
                 creatingVideoText.innerHTML = "MP4 Conversion in progress...";
-                
-                // ✅ Add these debug logs
-                if (!jobData || !jobData.data || !jobData.data.id) {
-                    console.error("CloudConvert Job Creation Failed: Invalid Response", jobResponse);
-                    creatingVideoText.innerHTML = "CloudConvert Job Creation Failed: Invalid Response... (userAgent: " + navigator.userAgent + ")";
-                    return;
-                } else {
-                    creatingVideoText.innerHTML = "CloudConvert Job ID: " + jobData.data.id + " (userAgent: " + navigator.userAgent + ")";
-                }
 
                 // Step 2: Extract Upload Task & Parameters
                 const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
