@@ -341,7 +341,7 @@ class UploadVideo {
                 });
         
                 if (!jobResponse.ok) {
-                    creatingVideoText.innerHTML = "ERROR: Starting upload and conversion process...";
+                    creatingVideoText.innerHTML = `ERROR: Job Creation Error: ${jobResponse.statusText}`;
                     throw new Error(`Job Creation Error: ${jobResponse.statusText}`);
                 }
         
