@@ -413,7 +413,7 @@ class UploadVideo {
                 let convertedFileUrl: string | null = null;
                 let count = 0;
 
-                while (!convertedFileUrl) {
+                while (!convertedFileUrl && (count <= 10)) {
                     await new Promise(res => setTimeout(res, 5000)); // Wait 5 seconds before checking status
                     count++;
 
@@ -424,6 +424,20 @@ class UploadVideo {
                     const jobStatusData = await jobStatusResponse.json();
                     creatingVideoText.innerHTML = 'Conversion Status (' + count + '): "' + jobStatusData.data.status + '" Converted File URL:' + convertedFileUrl;
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
+                    creatingVideoText.innerHTML += "(ExportID: " + exportTask.id + ")";
+                    creatingVideoText.innerHTML += "(JobID: " + exportTask.job_id + ")";
+                    if (exportTask.result && exportTask.result.files && exportTask.result.files[0] && exportTask.result.files[0].filename) {
+                        creatingVideoText.innerHTML += "(Filename: " + exportTask.result.files[0].filename + ")";
+                        creatingVideoText.innerHTML += "(Size: " + exportTask.result.files[0].size + ")";
+
+                    }
+                    else {
+                        creatingVideoText.innerHTML += "(Filename: " + exportTask.result.files[0].filename + ")";
+                    }
+                    creatingVideoText.innerHTML += "(ExportTask Status: " + exportTask.status + ")";
+
+
+console.log("ex", exportTask)
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
                 }
         
@@ -444,7 +458,7 @@ class UploadVideo {
                         // backButton.click();
                     }, 5000);
                 } else {
-                    creatingVideoText.innerHTML = "Else";
+                    creatingVideoText.innerHTML = "No Dice...";
                 }
         
             } catch (error) {
