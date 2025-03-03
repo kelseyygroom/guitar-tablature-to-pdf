@@ -46,7 +46,6 @@ class UploadVideo {
             markerTimes.push(time.start);
             markerEndTimes.push(time.end);
         });
-        console.log(markerTimes, markerEndTimes)
 
         // Function to create markers
         markersContainer.innerHTML = ""; // Clear existing markers
@@ -230,7 +229,9 @@ class UploadVideo {
         const video = document.createElement("video");
         const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
         const ctx = canvas.getContext("2d")!;
-    
+        const creatingVideoDisplay: HTMLElement = document.getElementById("loading-modal") as HTMLElement;
+        const creatingVideoText: HTMLElement = document.getElementById("loading-message") as HTMLElement;
+
         let currentText = ["", "", "", "", "", ""];
         const lineHeight = 50;
 
@@ -272,6 +273,7 @@ class UploadVideo {
 
         function startRecording(): void {
             if (isRecording) return;
+            creatingVideoDisplay.style.display = "flex";
 
             chunks = [];
             const estimatedFrameRate = 30;
@@ -298,7 +300,8 @@ class UploadVideo {
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
             try {
                 console.log("Starting upload and conversion process...");
-        
+                creatingVideoText.innerHTML = "Starting upload and conversion process...";
+
                 // Step 1: Create CloudConvert Job
                 const jobResponse = await fetch("https://api.cloudconvert.com/v2/jobs", {
                     method: "POST",
@@ -320,14 +323,19 @@ class UploadVideo {
                     })
                 });
         
-                if (!jobResponse.ok) throw new Error(`Job Creation Error: ${jobResponse.statusText}`);
+                if (!jobResponse.ok) {
+                    creatingVideoText.innerHTML = "ERROR: Starting upload and conversion process...";
+                    throw new Error(`Job Creation Error: ${jobResponse.statusText}`);
+                }
         
                 const jobData = await jobResponse.json();
                 console.log("CloudConvert Job Created:", jobData);
-        
+                creatingVideoText.innerHTML = "MP4 Conversion in progress (CloudConvert Job Created)...";
+
                 // Step 2: Extract Upload Task & Parameters
                 const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
                 if (!uploadTask || !uploadTask.result?.form?.url) {
+                    creatingVideoText.innerHTML = "ERROR: Upload URL not found in CloudConvert response.";
                     throw new Error("Upload URL not found in CloudConvert response.");
                 }
         
@@ -352,11 +360,13 @@ class UploadVideo {
         
                 if (!uploadFileResponse.ok) {
                     const errorText = await uploadFileResponse.text();
+                    creatingVideoText.innerHTML = `File Upload Error: ${errorText}`;
                     throw new Error(`File Upload Error: ${errorText}`);
                 }
         
                 console.log("File uploaded successfully. Waiting for conversion...");
-        
+                creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion...";
+
                 // Step 5: Poll for Conversion Status
                 const jobId = jobData.data.id;
                 let convertedFileUrl: string | null = null;
@@ -370,6 +380,7 @@ class UploadVideo {
         
                     const jobStatusData = await jobStatusResponse.json();
                     console.log("Conversion Status:", jobStatusData);
+                    creatingVideoText.innerHTML = "Conversion Status:", jobStatusData.data.tasks[jobStatusData.data.tasks.length - 1].status;
         
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
@@ -383,7 +394,12 @@ class UploadVideo {
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
+                    creatingVideoText.innerHTML = "Conversion completed! Your MP4 should now be downloading!";
                     console.log("Download link triggered:", convertedFileUrl);
+
+                    setTimeout(() => {
+                        creatingVideoDisplay.style.display = "none";
+                    }, 5000);
                 } else {
                     throw new Error("Conversion failed. No MP4 file available.");
                 }

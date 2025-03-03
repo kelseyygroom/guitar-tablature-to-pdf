@@ -128,6 +128,17 @@ body {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+#loading-message {
+    font-size: large;
+    position: fixed;
+    top: 75vh;
+    width: 75vw;
+    height: fit-content;
+    left: 12.5vw;
+    transition: all .25s;
 }
 
 canvas {
