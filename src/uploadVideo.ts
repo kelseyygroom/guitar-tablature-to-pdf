@@ -356,8 +356,9 @@ class UploadVideo {
                     return;
                 } else {
                     console.log("CloudConvert Job ID:", jobData.data.id);
-                    creatingVideoText.innerHTML = "CloudConvert Job Creation Failed: Invalid Response... (userAgent: " + navigator.userAgent + ") (jobId: " + jobData.data.id + ")";
+                    creatingVideoText.innerHTML = "CloudConvert Job ID: " + jobData.data.id + " (userAgent: " + navigator.userAgent + ")";
                 }
+
                 // Step 2: Extract Upload Task & Parameters
                 const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
                 if (!uploadTask || !uploadTask.result?.form?.url) {
@@ -370,7 +371,9 @@ class UploadVideo {
         
                 console.log("Upload URL:", uploadUrl);
                 console.log("Upload Parameters:", parameters);
-        
+                creatingVideoText.innerHTML = "Upload URL: " + uploadUrl;
+                creatingVideoText.innerHTML += " Upload Parameters:" + parameters;
+
                 // Step 3: Prepare Form Data (Including Required Parameters)
                 const formData = new FormData();
                 
