@@ -373,10 +373,25 @@ class UploadVideo {
                 creatingVideoText.innerHTML = `Form data appended! Waiting for uploadFileResponse.`;
         
                 // Step 4: Upload File
-                const uploadFileResponse = await fetch(uploadUrl, { method: "POST", body: formData });
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 60000); // 60s timeout
+                let uploadFileResponse;
+
+                try {
+                    uploadFileResponse = await fetch(uploadUrl, { 
+                        method: "POST", 
+                        body: formData, 
+                        signal: controller.signal 
+                    });
+                    clearTimeout(timeout);
+                } catch (error) {
+                    creatingVideoText.innerHTML = `uploadFileResponse ERROR: ${error}`;
+                    console.error("Upload failed:", error);
+                }                
+                
                 creatingVideoText.innerHTML = `uploadFileResponse await finished.`;
 
-                if (!uploadFileResponse.ok) {
+                if (uploadFileResponse && !uploadFileResponse.ok) {
                     const errorText = await uploadFileResponse.text();
                     creatingVideoText.innerHTML = `File Upload Error: ${errorText}`;
                 }
