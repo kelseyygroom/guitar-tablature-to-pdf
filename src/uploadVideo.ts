@@ -408,6 +408,8 @@ class UploadVideo {
                 }
 
                 creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion...";
+                console.log("CloudConvert API Response:", jobData);
+                console.log("CloudConvert API Response ID:", jobData.data.id);
 
                 // Step 5: Poll for Conversion Status
                 const jobId = jobData.data.id;
@@ -425,19 +427,11 @@ class UploadVideo {
                     const jobStatusData = await jobStatusResponse.json();
                     creatingVideoText.innerHTML = 'Conversion Status (' + count + '): "' + jobStatusData.data.status + '" Converted File URL:' + convertedFileUrl;
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
-                    creatingVideoText.innerHTML += "(ExportID: " + exportTask.id + ")";
-                    creatingVideoText.innerHTML += "(JobID: " + exportTask.job_id + ")";
-                    if (exportTask.result && exportTask.result.files && exportTask.result.files[0] && exportTask.result.files[0].filename) {
-                        creatingVideoText.innerHTML += "(Filename: " + exportTask.result.files[0].filename + ")";
-                        creatingVideoText.innerHTML += "(Size: " + exportTask.result.files[0].size + ")";
-
-                    }
-                    else {
-                        creatingVideoText.innerHTML += "(Filename: " + exportTask.result.files[0].filename + ")";
-                    }
-
-                    creatingVideoText.innerHTML += "(ExportTask Status: " + exportTask.status + ")";
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
+
+                    if (count >= 10) {
+                        creatingVideoDisplay.style.display = "none";
+                    }
                 }
         
                 if (convertedFileUrl) {
@@ -447,7 +441,7 @@ class UploadVideo {
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
-                    creatingVideoText.innerHTML = "Downloading " + UploadVideo.tab.tabtitle + ".mp4";
+                    creatingVideoText.innerHTML = "Downloading " + filename;
                     const loadingIcon: HTMLElement = document.getElementById("loading-icon") as HTMLElement;
                     loadingIcon.style.display = "none";
 
@@ -459,11 +453,9 @@ class UploadVideo {
                 } else {
                     creatingVideoText.innerHTML = "Upload Failed.";
                 }
-        
             } catch (error) {
                 console.error("Error during WebM to MP4 conversion:", error);
-                creatingVideoText.innerHTML = "Upload Failed: Error during conversion.";
-
+                creatingVideoText.innerHTML = "Upload Failed: Error during conversion. ERROR: " + error;
             }
         }
 
