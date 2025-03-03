@@ -1,2 +1,3 @@
 [build]
   publish = "dist" # Directory where your built files are located
+  environment = { PYTHON_VERSION = "3.12" }
