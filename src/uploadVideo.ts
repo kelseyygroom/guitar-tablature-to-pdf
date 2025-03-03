@@ -378,11 +378,15 @@ class UploadVideo {
                 let uploadFileResponse;
 
                 try {
+                    creatingVideoText.innerHTML = `Attempting fetch for uploadURL.`;
+
                     uploadFileResponse = await fetch(uploadUrl, { 
                         method: "POST", 
                         body: formData, 
                         signal: controller.signal 
                     });
+                    creatingVideoText.innerHTML = `uploadFileResponse: ${uploadFileResponse.text()}`;
+
                     clearTimeout(timeout);
                 } catch (error) {
                     creatingVideoText.innerHTML = `uploadFileResponse ERROR: ${error}`;
