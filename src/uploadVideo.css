@@ -131,14 +131,14 @@ body {
     color: white;
 }
 
-#loading-message {
+.loading-message {
     font-size: large;
     position: fixed;
     top: 65vh;
     width: 75vw;
     height: fit-content;
     left: 12.5vw;
-    transition: all .25s;
+    transition: all 1s;
     text-align: center;
 }
 

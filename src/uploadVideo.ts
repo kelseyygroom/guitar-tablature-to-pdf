@@ -224,6 +224,14 @@ class UploadVideo {
         });
     };
 
+    private resetTimeline() {
+        const timelineInput = document.getElementById("video-timeline") as HTMLInputElement;
+        if (timelineInput) {
+            timelineInput.value = "0"; // Set the slider to the beginning
+            timelineInput.dispatchEvent(new Event("input")); // Simulate user interaction
+        }
+    }
+
     private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
         const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
         const video = document.createElement("video");
@@ -271,9 +279,18 @@ class UploadVideo {
             requestAnimationFrame(drawFrame);
         }
 
+        function resetTimeline() {
+            const timelineInput = document.getElementById("video-timeline") as HTMLInputElement;
+            if (timelineInput) {
+                timelineInput.value = "0"; // Set the slider to the beginning
+                timelineInput.dispatchEvent(new Event("input")); // Simulate user interaction
+            }
+        }
+
         function startRecording(): void {
             if (isRecording) return;
             creatingVideoDisplay.style.display = "flex";
+            resetTimeline();
 
             chunks = [];
             const estimatedFrameRate = 30;
@@ -330,8 +347,17 @@ class UploadVideo {
         
                 const jobData = await jobResponse.json();
                 console.log("CloudConvert Job Created:", jobData);
-                creatingVideoText.innerHTML = "MP4 Conversion in progress (CloudConvert Job Created)...";
-
+                creatingVideoText.innerHTML = "MP4 Conversion in progress (CloudConvert Job Created)... (userAgent: " + navigator.userAgent + ")";
+                
+                // ✅ Add these debug logs
+                if (!jobData || !jobData.data || !jobData.data.id) {
+                    console.error("CloudConvert Job Creation Failed: Invalid Response", jobResponse);
+                    creatingVideoText.innerHTML = "CloudConvert Job Creation Failed: Invalid Response... (userAgent: " + navigator.userAgent + ")";
+                    return;
+                } else {
+                    console.log("CloudConvert Job ID:", jobData.data.id);
+                    creatingVideoText.innerHTML = "CloudConvert Job Creation Failed: Invalid Response... (userAgent: " + navigator.userAgent + ") (jobId: " + jobData.data.id + ")";
+                }
                 // Step 2: Extract Upload Task & Parameters
                 const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
                 if (!uploadTask || !uploadTask.result?.form?.url) {
@@ -396,6 +422,8 @@ class UploadVideo {
                     document.body.removeChild(a);
                     creatingVideoText.innerHTML = "Conversion completed!";
                     console.log("Download link triggered:", convertedFileUrl);
+                    const loadingIcon: HTMLElement = document.getElementById("loading-icon") as HTMLElement;
+                    loadingIcon.style.display = "none";
 
                     setTimeout(() => {
                         creatingVideoDisplay.style.display = "none";
