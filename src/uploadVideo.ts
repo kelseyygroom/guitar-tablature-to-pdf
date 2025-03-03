@@ -370,7 +370,6 @@ class UploadVideo {
                 console.log("Upload URL:", uploadUrl);
                 console.log("Upload Parameters:", parameters);
                 creatingVideoText.innerHTML = "Upload URL: " + uploadUrl;
-                creatingVideoText.innerHTML += " Upload Parameters:" + parameters;
 
                 // Step 3: Prepare Form Data (Including Required Parameters)
                 const formData = new FormData();
@@ -378,6 +377,7 @@ class UploadVideo {
                 // Append all required parameters from CloudConvert's response
                 for (const [key, value] of Object.entries(parameters)) {
                     formData.append(key, value as string);
+                    creatingVideoText.innerHTML += "PARAMS: [key: " + key + "], [value: " + value;
                 }
         
                 formData.append("file", blob, filename + ".webm");
@@ -385,6 +385,7 @@ class UploadVideo {
                 // Step 4: Upload File
                 const uploadFileResponse = await fetch(uploadUrl, { method: "POST", body: formData });
         
+                console.log("uploadFileResponse: ", uploadFileResponse)
                 if (!uploadFileResponse.ok) {
                     const errorText = await uploadFileResponse.text();
                     creatingVideoText.innerHTML = `File Upload Error: ${errorText}`;

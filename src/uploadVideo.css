@@ -134,7 +134,7 @@ body {
 .loading-message {
     font-size: large;
     position: fixed;
-    top: 65vh;
+    top: 50vh;
     width: 75vw;
     height: fit-content;
     left: 12.5vw;
