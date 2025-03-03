@@ -295,7 +295,7 @@ class UploadVideo {
             resetTimeline();
 
             chunks = [];
-            const estimatedFrameRate = 30;
+            const estimatedFrameRate = 60;
             stream = canvas.captureStream(estimatedFrameRate);
             recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
 
@@ -416,7 +416,7 @@ class UploadVideo {
                 let convertedFileUrl: string | null = null;
                 let count = 0;
 
-                while (!convertedFileUrl && (count <= 10)) {
+                while (!convertedFileUrl && (count <= 60)) {
                     await new Promise(res => setTimeout(res, 5000)); // Wait 5 seconds before checking status
                     count++;
 
@@ -429,7 +429,7 @@ class UploadVideo {
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
 
-                    if (count >= 10) {
+                    if (count >= 60) {
                         creatingVideoDisplay.style.display = "none";
                     }
                 }
