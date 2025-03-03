@@ -347,13 +347,15 @@ class UploadVideo {
                 }
         
                 const jobData = await jobResponse.json();
-                creatingVideoText.innerHTML = "MP4 Conversion in progress.....";
+                creatingVideoText.innerHTML = "MP4 Conversion in progress...";
 
                 // Step 2: Extract Upload Task & Parameters
                 const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
                 if (!uploadTask || !uploadTask.result?.form?.url) {
                     creatingVideoText.innerHTML = "ERROR: Upload URL not found in CloudConvert response.";
                 }
+
+                creatingVideoText.innerHTML = "No issue with uploadTask.";
         
                 const uploadUrl = uploadTask.result.form.url;
                 const parameters = uploadTask.result.form.parameters || {}; // Ensure parameters exist
@@ -364,33 +366,39 @@ class UploadVideo {
                 // Append all required parameters from CloudConvert's response
                 for (const [key, value] of Object.entries(parameters)) {
                     formData.append(key, value as string);
+                    creatingVideoText.innerHTML = `Value appending to form data: ${value}`;
                 }
         
                 formData.append("file", blob, filename + ".webm");
+                creatingVideoText.innerHTML = `Form data appended! Waiting for uploadFileResponse.`;
         
                 // Step 4: Upload File
                 const uploadFileResponse = await fetch(uploadUrl, { method: "POST", body: formData });
-        
+                creatingVideoText.innerHTML = `uploadFileResponse await finished.`;
+
                 if (!uploadFileResponse.ok) {
                     const errorText = await uploadFileResponse.text();
                     creatingVideoText.innerHTML = `File Upload Error: ${errorText}`;
                 }
-        
+
+                creatingVideoText.innerHTML = `uploadFileResponse successful!`;
                 creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion...";
 
                 // Step 5: Poll for Conversion Status
                 const jobId = jobData.data.id;
                 let convertedFileUrl: string | null = null;
-        
+                let count = 0;
+
                 while (!convertedFileUrl) {
                     await new Promise(res => setTimeout(res, 5000)); // Wait 5 seconds before checking status
-        
+                    count++;
+
                     const jobStatusResponse = await fetch(`https://api.cloudconvert.com/v2/jobs/${jobId}`, {
                         headers: { "Authorization": `Bearer ${apiKey}` }
                     });
-        
+
                     const jobStatusData = await jobStatusResponse.json();
-                    creatingVideoText.innerHTML = 'Conversion Status: "' + jobStatusData.data.status + '"';
+                    creatingVideoText.innerHTML = 'Conversion Status (' + count + '): "' + jobStatusData.data.status + '" Converted File URL:' + convertedFileUrl;
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
                 }
@@ -409,7 +417,7 @@ class UploadVideo {
                     setTimeout(() => {
                         creatingVideoDisplay.style.display = "none";
                         const backButton: HTMLElement = document.getElementById("return-to-tab-button") as HTMLElement;
-                        backButton.click();
+                        // backButton.click();
                     }, 5000);
                 } else {
                     creatingVideoText.innerHTML = "Else";
