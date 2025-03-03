@@ -316,7 +316,6 @@ class UploadVideo {
 
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
             try {
-                console.log("Starting upload and conversion process...");
                 creatingVideoText.innerHTML = "Starting upload and conversion process...";
 
                 // Step 1: Create CloudConvert Job
@@ -333,7 +332,10 @@ class UploadVideo {
                                 "operation": "convert",
                                 "input": ["upload"],
                                 "output_format": "mp4",
-                                "options": { "video_codec": "h264" }
+                                "options": { 
+                                    "video_codec": "h264",     
+                                    "audio_codec": "aac",  // Ensure audio is processed with AAC code                                
+                                }
                             },
                             "export": { "operation": "export/url", "input": ["convert"] }
                         }
@@ -345,8 +347,7 @@ class UploadVideo {
                 }
         
                 const jobData = await jobResponse.json();
-                console.log("CloudConvert Job Created:", jobData);
-                creatingVideoText.innerHTML = "MP4 Conversion in progress (CloudConvert Job Created)... (userAgent: " + navigator.userAgent + ")";
+                creatingVideoText.innerHTML = "MP4 Conversion in progress...";
                 
                 // ✅ Add these debug logs
                 if (!jobData || !jobData.data || !jobData.data.id) {
@@ -354,7 +355,6 @@ class UploadVideo {
                     creatingVideoText.innerHTML = "CloudConvert Job Creation Failed: Invalid Response... (userAgent: " + navigator.userAgent + ")";
                     return;
                 } else {
-                    console.log("CloudConvert Job ID:", jobData.data.id);
                     creatingVideoText.innerHTML = "CloudConvert Job ID: " + jobData.data.id + " (userAgent: " + navigator.userAgent + ")";
                 }
 
@@ -366,10 +366,6 @@ class UploadVideo {
         
                 const uploadUrl = uploadTask.result.form.url;
                 const parameters = uploadTask.result.form.parameters || {}; // Ensure parameters exist
-        
-                console.log("Upload URL:", uploadUrl);
-                console.log("Upload Parameters:", parameters);
-                creatingVideoText.innerHTML = "Upload URL: " + uploadUrl;
 
                 // Step 3: Prepare Form Data (Including Required Parameters)
                 const formData = new FormData();
@@ -377,7 +373,6 @@ class UploadVideo {
                 // Append all required parameters from CloudConvert's response
                 for (const [key, value] of Object.entries(parameters)) {
                     formData.append(key, value as string);
-                    creatingVideoText.innerHTML += "PARAMS: [key: " + key + "], [value: " + value;
                 }
         
                 formData.append("file", blob, filename + ".webm");
@@ -385,13 +380,11 @@ class UploadVideo {
                 // Step 4: Upload File
                 const uploadFileResponse = await fetch(uploadUrl, { method: "POST", body: formData });
         
-                console.log("uploadFileResponse: ", uploadFileResponse)
                 if (!uploadFileResponse.ok) {
                     const errorText = await uploadFileResponse.text();
                     creatingVideoText.innerHTML = `File Upload Error: ${errorText}`;
                 }
         
-                console.log("File uploaded successfully. Waiting for conversion...");
                 creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion...";
 
                 // Step 5: Poll for Conversion Status
@@ -406,23 +399,19 @@ class UploadVideo {
                     });
         
                     const jobStatusData = await jobStatusResponse.json();
-                    console.log("Conversion Status:", jobStatusData);
                     creatingVideoText.innerHTML = 'Conversion Status: "' + jobStatusData.data.status + '"';
-        
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
                 }
         
                 if (convertedFileUrl) {
-                    console.log("Conversion completed. Downloading MP4...");
                     const a = document.createElement("a");
                     a.href = convertedFileUrl;
                     a.download = filename + ".mp4";
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
-                    creatingVideoText.innerHTML = "Conversion completed!";
-                    console.log("Download link triggered:", convertedFileUrl);
+                    creatingVideoText.innerHTML = "Downloading...";
                     const loadingIcon: HTMLElement = document.getElementById("loading-icon") as HTMLElement;
                     loadingIcon.style.display = "none";
 
@@ -432,7 +421,7 @@ class UploadVideo {
                         backButton.click();
                     }, 5000);
                 } else {
-                    creatingVideoText.innerHTML = "Conversion completed!";
+                    creatingVideoText.innerHTML = "Else";
                 }
         
             } catch (error) {
