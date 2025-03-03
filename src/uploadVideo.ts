@@ -455,11 +455,13 @@ class UploadVideo {
                         // backButton.click();
                     }, 5000);
                 } else {
-                    creatingVideoText.innerHTML = "No Dice...";
+                    creatingVideoText.innerHTML = "Upload Failed.";
                 }
         
             } catch (error) {
                 console.error("Error during WebM to MP4 conversion:", error);
+                creatingVideoText.innerHTML = "Upload Failed: Error during conversion.";
+
             }
         }
 
