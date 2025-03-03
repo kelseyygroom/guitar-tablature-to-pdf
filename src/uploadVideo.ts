@@ -371,14 +371,19 @@ class UploadVideo {
         
                 formData.append("file", blob, filename + ".webm");
                 creatingVideoText.innerHTML = `Form data appended! Waiting for uploadFileResponse.`;
-        
+
                 // Step 4: Upload File
                 const controller = new AbortController();
+                creatingVideoText.innerHTML = `Controler created.`;
+
                 const timeout = setTimeout(() => controller.abort(), 60000); // 60s timeout
+                creatingVideoText.innerHTML = `timeout begins...`;
+
                 let uploadFileResponse;
+                creatingVideoText.innerHTML = `before try block...`;
 
                 try {
-                    creatingVideoText.innerHTML = `Attempting fetch for uploadURL.`;
+                    creatingVideoText.innerHTML = `Attempting fetch for uploadURL. IN TRY BLOCK`;
 
                     uploadFileResponse = await fetch(uploadUrl, { 
                         method: "POST", 
