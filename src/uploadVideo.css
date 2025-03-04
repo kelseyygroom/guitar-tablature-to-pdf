@@ -309,7 +309,6 @@ input[type="file"] {
     position: absolute;
     left: 1rem;
     top: 1rem;
-    display: none;
     z-index: 99999;
     color: white;
 }

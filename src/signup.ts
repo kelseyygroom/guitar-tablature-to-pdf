@@ -20,6 +20,7 @@ class SignUp {
 
     private setLogo = () => {
         const logoImage: HTMLImageElement = document.getElementById("logo") as HTMLImageElement;
+        if (!logoImage) return;
         logoImage.src = logo;
     };
 
@@ -27,7 +28,7 @@ class SignUp {
         const passwordInput: HTMLInputElement = document.getElementById("create-password-input") as HTMLInputElement;
         const passwordIsValidChecklist: HTMLInputElement = document.getElementById("failed-password-error") as HTMLInputElement;
         const passwordIsValidLabel: HTMLInputElement = document.getElementById("failed-password-error-label") as HTMLInputElement;
-
+        if (!passwordInput) return;
         passwordInput.addEventListener("keyup", (event: any) => {
             console.log(       this.validPasswordCheckSpecial,
                 this.validPasswordCheckCapital,
@@ -96,7 +97,7 @@ class SignUp {
         const createPasswordInput: HTMLInputElement = document.getElementById("create-password-input") as HTMLInputElement;
         const createEmailInput: HTMLInputElement = document.getElementById("create-email-input") as HTMLInputElement;
         const usernameErrorLabel: HTMLDivElement = document.getElementById("failed-username-error-label") as HTMLDivElement;
-
+        if (!createUsernameInput) return;
         createUsernameInput.addEventListener("keyup", () => {
             usernameErrorLabel.style.display = "none";
         });

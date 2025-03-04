@@ -10,6 +10,7 @@ class SignIn {
 
     private setLogo = () => {
         const logoImage: HTMLImageElement = document.getElementById("logo") as HTMLImageElement;
+        if (!logoImage) return;
         logoImage.src = logo;
     };
 

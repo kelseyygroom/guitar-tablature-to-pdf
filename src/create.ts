@@ -30,6 +30,7 @@ class Create {
 
     public init = (): void => {
         const body: HTMLBodyElement = document.querySelector("body") as HTMLBodyElement;
+        if (!body) return;
         body.style.background = "url(" + emblem + ")";
         body.style.backgroundRepeat = "no-repeat";
         body.style.backgroundPosition = "center";
