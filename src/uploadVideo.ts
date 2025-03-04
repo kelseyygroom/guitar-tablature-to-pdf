@@ -21,10 +21,176 @@ class UploadVideo {
         this.tabClipSegmentColors = ["#23FE69", "#FF1493", "#00FFFF", "#9400D3", "#FDFD00", "#FF073A", "#FDFD00"]
     }
 
+    private detectBrowser(): string {
+        const userAgent = navigator.userAgent;
+    
+        // Check for Mobile Safari
+        if (/iP(hone|od|ad).*Safari/i.test(userAgent)) {
+            return "Safari Mobile";
+        }
+    
+        // Check for Firefox
+        if (/Firefox/i.test(userAgent)) {
+            return "Firefox";
+        }
+    
+        return "Other";
+    }
+
+    private openWelcomePopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+
+        const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
+        confirmWelcomeButton.addEventListener("click", () => {
+            const uploadVideoButton: HTMLButtonElement = document.getElementById("upload-file-button") as HTMLButtonElement;
+            const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+
+            setTimeout(() => {
+                uploadVideoButton.classList.add("tab-cell-active-tutorial");
+            }, 500);
+        })
+    };
+
+    private openSelectFirstClipPopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+        const tabChunksButton: HTMLButtonElement = document.getElementById("view-tab-chunks-button") as HTMLButtonElement;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+        tabChunksButton.classList.remove("tab-cell-active-tutorial");
+
+        const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
+        confirmWelcomeButton.addEventListener("click", () => {
+            const tabChunksButton: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;
+            const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+
+            setTimeout(() => {
+                tabChunksButton[0].classList.add("tab-cell-active-tutorial");
+            }, 500);
+        })
+    };
+
+    private openSelectClipPopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+
+        const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
+        confirmWelcomeButton.addEventListener("click", () => {
+            const tabChunksButton: HTMLButtonElement = document.getElementById("view-tab-chunks-button") as HTMLButtonElement;
+            const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+
+            setTimeout(() => {
+                tabChunksButton.classList.add("tab-cell-active-tutorial");
+            }, 500);
+        })
+    };
+
+    private openSetStartPointPopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+        const tabChunksButton: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+        tabChunksButton[0].classList.remove("tab-cell-active-tutorial");
+
+        const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
+        confirmWelcomeButton.addEventListener("click", () => {
+            const startButton: HTMLDivElement = document.getElementById("start-tab-segment-button") as HTMLDivElement;
+            const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+
+            setTimeout(() => {
+                startButton.classList.add("tab-cell-active-tutorial");
+            }, 500);
+        })
+    };
+
+    // Tutorial Welcome.
+    private initWelcomeTutorialFlow = () => {
+        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        welcomeButton.id = "welcome-confirm-button";
+        welcomeButton.innerHTML = "Let's upload it!";
+        welcomeLabel.innerHTML = "Let's upload the video we would like to add our tabs to.";
+
+        setTimeout(() => {
+            this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
+        }, 1500);
+    };
+
+    // Tutorial Welcome.
+    private initSelectClipTutorialFlow = () => {
+        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        welcomeButton.id = "welcome-confirm-button";
+        welcomeButton.innerHTML = "Got it!";
+        welcomeLabel.innerHTML = "Now that our video is uploaded, we'll have to select the first clip and place it so that it matches up with our fingers.";
+
+        setTimeout(() => {
+            this.openSelectClipPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
+        }, 1000);
+    };
+
+    // Tutorial Welcome.
+    private initSelectFirstClipTutorialFlow = () => {
+        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        welcomeButton.id = "welcome-confirm-button";
+        welcomeButton.innerHTML = "Got it!";
+        welcomeLabel.innerHTML = "Now select the clip that you'd like to edit. How about this first one?";
+
+        setTimeout(() => {
+            this.openSelectFirstClipPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
+        }, 1000);
+    };
+
+    // Tutorial Welcome.
+    private initSetStartPointFlow = () => {
+        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        welcomeButton.id = "welcome-confirm-button";
+        welcomeButton.innerHTML = "Got it!";
+        welcomeLabel.innerHTML = "Now let's set the starting point for this segment of your tab. The starting point will be set wherever the dot on the scroll bar is when the start button is clicked. <i class'fa fa-arrow-right-from-bracket'></i>";
+
+        setTimeout(() => {
+            this.openSetStartPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
+        }, 1000);
+    };
+
+    private initTutorial = () => {
+        this.initWelcomeTutorialFlow();
+    };
+
     public init = () => {
-        this.getUserAccount();
-        this.addTabSegmentListeners();
-        this.addBackButtonListener();
+        if (this.detectBrowser() === "Safari Mobile" || this.detectBrowser() === "Firefox") {
+            const body = document.querySelector("body") as HTMLBodyElement;
+            body.innerHTML = "<h1 style='text-align: center; color: white;'> We're sorry, TickTabs.com is not currently set up to work on your browser.</h1>";
+        }
+        else {
+            this.getUserAccount();
+            this.addTabSegmentListeners();
+            this.addBackButtonListener();
+        }
     }
 
     private addClosePopupListener = () => {
@@ -512,6 +678,9 @@ function startRecording(): void {
 
         // Handle file upload and video load
         videoInput.addEventListener("change", (event) => {
+            if (this.tabTitle === "Tutorial") {
+                this.initSelectClipTutorialFlow();
+            }
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
             const videoCanvas: HTMLDivElement = document.getElementById("video-canvas") as HTMLDivElement;
             const videoIcon: HTMLImageElement = document.getElementById("video-icon") as HTMLImageElement;
@@ -529,6 +698,9 @@ function startRecording(): void {
                 unloadVideoButton.style.display = "block";
 
                 tabSegmentsDisplay.addEventListener("click", () => {
+                    if (this.tabTitle === "Tutorial") {
+                        this.initSelectFirstClipTutorialFlow();
+                    }
                     tabSegmentsDisplay.style.backgroundColor = "#23FE69";
 
                     setTimeout(() => {
@@ -542,6 +714,10 @@ function startRecording(): void {
 
                     for (let i: number = 0; i < tabChunks.length; i++) {
                         tabChunks[i].addEventListener("click", (event) => {
+                            if (this.tabTitle === "Tutorial") {
+                                this.initSetStartPointFlow();
+                            }
+
                             const selectedTabIndicator: HTMLDivElement = document.getElementById("selected-tab-indicator") as HTMLDivElement;
 
                             for (let i: number = 0; i < tabChunks.length; i++) {
@@ -695,6 +871,11 @@ function startRecording(): void {
 
         // Separate into new function.
         const title = params.get('title');
+
+        if (title === "Tutorial") {
+            this.initTutorial();
+        }
+
         this.tabTitle = title!;
         this.user = userAccountData;
         const tab = this.user.tabs.find((tab: any) => { return tab.tabTitle === title});
