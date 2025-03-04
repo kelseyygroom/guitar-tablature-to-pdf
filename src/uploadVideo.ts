@@ -301,7 +301,7 @@ class UploadVideo {
             const videoStream = canvas.captureStream(estimatedFrameRate);
         
             // Create a video element to get the audio from the playing video
-            const videoElement = document.createElement("video");
+            const videoElement = document.getElementById("video") as HTMLVideoElement;
             videoElement.src = video.src;  // Ensure the video element has the same source as the canvas video
             videoElement.play();
             videoElement.playsInline = true;
