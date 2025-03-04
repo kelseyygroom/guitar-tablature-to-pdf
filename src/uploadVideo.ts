@@ -417,7 +417,7 @@ class UploadVideo {
                 let count = 0;
 
                 while (!convertedFileUrl && (count <= 60)) {
-                    await new Promise(res => setTimeout(res, 5000)); // Wait 5 seconds before checking status
+                    await new Promise(res => setTimeout(res, 10000)); // Wait 10 seconds before checking status
                     count++;
 
                     const jobStatusResponse = await fetch(`https://api.cloudconvert.com/v2/jobs/${jobId}`, {
