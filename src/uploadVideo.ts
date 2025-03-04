@@ -236,7 +236,7 @@ class UploadVideo {
 
     private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
         const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
-        const video = document.createElement("video");
+        const video = document.getElementById("video") as HTMLVideoElement;
         const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
         const ctx = canvas.getContext("2d")!;
         const creatingVideoDisplay: HTMLElement = document.getElementById("loading-modal") as HTMLElement;
