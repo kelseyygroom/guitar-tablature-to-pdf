@@ -293,28 +293,57 @@ class UploadVideo {
             if (isRecording) return;
             creatingVideoDisplay.style.display = "flex";
             resetTimeline();
-
+        
             chunks = [];
             const estimatedFrameRate = 30;
-            stream = canvas.captureStream(estimatedFrameRate);
-            recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
-
+        
+            // Capture video from the canvas
+            const videoStream = canvas.captureStream(estimatedFrameRate);
+        
+            // Create a video element to get the audio from the playing video
+            const videoElement = document.createElement("video");
+            videoElement.src = video.src;  // Ensure the video element has the same source as the canvas video
+            videoElement.play();
+            videoElement.playsInline = true;
+            videoElement.controls = false;
+            videoElement.style.display = "none"; // Ensure it's hidden
+        
+            // Create an audio context to capture the audio track from the video element
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const source = audioContext.createMediaElementSource(videoElement);
+        
+            // Create a gain node for controlling the audio volume (if needed)
+            const gainNode = audioContext.createGain();
+            source.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+        
+            // Create a MediaStream from the audio context
+            const audioStream = audioContext.createMediaStreamDestination().stream;
+        
+            // Combine the video stream and audio stream into a single MediaStream
+            const combinedStream = new MediaStream([
+                ...videoStream.getVideoTracks(),
+                ...audioStream.getAudioTracks()
+            ]);
+        
+            recorder = new MediaRecorder(combinedStream, { mimeType: "video/webm" });
+        
             recorder.ondataavailable = (e: BlobEvent) => {
                 if (e.data && e.data.size > 0) {
                     chunks.push(e.data);
                 }
             };
-
+        
             recorder.onstop = async () => {
                 const webmBlob = new Blob(chunks, { type: "video/webm" });
                 await uploadAndConvert(webmBlob, tabTitle);
             };
-
+        
             recorder.start();
             isRecording = true;
             video.play();
             drawFrame();
-        }
+        }                  
 
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
             try {
@@ -392,12 +421,11 @@ class UploadVideo {
                         body: formData, 
                         signal: controller.signal 
                     });
-                    creatingVideoText.innerHTML = `uploadFileResponse: ${uploadFileResponse.text()}`;
 
+                    creatingVideoText.innerHTML = `uploadFileResponse: ${uploadFileResponse.text()}`;
                     clearTimeout(timeout);
                 } catch (error) {
                     creatingVideoText.innerHTML = `uploadFileResponse ERROR: ${error}`;
-                    console.error("Upload failed:", error);
                 }                
                 
                 creatingVideoText.innerHTML = `uploadFileResponse await finished.`;
@@ -408,8 +436,6 @@ class UploadVideo {
                 }
 
                 creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion...";
-                console.log("CloudConvert API Response:", jobData);
-                console.log("CloudConvert API Response ID:", jobData.data.id);
 
                 // Step 5: Poll for Conversion Status
                 const jobId = jobData.data.id;
@@ -424,7 +450,14 @@ class UploadVideo {
                         headers: { "Authorization": `Bearer ${apiKey}` }
                     });
 
+
                     const jobStatusData = await jobStatusResponse.json();
+                    console.log("Job Status:", jobStatusData);  // Log the status for debugging
+
+                    if (jobStatusData.data.status === "error") {
+                        break;
+                    }
+
                     creatingVideoText.innerHTML += '<p>Conversion Status: ' + jobStatusData.data.status + ", attempts: " + count + "</p>";
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
