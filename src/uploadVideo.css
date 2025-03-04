@@ -454,6 +454,7 @@ input[type="file"] {
     top: 0px;
     left: 0px;
     animation: fadeIn .5s;
+    display: none;
     /* From https://css.glass */
     background: rgba(43, 43, 43, 0.2);
     border-radius: 16px;
