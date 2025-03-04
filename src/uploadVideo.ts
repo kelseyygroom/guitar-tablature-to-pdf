@@ -295,7 +295,7 @@ class UploadVideo {
             resetTimeline();
 
             chunks = [];
-            const estimatedFrameRate = 60;
+            const estimatedFrameRate = 30;
             stream = canvas.captureStream(estimatedFrameRate);
             recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
 
