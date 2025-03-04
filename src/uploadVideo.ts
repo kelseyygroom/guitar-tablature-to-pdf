@@ -236,7 +236,7 @@ class UploadVideo {
 
     private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
         const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
-        const video = document.getElementById("video") as HTMLVideoElement;
+        const video = document.createElement("video");
         const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
         const ctx = canvas.getContext("2d")!;
         const creatingVideoDisplay: HTMLElement = document.getElementById("loading-modal") as HTMLElement;
@@ -293,57 +293,28 @@ class UploadVideo {
             if (isRecording) return;
             creatingVideoDisplay.style.display = "flex";
             resetTimeline();
-        
+
             chunks = [];
             const estimatedFrameRate = 30;
-        
-            // Capture video from the canvas
-            const videoStream = canvas.captureStream(estimatedFrameRate);
-        
-            // Create a video element to get the audio from the playing video
-            const videoElement = document.getElementById("video") as HTMLVideoElement;
-            videoElement.src = video.src;  // Ensure the video element has the same source as the canvas video
-            videoElement.play();
-            videoElement.playsInline = true;
-            videoElement.controls = false;
-            videoElement.style.display = "none"; // Ensure it's hidden
-        
-            // Create an audio context to capture the audio track from the video element
-            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-            const source = audioContext.createMediaElementSource(videoElement);
-        
-            // Create a gain node for controlling the audio volume (if needed)
-            const gainNode = audioContext.createGain();
-            source.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-        
-            // Create a MediaStream from the audio context
-            const audioStream = audioContext.createMediaStreamDestination().stream;
-        
-            // Combine the video stream and audio stream into a single MediaStream
-            const combinedStream = new MediaStream([
-                ...videoStream.getVideoTracks(),
-                ...audioStream.getAudioTracks()
-            ]);
-        
-            recorder = new MediaRecorder(combinedStream, { mimeType: "video/webm" });
-        
+            stream = canvas.captureStream(estimatedFrameRate);
+            recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+
             recorder.ondataavailable = (e: BlobEvent) => {
                 if (e.data && e.data.size > 0) {
                     chunks.push(e.data);
                 }
             };
-        
+
             recorder.onstop = async () => {
                 const webmBlob = new Blob(chunks, { type: "video/webm" });
                 await uploadAndConvert(webmBlob, tabTitle);
             };
-        
+
             recorder.start();
             isRecording = true;
             video.play();
             drawFrame();
-        }                  
+        }
 
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
             try {
@@ -421,11 +392,12 @@ class UploadVideo {
                         body: formData, 
                         signal: controller.signal 
                     });
-
                     creatingVideoText.innerHTML = `uploadFileResponse: ${uploadFileResponse.text()}`;
+
                     clearTimeout(timeout);
                 } catch (error) {
                     creatingVideoText.innerHTML = `uploadFileResponse ERROR: ${error}`;
+                    console.error("Upload failed:", error);
                 }                
                 
                 creatingVideoText.innerHTML = `uploadFileResponse await finished.`;
@@ -442,27 +414,20 @@ class UploadVideo {
                 let convertedFileUrl: string | null = null;
                 let count = 0;
 
-                while (!convertedFileUrl && (count <= 60)) {
-                    await new Promise(res => setTimeout(res, 10000)); // Wait 10 seconds before checking status
+                while (!convertedFileUrl && (count <= 10)) {
+                    await new Promise(res => setTimeout(res, 5000)); // Wait 5 seconds before checking status
                     count++;
 
                     const jobStatusResponse = await fetch(`https://api.cloudconvert.com/v2/jobs/${jobId}`, {
                         headers: { "Authorization": `Bearer ${apiKey}` }
                     });
 
-
                     const jobStatusData = await jobStatusResponse.json();
-                    console.log("Job Status:", jobStatusData);  // Log the status for debugging
-
-                    if (jobStatusData.data.status === "error") {
-                        break;
-                    }
-
-                    creatingVideoText.innerHTML += '<p>Conversion Status: ' + jobStatusData.data.status + ", attempts: " + count + "</p>";
+                    creatingVideoText.innerHTML = 'Conversion Status (' + count + '): "' + jobStatusData.data.status + '" Converted File URL:' + convertedFileUrl;
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
 
-                    if (count >= 60) {
+                    if (count >= 10) {
                         creatingVideoDisplay.style.display = "none";
                     }
                 }
