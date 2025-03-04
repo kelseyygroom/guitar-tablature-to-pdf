@@ -208,7 +208,7 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Now that our video is uploaded, we'll have to select the first clip and place it so that it matches up with our fingers.";
+        welcomeLabel.innerHTML = "Now that our video is uploaded, we'll have to select the first clip and place it on the timeline so that it matches up with our fingers.";
 
         setTimeout(() => {
             this.openSelectClipPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -247,7 +247,7 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Next let's set the ending point for this segment of your tab. The ending point will be set wherever the dot on the scroll bar is when the end button is clicked.";
+        welcomeLabel.innerHTML = "Nice! You'll see that the colored bar that matches the clip color on the timeline has adjusted to display the clip's new starting position. Next let's set the ending point for this segment of your tab. The ending point will be set wherever the dot on the scroll bar is when the end button is clicked.";
 
         setTimeout(() => {
             this.openSetEndPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);

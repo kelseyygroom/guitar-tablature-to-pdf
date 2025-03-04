@@ -180,22 +180,6 @@ class Create {
         const saveTabButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
 
         saveTabButton.addEventListener("click", async () => {
-            if (this.tabTitle === "Tutorial") {
-                saveTabButton.style.backgroundColor = "#964FF6";
-                saveTabButton.classList.add("save-button-acitve");
-                saveTabButton.innerHTML = '<i style="color: white; height: 1rem; width: 1rem;" class="fas fa-file"></i>Saved!';
-                saveTabButton.style.color = "white";
-
-                setTimeout(() => {
-                    saveTabButton.style.color = "black";
-                    saveTabButton.style.backgroundColor = "white";
-                    saveTabButton.innerHTML = '<i style="height: 1rem; width: 1rem;" class="fas fa-file"></i> Save';
-                    const tabData: any = this.translateTabCellsToData();
-                    this.formatTabForPDFExport(tabData)
-                }, 1000);
-                return;
-            }
-            
             const tabData: any = this.translateTabCellsToData();
             const response = await fetch(url + "saveTab", {
                 method: 'POST',
@@ -765,8 +749,8 @@ class Create {
             popupModal.style.display = "none";
             popupModalOverlay.style.display = "none";
 
-            const backIcon: HTMLElement = document.getElementById("back-button") as HTMLElement;
-            backIcon.classList.add("tab-cell-active-tutorial-icon");
+            const exportButton: HTMLElement = document.getElementById("export-button") as HTMLElement;
+            exportButton.classList.add("tab-cell-active-tutorial");
             // Done with tutorial (for now).
         })
     };
@@ -779,7 +763,7 @@ class Create {
         saveButton.classList.remove("tab-cell-active-tutorial");
         exportButton.id = "export-confirm-button";
         exportButton.innerHTML = "Got it!";
-        exportLabel.innerHTML = "Excellent! Now that your tab has been saved, you can export it if you'd like! If not, return back to the home page. (Changes to \"Tutorial\" tab will not be recorded).";
+        exportLabel.innerHTML = "Excellent! Now that our tab has been saved, let's create a video with our tab on it! That way we can post it to TickTok, Instagram, Twitter, and more!";
 
         setTimeout(() => {
             this.openExportPopupModal(exportLabel.outerHTML + exportButton.outerHTML);

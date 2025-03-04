@@ -457,6 +457,11 @@ select {
 }
 
 @media (orientation:landscape) {
+    .popup-modal {
+        left: 33.33vw;
+        width: calc(33.33vw - 2rem);
+    }
+
     .tab-cell-container {
         top: 18vh;
         width: calc(46vw);
