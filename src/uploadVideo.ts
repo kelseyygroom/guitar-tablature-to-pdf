@@ -236,7 +236,7 @@ class UploadVideo {
 
     private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
         const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
-        const video = document.createElement("video");
+        const video = document.createElement("video") as any;
         const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
         const ctx = canvas.getContext("2d")!;
         const creatingVideoDisplay: HTMLElement = document.getElementById("loading-modal") as HTMLElement;
@@ -289,32 +289,47 @@ class UploadVideo {
             }
         }
 
-        function startRecording(): void {
-            if (isRecording) return;
-            creatingVideoDisplay.style.display = "flex";
-            resetTimeline();
+        // Ensure that the video element is correctly typed as HTMLVideoElement
 
-            chunks = [];
-            const estimatedFrameRate = 30;
-            stream = canvas.captureStream(estimatedFrameRate);
-            recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+function startRecording(): void {
+    if (isRecording) return;
+    creatingVideoDisplay.style.display = "flex";
+    resetTimeline();
 
-            recorder.ondataavailable = (e: BlobEvent) => {
-                if (e.data && e.data.size > 0) {
-                    chunks.push(e.data);
-                }
-            };
+    chunks = [];
 
-            recorder.onstop = async () => {
-                const webmBlob = new Blob(chunks, { type: "video/webm" });
-                await uploadAndConvert(webmBlob, tabTitle);
-            };
+    // Capture the video from the canvas
+    const estimatedFrameRate = 30;
+    const canvasStream = canvas.captureStream(estimatedFrameRate);
 
-            recorder.start();
-            isRecording = true;
-            video.play();
-            drawFrame();
+    // Capture the audio from the video element (now properly typed as HTMLVideoElement)
+    const audioStream = video.captureStream();
+
+    // Combine both streams (audio + video)
+    const combinedStream = new MediaStream();
+
+    // Ensure that the track type is MediaStreamTrack
+    canvasStream.getTracks().forEach((track: MediaStreamTrack) => combinedStream.addTrack(track)); // Add video tracks
+    audioStream.getTracks().forEach((track: MediaStreamTrack) => combinedStream.addTrack(track));  // Add audio track
+
+    recorder = new MediaRecorder(combinedStream, { mimeType: "video/webm" });
+
+    recorder.ondataavailable = (e: BlobEvent) => {
+        if (e.data && e.data.size > 0) {
+            chunks.push(e.data);
         }
+    };
+
+    recorder.onstop = async () => {
+        const webmBlob = new Blob(chunks, { type: "video/webm" });
+        await uploadAndConvert(webmBlob, tabTitle);
+    };
+
+    recorder.start();
+    isRecording = true;
+    video.play();
+    drawFrame();
+}   
 
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
             try {
@@ -467,7 +482,7 @@ class UploadVideo {
         const videoInput = document.getElementById('video-upload') as HTMLInputElement;
         const canvas = document.getElementById('video-canvas') as HTMLCanvasElement;
         const ctx = canvas.getContext('2d')!;
-        const video = document.createElement('video');
+        const video: any = document.createElement("video");
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
         const pauseIcon: HTMLElement = document.getElementById("pause-icon") as HTMLElement;
         const tabSegmentsDisplay: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
