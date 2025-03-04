@@ -125,13 +125,77 @@ class UploadVideo {
         })
     };
 
+    private openSetEndPointPopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+        const startButton: HTMLDivElement = document.getElementById("start-tab-segment-button") as HTMLDivElement;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+        startButton.classList.remove("tab-cell-active-tutorial");
+
+        const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
+        confirmWelcomeButton.addEventListener("click", () => {
+            const endButton: HTMLDivElement = document.getElementById("end-tab-segment-button") as HTMLDivElement;
+            const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+
+            setTimeout(() => {
+                endButton.classList.add("tab-cell-active-tutorial");
+            }, 500);
+        })
+    };
+
+    private openTutorialDownloadPopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+        const endButton: HTMLDivElement = document.getElementById("end-tab-segment-button") as HTMLDivElement;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+        endButton.classList.remove("tab-cell-active-tutorial");
+
+        const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
+        confirmWelcomeButton.addEventListener("click", () => {
+            const endButton: HTMLDivElement = document.getElementById("end-tab-segment-button") as HTMLDivElement;
+            const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+            const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+
+            setTimeout(() => {
+                const downloadButton: HTMLDivElement = document.getElementById("start-record") as HTMLDivElement;
+                const endButton: HTMLDivElement = document.getElementById("end-tab-segment-button") as HTMLDivElement;
+                endButton.classList.remove("tab-cell-active-tutorial");
+                downloadButton.classList.add("tab-cell-active-tutorial");
+            }, 500);
+        })
+    };
+
+    private openEndTutorialPopupModal = (htmlString: string) => {
+        const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
+        const endButton: HTMLDivElement = document.getElementById("start-download") as HTMLDivElement;
+        popupModal.innerHTML = htmlString;
+        popupModal.style.display = "flex";
+        popupModalOverlay.style.display = "flex";
+        endButton.classList.remove("tab-cell-active-tutorial");
+
+        const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
+        confirmWelcomeButton.addEventListener("click", () => {
+            window.location.href = "home.html?username=" + this.user.username;
+        })
+    };
+
     // Tutorial Welcome.
     private initWelcomeTutorialFlow = () => {
         const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Let's upload it!";
-        welcomeLabel.innerHTML = "Let's upload the video we would like to add our tabs to.";
+        welcomeLabel.innerHTML = "Let's upload the video we would like to add our tabs to. You can upload a video up to 5 minutes long.";
 
         setTimeout(() => {
             this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -170,10 +234,49 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Now let's set the starting point for this segment of your tab. The starting point will be set wherever the dot on the scroll bar is when the start button is clicked. <i class'fa fa-arrow-right-from-bracket'></i>";
+        welcomeLabel.innerHTML = "Now let's set the starting point for this segment of your tab. The starting point will be set wherever the dot on the scroll bar is when the start button is clicked.";
 
         setTimeout(() => {
             this.openSetStartPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
+        }, 1000);
+    };
+
+    // Tutorial Welcome.
+    private initSetEndPointFlow = () => {
+        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        welcomeButton.id = "welcome-confirm-button";
+        welcomeButton.innerHTML = "Got it!";
+        welcomeLabel.innerHTML = "Next let's set the ending point for this segment of your tab. The ending point will be set wherever the dot on the scroll bar is when the end button is clicked.";
+
+        setTimeout(() => {
+            this.openSetEndPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
+        }, 1000);
+    };
+
+    // Tutorial Welcome.
+    private initSaveMP4Flow = () => {
+        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        welcomeButton.id = "welcome-confirm-button";
+        welcomeButton.innerHTML = "Got it!";
+        welcomeLabel.innerHTML = "Awesome! Now that we've set our clips so they can match our fingers, we're ready to download our video for TickTok, Instagram, and Twitter! Click the download button and we'll guide you through the download!";
+
+        setTimeout(() => {
+            this.openTutorialDownloadPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
+        }, 1000);
+    };
+
+    // Tutorial Welcome.
+    private initEndTutorialFlow = () => {
+        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        welcomeButton.id = "welcome-confirm-button";
+        welcomeButton.innerHTML = "Take me home! ('country rooaaads...')";
+        welcomeLabel.innerHTML = "That's it! You can now navigate back to your home page and create your own tabs! Feel free to delete the tutorial if you'd like, or keep it around in case you need it. Can't wait to see you online!";
+
+        setTimeout(() => {
+            this.openEndTutorialPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
         }, 1000);
     };
 
@@ -320,6 +423,9 @@ class UploadVideo {
         
         if (!tabSegmentStartButton || !tabSegmentEndButton) return;
         tabSegmentStartButton.addEventListener("click", () => {
+            if (this.tabTitle === "Tutorial") {
+                this.initSetEndPointFlow();
+            }
             tabSegmentStartButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
                 tabSegmentStartButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
@@ -356,6 +462,9 @@ class UploadVideo {
         });
 
         tabSegmentEndButton.addEventListener("click", () => {
+            if (this.tabTitle === "Tutorial") {
+                this.initSaveMP4Flow();
+            }
             tabSegmentEndButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
                 tabSegmentEndButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
@@ -457,45 +566,45 @@ class UploadVideo {
 
         // Ensure that the video element is correctly typed as HTMLVideoElement
 
-function startRecording(): void {
-    if (isRecording) return;
-    creatingVideoDisplay.style.display = "flex";
-    resetTimeline();
+        function startRecording(): void {
+            if (isRecording) return;
+            creatingVideoDisplay.style.display = "flex";
+            resetTimeline();
 
-    chunks = [];
+            chunks = [];
 
-    // Capture the video from the canvas
-    const estimatedFrameRate = 30;
-    const canvasStream = canvas.captureStream(estimatedFrameRate);
+            // Capture the video from the canvas
+            const estimatedFrameRate = 30;
+            const canvasStream = canvas.captureStream(estimatedFrameRate);
 
-    // Capture the audio from the video element (now properly typed as HTMLVideoElement)
-    const audioStream = video.captureStream();
+            // Capture the audio from the video element (now properly typed as HTMLVideoElement)
+            const audioStream = video.captureStream();
 
-    // Combine both streams (audio + video)
-    const combinedStream = new MediaStream();
+            // Combine both streams (audio + video)
+            const combinedStream = new MediaStream();
 
-    // Ensure that the track type is MediaStreamTrack
-    canvasStream.getTracks().forEach((track: MediaStreamTrack) => combinedStream.addTrack(track)); // Add video tracks
-    audioStream.getTracks().forEach((track: MediaStreamTrack) => combinedStream.addTrack(track));  // Add audio track
+            // Ensure that the track type is MediaStreamTrack
+            canvasStream.getTracks().forEach((track: MediaStreamTrack) => combinedStream.addTrack(track)); // Add video tracks
+            audioStream.getTracks().forEach((track: MediaStreamTrack) => combinedStream.addTrack(track));  // Add audio track
 
-    recorder = new MediaRecorder(combinedStream, { mimeType: "video/webm" });
+            recorder = new MediaRecorder(combinedStream, { mimeType: "video/webm" });
 
-    recorder.ondataavailable = (e: BlobEvent) => {
-        if (e.data && e.data.size > 0) {
-            chunks.push(e.data);
+            recorder.ondataavailable = (e: BlobEvent) => {
+                if (e.data && e.data.size > 0) {
+                    chunks.push(e.data);
+                }
+            };
+
+            recorder.onstop = async () => {
+                const webmBlob = new Blob(chunks, { type: "video/webm" });
+                await uploadAndConvert(webmBlob, tabTitle);
+            };
+
+            recorder.start();
+            isRecording = true;
+            video.play();
+            drawFrame();
         }
-    };
-
-    recorder.onstop = async () => {
-        const webmBlob = new Blob(chunks, { type: "video/webm" });
-        await uploadAndConvert(webmBlob, tabTitle);
-    };
-
-    recorder.start();
-    isRecording = true;
-    video.play();
-    drawFrame();
-}   
 
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
             try {
@@ -627,7 +736,7 @@ function startRecording(): void {
                     setTimeout(() => {
                         creatingVideoDisplay.style.display = "none";
                         const backButton: HTMLElement = document.getElementById("return-to-tab-button") as HTMLElement;
-                        // backButton.click();
+                        backButton.click();
                     }, 5000);
                 } else {
                     creatingVideoText.innerHTML = "Upload Failed.";

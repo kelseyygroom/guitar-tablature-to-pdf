@@ -516,6 +516,11 @@ input[type="file"] {
         width: 50vw;
     }
 
+    .tutorial-modal {
+        left: calc(33.33vw - 2rem);
+        width: calc(33.33vw - 2rem);
+    }
+
     .popup-modal {
         top: 10vh;
     }
