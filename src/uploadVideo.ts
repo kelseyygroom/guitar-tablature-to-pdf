@@ -425,7 +425,7 @@ class UploadVideo {
                     });
 
                     const jobStatusData = await jobStatusResponse.json();
-                    creatingVideoText.innerHTML = 'Conversion Status (' + count + '): "' + jobStatusData.data.status + '" Converted File URL:' + convertedFileUrl;
+                    creatingVideoText.innerHTML += '<p>Conversion Status: ' + jobStatusData.data.status + ", attempts: " + count + "</p>";
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
 
