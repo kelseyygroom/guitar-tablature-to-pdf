@@ -672,7 +672,6 @@ class Create {
     };
 
     private syncScroll = (source: any, target: any) => {
-        console.log(source.scrollLeft, target.scrollLeft)
         target.scrollLeft = source.scrollLeft;
     }
 

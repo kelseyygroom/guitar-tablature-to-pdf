@@ -478,13 +478,13 @@ select {
     }
 
     .tab-preview-container {
+        height: calc(198px - 1rem);
         top: 18vh;
         width: calc(44vw);
         position: fixed;
         left: 52vw;
         right: 2vw;
         overflow-x: scroll;
-        height: fit-content;
         padding: .5rem;
         animation: fadeIn 1s;
         /* From https://css.glass */

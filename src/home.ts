@@ -193,7 +193,6 @@ class Home {
     // Delete the tab based on the list-item delete-icon that was clicked.
     private deleteTab = async (deleteTabButton: HTMLElement) => {
         const tabTitle: string = deleteTabButton.id.split("-")[0];
-        console.log("tabtitle", tabTitle)
         const response = await fetch(url + "deleteTab", {
             method: 'POST',
             headers: {
