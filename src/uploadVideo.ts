@@ -422,7 +422,7 @@ function startRecording(): void {
                     creatingVideoText.innerHTML = `File Upload Error: ${errorText}`;
                 }
 
-                creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion...";
+                creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion. This may take a few minutes. The video will automatically download when it is complete.";
 
                 // Step 5: Poll for Conversion Status
                 const jobId = jobData.data.id;
