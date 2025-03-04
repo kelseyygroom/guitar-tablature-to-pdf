@@ -704,8 +704,8 @@ class UploadVideo {
                 let convertedFileUrl: string | null = null;
                 let count = 0;
 
-                while (!convertedFileUrl && (count <= 10)) {
-                    await new Promise(res => setTimeout(res, 5000)); // Wait 5 seconds before checking status
+                while (!convertedFileUrl && (count <= 60)) {
+                    await new Promise(res => setTimeout(res, 10000)); // Wait 5 seconds before checking status
                     count++;
 
                     const jobStatusResponse = await fetch(`https://api.cloudconvert.com/v2/jobs/${jobId}`, {
@@ -713,11 +713,11 @@ class UploadVideo {
                     });
 
                     const jobStatusData = await jobStatusResponse.json();
-                    creatingVideoText.innerHTML = 'Conversion Status (' + count + '): "' + jobStatusData.data.status + '" Converted File URL:' + convertedFileUrl;
+                    creatingVideoText.innerHTML = 'Video Conversion Status' + jobStatusData.data.status + '" #' + count;
                     const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
                     convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
 
-                    if (count >= 10) {
+                    if (count >= 60) {
                         creatingVideoDisplay.style.display = "none";
                     }
                 }
