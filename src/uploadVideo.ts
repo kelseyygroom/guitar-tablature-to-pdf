@@ -762,6 +762,7 @@ class UploadVideo {
         const pauseIcon: HTMLElement = document.getElementById("pause-icon") as HTMLElement;
         const tabSegmentsDisplay: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
         videoIcon.src = logo;
+        pauseIcon.style.display = "flex";
 
         // Six string arrays with different text.
         const strings1 = this.getVideoText(UploadVideo.tab.highEString);
@@ -859,7 +860,6 @@ class UploadVideo {
                 const fileURL = URL.createObjectURL(file);
                 video.src = fileURL;
                 video.load();
-                video.play();
                 video.muted = false; // Optional: Mute video by default
 
                 video.addEventListener('loadedmetadata', () => {
