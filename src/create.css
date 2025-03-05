@@ -15,6 +15,7 @@ body {
     padding: 2rem;
     overscroll-behavior-y: none;
     background-size: 75vw !important;
+    background-position: center !important; /* Centers horizontally and positions 30vh from the top */
 }
 
 html {
@@ -146,7 +147,7 @@ button i {
     left: 15vw;
     right: 15vw;
     overflow-x: scroll;
-    height: fit-content;
+    height: calc(198px - 1rem);
     padding: .5rem;
     animation: fadeIn 1s;
     /* From https://css.glass */
@@ -463,15 +464,20 @@ select {
         width: calc(33.33vw - 2rem);
     }
 
+    body {
+        background-size: 100vh;
+        background-position: center -7.5vh !important; /* Centers horizontally and positions 30vh from the top */
+    }
+
     .tab-cell-container {
-        top: 18vh;
+        top: 10vh;
         width: calc(46vw);
         position: fixed;
         position: fixed;
         left: 2vw;
         right: 48vw;
         overflow-x: scroll;
-        height: fit-content;
+        height: calc(198px - 1rem);
         padding: .5rem;
         animation: fadeIn 1s;
         /* From https://css.glass */
@@ -485,7 +491,7 @@ select {
 
     .tab-preview-container {
         height: calc(198px - 1rem);
-        top: 18vh;
+        top: 10vh;
         width: calc(44vw);
         position: fixed;
         left: 52vw;
