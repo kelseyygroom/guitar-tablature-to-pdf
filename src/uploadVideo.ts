@@ -29,6 +29,11 @@ class UploadVideo {
         if (/iP(hone|od|ad).*Safari/i.test(userAgent)) {
             return "Safari Mobile";
         }
+
+        // Check for Safari on macOS (excluding Chrome and other WebKit-based browsers)
+        if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) {
+            return "Safari";
+        }
     
         // Check for Firefox
         if (/Firefox/i.test(userAgent)) {
