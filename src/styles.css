@@ -135,12 +135,14 @@ article {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     z-index: 9999;
+    font-size: small;
 }
 
 h2 {
     margin-top: 0px;
     color: white !important;
-     margin-bottom: 1rem !important;
+    margin-bottom: .5rem !important;
+    text-decoration: underline;
 }
 
 p {

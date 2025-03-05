@@ -27,6 +27,7 @@ body {
     margin: 0px;
     overflow-y: hidden;
     height: 100%;
+    background-size: 75vw !important;
 }
 
 #tab-list-container {
@@ -199,6 +200,10 @@ a {
 }
 
 @media (min-width: 600px) and (orientation:landscape) {
+    body {
+        background-size: 25vw;
+    }
+
     li {
         width: 50vw;
     }
