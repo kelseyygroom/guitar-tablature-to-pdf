@@ -180,19 +180,25 @@ class UploadVideo {
         })
     };
 
-    private openEndTutorialPopupModal = (htmlString: string) => {
+    private openNotificationPopupModal = (htmlString: string) => {
+        console.log("in")
         const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
         const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
-        const endButton: HTMLDivElement = document.getElementById("start-download") as HTMLDivElement;
         popupModal.innerHTML = htmlString;
         popupModal.style.display = "flex";
         popupModalOverlay.style.display = "flex";
-        endButton.classList.remove("tab-cell-active-tutorial");
 
         const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
+        const backWelcomeButton: HTMLButtonElement = document.getElementById("welcome-back-button") as HTMLButtonElement;
+        
         confirmWelcomeButton.addEventListener("click", () => {
-            window.location.href = "home.html?username=" + this.user.username;
-        })
+            popupModal.style.display = "none";
+            popupModalOverlay.style.display = "none";
+        });
+
+        backWelcomeButton.addEventListener("click", () => {
+            window.location.href = "create.html?username=" + this.user.username + "&title=" + this.tabTitle;
+        });
     };
 
     // Tutorial Welcome.
@@ -201,14 +207,31 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Let's upload it!";
-        welcomeLabel.innerHTML = "Let's upload the video we would like to add our tabs to. You can upload a video up to 5 minutes long.";
+        welcomeLabel.innerHTML = "TabTok's Video Generator is currently in Beta. We're still working out a few kinks. There's a lot of cool stuff to check out! Let's upload the video you would like to add your tabs to. You can upload a video up to 5 minutes long.";
 
         setTimeout(() => {
             this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
-        }, 1500);
+        }, 10);
     };
 
-    // Tutorial Welcome.
+    // Notifications.
+    private initNotificationFlow = () => {
+        console.log("workin")
+        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        const backButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+        backButton.id = "welcome-back-button";
+        welcomeButton.id = "welcome-confirm-button";
+        welcomeButton.innerHTML = "Sweet!";
+        backButton.innerHTML = "Ahh! Turn Back!";
+        welcomeLabel.innerHTML = "TabTok's Video Generator is currently in Beta. We're still working out a few kinks. There's a lot of cool stuff to check out! So head on in!";
+
+        setTimeout(() => {
+            this.openNotificationPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML + backButton.outerHTML);
+        }, 10);
+    };
+
+    // Select Clip
     private initSelectClipTutorialFlow = () => {
         const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
@@ -221,7 +244,7 @@ class UploadVideo {
         }, 1000);
     };
 
-    // Tutorial Welcome.
+    // First Clip
     private initSelectFirstClipTutorialFlow = () => {
         const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
@@ -234,7 +257,7 @@ class UploadVideo {
         }, 1000);
     };
 
-    // Tutorial Welcome.
+    // Start Point
     private initSetStartPointFlow = () => {
         const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
@@ -247,7 +270,7 @@ class UploadVideo {
         }, 1000);
     };
 
-    // Tutorial Welcome.
+    // End Point
     private initSetEndPointFlow = () => {
         const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
@@ -260,7 +283,7 @@ class UploadVideo {
         }, 1000);
     };
 
-    // Tutorial Welcome.
+    // MP4
     private initSaveMP4Flow = () => {
         const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
@@ -273,24 +296,14 @@ class UploadVideo {
         }, 1000);
     };
 
-    // Tutorial Welcome.
-    private initEndTutorialFlow = () => {
-        const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
-        const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
-        welcomeButton.id = "welcome-confirm-button";
-        welcomeButton.innerHTML = "Take me home! ('country rooaaads...')";
-        welcomeLabel.innerHTML = "That's it! You can now navigate back to your home page and create your own tabs! Feel free to delete the tutorial if you'd like, or keep it around in case you need it. Can't wait to see you online!";
-
-        setTimeout(() => {
-            this.openEndTutorialPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
-        }, 1000);
-    };
-
     private initTutorial = () => {
         this.initWelcomeTutorialFlow();
     };
 
     public init = () => {
+        this.initNotificationFlow();
+
+        // TODO: If firefox or safari modible doesn't work reactivate.
         // if (this.detectBrowser() === "Safari Mobile" || this.detectBrowser() === "Firefox") {
         //     const body = document.querySelector("body") as HTMLBodyElement;
         //     body.innerHTML = "<h1 style='text-align: center; color: white;'> We're sorry, TickTabs.com is not currently set up to work on your browser.</h1>";
@@ -429,9 +442,6 @@ class UploadVideo {
         
         if (!tabSegmentStartButton || !tabSegmentEndButton) return;
         tabSegmentStartButton.addEventListener("click", () => {
-            if (this.tabTitle === "Tutorial") {
-                this.initSetEndPointFlow();
-            }
             tabSegmentStartButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
                 tabSegmentStartButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
@@ -465,6 +475,11 @@ class UploadVideo {
 
             this.addMarkers();
             this.initVideoUpload();
+
+            // TODO: Remove this when you are finished polishing the video feature.
+            if (this.tabTitle === "Tutorial") {
+                this.initSetEndPointFlow();
+            }
         });
 
         tabSegmentEndButton.addEventListener("click", () => {
