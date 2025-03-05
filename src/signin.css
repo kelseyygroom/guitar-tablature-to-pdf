@@ -71,8 +71,8 @@ button {
 }
 
 #logo {
-    width: 25vw;
-    margin-bottom: 1rem;
+    width: 40vw;
+    margin-inline: -5vw;
 }
 
 .layout-container {
