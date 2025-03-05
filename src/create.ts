@@ -96,7 +96,7 @@ class Create {
         }
 
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
-        usernameLabel.innerHTML = this.tabTitle + '<i style="height: 1rem; width: 1rem; margin-bottom: 2px;" class="fas fa-floppy-disk" id="save-button"></i>';
+        usernameLabel.innerHTML = this.tabTitle + '<i style="height: 1rem; width: 1rem; margin-bottom: 3px;" class="fas fa-floppy-disk" id="save-button"></i>';
         // Include this when you create the menu.
         // + "<i style='padding-top: .2rem;' class='fas fa-bars'></i>";
         this.exit();
