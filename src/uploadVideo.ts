@@ -291,15 +291,15 @@ class UploadVideo {
     };
 
     public init = () => {
-        if (this.detectBrowser() === "Safari Mobile" || this.detectBrowser() === "Firefox") {
-            const body = document.querySelector("body") as HTMLBodyElement;
-            body.innerHTML = "<h1 style='text-align: center; color: white;'> We're sorry, TickTabs.com is not currently set up to work on your browser.</h1>";
-        }
-        else {
-            this.getUserAccount();
-            this.addTabSegmentListeners();
-            this.addBackButtonListener();
-        }
+        // if (this.detectBrowser() === "Safari Mobile" || this.detectBrowser() === "Firefox") {
+        //     const body = document.querySelector("body") as HTMLBodyElement;
+        //     body.innerHTML = "<h1 style='text-align: center; color: white;'> We're sorry, TickTabs.com is not currently set up to work on your browser.</h1>";
+        // }
+        // else {
+        this.getUserAccount();
+        this.addTabSegmentListeners();
+        this.addBackButtonListener();
+        // }
     }
 
     private addClosePopupListener = () => {
