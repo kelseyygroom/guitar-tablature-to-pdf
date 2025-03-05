@@ -54,16 +54,15 @@ input, a {
     width: 100%;
     justify-content: center;
     align-items: center;
-    margin-bottom: 2rem;
 }
 
 a {
     box-sizing: border-box;
     width: 85%;
     padding: 1rem;
-    background-color: #1D1D1F;
-    border-color: #CECECF;
-    color: #F6F6F8;
+    color: #1D1D1F;
+    border-color: #1D1D1F;
+    background-color: #F6F6F8;
     border-radius: 10px;
     border-width: 1px;
     text-align: center;
@@ -127,7 +126,7 @@ article {
     color: white;
     background-color: #1D1D1F;
     padding: 1rem;
-    border-radius: 10px;
+    border-radius: 5px;
     /* From https://css.glass */
     background: rgba(43, 43, 43, 0.2);
     border-radius: 16px;
@@ -135,14 +134,17 @@ article {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     z-index: 9999;
+    z-index: 9999;
     font-size: small;
+    /* border-style: solid; */
+    border-color: white;
+    margin-block: 1rem;
 }
 
 h2 {
     margin-top: 0px;
     color: white !important;
     margin-bottom: .5rem !important;
-    text-decoration: underline;
 }
 
 p {
@@ -150,7 +152,6 @@ p {
 }
 
 h2, article {
-    margin-bottom: .5rem;
     text-align: left;
 }
 
@@ -187,7 +188,6 @@ footer {
     }
 
     article {
-        margin-top: .5rem;
         width: calc(85% - 2rem);
     }
 
@@ -217,8 +217,6 @@ footer {
 
     .icons {
         width: 85%;
-        margin-bottom: 1rem;
-        margin-top: 2.5rem;
     }
 }
 
@@ -229,7 +227,6 @@ footer {
 
     .full-width {
         justify-content: space-between;
-        margin-top: 1rem;
     }
 
     h2 {
