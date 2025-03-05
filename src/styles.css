@@ -13,7 +13,7 @@ body {
     flex-direction: column;
     overscroll-behavior-y: none;
     animation: fadeIn 1s;
-    height: fit-content;
+    height: 100vh;
     position: relative;
 }
 
@@ -103,13 +103,17 @@ a {
     margin-left: 10vw;
 }
 
+footer p {
+    margin: 0px;
+}
+
 .icons {
     width: 100%;
     display: flex;
     justify-content: space-between;
     font-size: 3rem;
-    margin-bottom: 1rem;
-    margin-top: 1.5rem;
+    margin-bottom: 0rem;
+    margin-top: .5rem;
 }
 
 i {
@@ -179,7 +183,7 @@ footer {
     }
 
     article {
-        margin-top: 1rem;
+        margin-top: .5rem;
         width: calc(85% - 2rem);
     }
 
@@ -209,6 +213,7 @@ footer {
 
     .icons {
         width: 85%;
+        margin-bottom: 1rem;
     }
 }
 
