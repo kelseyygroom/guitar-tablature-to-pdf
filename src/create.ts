@@ -41,7 +41,6 @@ class Create {
         this.getUserAccount();
         this.export();
         this.updateTabCell();
-        this.saveTab();
         this.addLine();
         this.removeLine();
         this.listenForModalClose();
@@ -62,6 +61,7 @@ class Create {
         this.user = userAccountData;
         this.loadTab();
         this.tutorial();
+        this.saveTab();
     }
 
     // Return to home page.
@@ -96,7 +96,7 @@ class Create {
         }
 
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
-        usernameLabel.innerHTML = this.tabTitle 
+        usernameLabel.innerHTML = this.tabTitle + '<i style="height: 1rem; width: 1rem;" class="fas fa-floppy-disk" id="save-button"></i>';
         // Include this when you create the menu.
         // + "<i style='padding-top: .2rem;' class='fas fa-bars'></i>";
         this.exit();
@@ -189,15 +189,11 @@ class Create {
             })
 
             if (response) {
-                saveTabButton.style.backgroundColor = "#964FF6";
-                saveTabButton.classList.add("save-button-acitve");
-                saveTabButton.innerHTML = '<i style="color: white; height: 1rem; width: 1rem;" class="fas fa-file"></i>Saved!';
+                saveTabButton.classList.add("tab-cell-active-tutorial-icon");
                 saveTabButton.style.color = "white";
 
                 setTimeout(() => {
-                    saveTabButton.style.color = "black";
-                    saveTabButton.style.backgroundColor = "white";
-                    saveTabButton.innerHTML = '<i style="height: 1rem; width: 1rem;" class="fas fa-file"></i> Save';
+                    saveTabButton.classList.remove("tab-cell-active-tutorial-icon");
                     this.formatTabForPDFExport(tabData)
                 }, 1000);
             }
@@ -611,7 +607,7 @@ class Create {
 
     // Export the tab.
     private export = (): void => {
-        const exportButton: HTMLButtonElement = document.getElementById("export-button") as HTMLButtonElement;
+        const exportButton: HTMLButtonElement = document.getElementById("pdf-button") as HTMLButtonElement;
         exportButton?.addEventListener("click", () => {
             const tabDataRaw: any = this.translateTabCellsToData();
             const tabData: any = this.formatTabForPDFExport(tabDataRaw);
@@ -649,9 +645,14 @@ class Create {
                 range = range + initialRange;
             }
 
-            // doc.save(this.tabTitle);
-            window.location.href = "uploadVideo.html?username=" + this.user.username + "&title=" + this.tabTitle;
+            doc.save(this.tabTitle);
         });
+
+        // For PDF
+        const pdfButton: HTMLElement = document.getElementById("export-button") as HTMLElement;
+        pdfButton.addEventListener("click", () => {
+            window.location.href = "uploadVideo.html?username=" + this.user.username + "&title=" + this.tabTitle;
+        })
     };
 
     private syncScroll = (source: any, target: any) => {
@@ -716,7 +717,7 @@ class Create {
         const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
         const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
         popupModal.innerHTML = htmlString;
-        saveButton.classList.add("tab-cell-active-tutorial");
+        saveButton.classList.add("tab-cell-active-tutorial-icon");
         popupModal.style.display = "flex";
         popupModalOverlay.style.display = "flex";
         const confirmSaveButton: HTMLButtonElement = document.getElementById("save-confirm-button") as HTMLButtonElement;
@@ -750,7 +751,9 @@ class Create {
 
             const exportButton: HTMLElement = document.getElementById("export-button") as HTMLElement;
             exportButton.classList.add("tab-cell-active-tutorial");
-            // Done with tutorial (for now).
+
+            const pdfButton: HTMLElement = document.getElementById("pdf-button") as HTMLElement;
+            pdfButton.classList.add("tab-cell-active-tutorial");
         })
     };
 
@@ -759,7 +762,7 @@ class Create {
         const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
         const exportLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const exportButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
-        saveButton.classList.remove("tab-cell-active-tutorial");
+        saveButton.classList.remove("tab-cell-active-tutorial-icon");
         exportButton.id = "export-confirm-button";
         exportButton.innerHTML = "Got it!";
         exportLabel.innerHTML = "Excellent! Now that our tab has been saved, let's create a video with our tab on it! That way we can post it to TickTok, Instagram, Twitter, and more!";
