@@ -121,7 +121,7 @@ i {
 }
 
 article {
-    width: calc(85% - 2rem);
+    width: calc(100% - 2rem);
     text-align: left !important;
     color: white;
     background-color: #1D1D1F;
@@ -149,7 +149,6 @@ h2 {
 
 h2, article {
     margin-bottom: .5rem;
-    width: 85%;
     text-align: center;
 }
 
@@ -219,7 +218,6 @@ footer {
 
 @media (min-width: 600px) and (orientation:landscape) {
     h2, article {
-        width: 100%;
         text-align: left;
     }
 
