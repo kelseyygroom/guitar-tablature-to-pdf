@@ -112,8 +112,6 @@ footer p {
     display: flex;
     justify-content: space-between;
     font-size: 3rem;
-    margin-bottom: 0rem;
-    margin-top: .5rem;
 }
 
 i {
@@ -138,7 +136,7 @@ article {
     font-size: small;
     /* border-style: solid; */
     border-color: white;
-    margin-block: 1rem;
+    margin-block: 1.5rem;
 }
 
 h2 {
