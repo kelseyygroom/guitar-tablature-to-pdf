@@ -186,6 +186,7 @@ a {
 
     #logo {
         width: 90vw;
+        margin-block: -4rem;
     }
 
     .layout-container {

@@ -77,7 +77,8 @@ a {
 }
 
 #logo {
-    width: 25vw;
+    width: 40vw;
+    margin-inline: -5vw;
 }
 
 .layout-container {
@@ -139,11 +140,6 @@ article {
 h2 {
     margin-top: 0px;
     color: #5DCCF5 !important;
-    text-shadow:
-    -1px -1px 0 #1D1D1F,
-     1px -1px 0 #1D1D1F,
-    -1px  1px 0 #1D1D1F,
-     1px  1px 0 #1D1D1F;
      margin-bottom: 1rem !important;
 }
 
@@ -153,6 +149,7 @@ h2, article {
 }
 
 h1 {
+    display: none;
     font-size: 5rem;
     color: #964FF6;
     margin-block: 0rem;
@@ -179,6 +176,8 @@ footer {
 @media (max-width: 600px) and (orientation:portrait) {
     #logo {
         width: 90vw;
+        margin-top: -2rem;
+        margin-bottom: -4rem;
     }
 
     article {
@@ -213,6 +212,7 @@ footer {
     .icons {
         width: 85%;
         margin-bottom: 1rem;
+        margin-top: 2.5rem;
     }
 }
 

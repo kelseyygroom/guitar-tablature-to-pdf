@@ -1,5 +1,5 @@
 import "./home.css"
-import emblem from './images/emblem.svg'
+import emblem from './images/landing-logo.svg'
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 // const url = "http://localhost:5000/";
 
