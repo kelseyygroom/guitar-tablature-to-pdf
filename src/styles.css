@@ -139,13 +139,17 @@ article {
 
 h2 {
     margin-top: 0px;
-    color: #5DCCF5 !important;
+    color: white !important;
      margin-bottom: 1rem !important;
+}
+
+p {
+    margin-block: .25rem;
 }
 
 h2, article {
     margin-bottom: .5rem;
-    text-align: center;
+    text-align: left;
 }
 
 h1 {
