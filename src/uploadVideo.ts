@@ -702,7 +702,7 @@ class UploadVideo {
                 formData.append("file", blob, filename + ".webm");
     
                 const controller: AbortController = new AbortController();
-                const timeout: NodeJS.Timeout = setTimeout(() => controller.abort(), 120000);
+                const timeout: NodeJS.Timeout = setTimeout(() => controller.abort(), 600000);
     
                 let uploadFileResponse: Response;
                 try {
