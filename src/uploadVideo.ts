@@ -8,7 +8,6 @@ const apiKey = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzB
 class UploadVideo {
     user: any;
     tabTitle: string;
-    private static username: string;
     private TIMER: number = 5;
     private static tab: any;
     private static tabChunks: any;
@@ -1012,7 +1011,6 @@ class UploadVideo {
 
         this.tabTitle = title!;
         this.user = userAccountData;
-        UploadVideo.username = this.user.username;
         const tab = this.user.tabs.find((tab: any) => { return tab.tabTitle === title});
         UploadVideo.tab = this.splitTabIntoChunks(this.formatTabForPDFExport(tab.tabData));
         UploadVideo.tabChunks = this.splitTabIntoChunks(this.formatTabForPDFExport(tab.tabData));

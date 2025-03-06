@@ -61,7 +61,9 @@ class Create {
         this.user = userAccountData;
         this.loadTab();
         this.tutorial();
-        this.saveTab();
+        setTimeout(() => {
+            this.saveTab();
+        }, 3000);
     }
 
     // Return to home page.
@@ -97,8 +99,6 @@ class Create {
 
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
         usernameLabel.innerHTML = this.tabTitle + '<i style="height: 1rem; width: 1rem; margin-bottom: 3px;" class="fas fa-floppy-disk" id="save-button"></i>';
-        // Include this when you create the menu.
-        // + "<i style='padding-top: .2rem;' class='fas fa-bars'></i>";
         this.exit();
         this.buildTabCellRows();
 
