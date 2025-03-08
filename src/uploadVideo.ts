@@ -703,8 +703,8 @@ class UploadVideo {
     
                 const controller: AbortController = new AbortController();
                 const timeout: NodeJS.Timeout = setTimeout(() => controller.abort(), 600000);
-    
                 let uploadFileResponse: Response;
+                
                 try {
                     uploadFileResponse = await fetch(uploadUrl, { 
                         method: "POST", 
