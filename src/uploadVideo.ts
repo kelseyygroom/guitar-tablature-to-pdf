@@ -1,8 +1,8 @@
 import "./uploadVideo.css";
 import logo from "./images/landing-logo.svg"
 
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
-// const url = "http://localhost:5000/";
+// const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = "http://localhost:5000/";
 const apiKey = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzBjYWM3ZjY2YWRkYWE3ZTFiNjY1ZjI5YzRkNzliZjQyZjk5NzhiZDZlYTBmMmFmN2Y5ZmRhZDc1ZDNiZTk2YWJkNjI0MjhjZDc3ZTkzNTIiLCJpYXQiOjE3NDA1NjY0MDQuODE3MjY5LCJuYmYiOjE3NDA1NjY0MDQuODE3MjcxLCJleHAiOjQ4OTYyNDAwMDQuODExNjM5LCJzdWIiOiI3MTE3MTY1MyIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSIsIndlYmhvb2sucmVhZCIsIndlYmhvb2sud3JpdGUiLCJwcmVzZXQucmVhZCIsInByZXNldC53cml0ZSJdfQ.B8py_YqzZMacZP2WnSQHJm_Gh97EvSz1j1g4nvGOsGd9DvxqUha3ZOuiSZsOD-0bItKPBFJP7PLILZd1K5YCJwvSV1e5XkmaUM4_QYo870xi8DfmNR6bN5zf5nquwj7aVORirv6_q1pzjV5tg3j0RXSMV-GSsBA4wCE3oLEOg6GtcEVdV5soLv5jwbWhauDSuFoXiZI61bQut2TsAngVUlN0wyLr3ufH68izMwRRlPJdpHh_D7KfjTdMN5Gxb9QKUGjJ0ekdw5e5JZKACSGZNJAdcHeEElcTHnFLnjn0I-4edwQaBbu1qwvEF8ZvFN0ZrPvBEUtkd5bzyuT60NOzensyfnHyYaiZd1FaiGN_bLIsW_vCfUfDWOiOAEeRHb_mpwj64y2sLT1HGFqi6rWFS3b4uNxD22TF7DM62PiS6AzCljhG4n8fScdncLmT6DuqQ7PPcj4HfE5ixd8QuuES7ZwP05RDmTeNgN-lYZ-Kkb-5l06ElwOc9K7-ORSU_iPp0pCJtf5KrtVcdqd4HZ3zgCZ7EBczKbTMusP4eCKo0r-TmoZCx0grJ83MBoPkgtRrQwzyyaLl-qq4_eSvmelYLsYS6BwLIE_YF-ljXf90JkuQIFZpCpHKICebrbGiCVrr93WTqvUz4hmrqEuilbwh-etxjF_Nd-Kq5hJ9RjZSz5s';
 
 class UploadVideo {
@@ -180,7 +180,6 @@ class UploadVideo {
     };
 
     private openNotificationPopupModal = (htmlString: string) => {
-        console.log("in")
         const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
         const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
         popupModal.innerHTML = htmlString;
@@ -215,7 +214,6 @@ class UploadVideo {
 
     // Notifications.
     private initNotificationFlow = () => {
-        console.log("workin")
         const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         const backButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
@@ -652,124 +650,46 @@ class UploadVideo {
         }        
     
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
-            try {
-                creatingVideoText.innerHTML = "Starting upload and conversion process...";
+            creatingVideoText.innerHTML = "Uploading video for conversion...";
     
-                const jobResponse: Response = await fetch("https://api.cloudconvert.com/v2/jobs", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${apiKey}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        tasks: {
-                            "upload": { "operation": "import/upload" },
-                            "convert": {
-                                "operation": "convert",
-                                "input": ["upload"],
-                                "output_format": "mp4",
-                                "options": { 
-                                    "video_codec": "h264",     
-                                    "audio_codec": "aac"                              
-                                }
-                            },
-                            "export": { "operation": "export/url", "input": ["convert"] }
-                        }
-                    })
-                });
+            filename = filename.replace(/ /g, "_");
+            
+            // Create FormData and append the video blob
+            const formData: FormData = new FormData();
+            formData.append("video", blob, `${filename}.webm`);
     
-                if (!jobResponse.ok) {
-                    creatingVideoText.innerHTML = `ERROR: Job Creation Error: ${jobResponse.statusText}`;
-                    return;
+            // Send the video to the server
+            fetch(url + 'convert', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    creatingVideoText.innerHTML = 'Network response was not ok.';
+                    throw new Error('Network response was not ok.');
                 }
-    
-                const jobData: any = await jobResponse.json();
-                creatingVideoText.innerHTML = "MP4 Conversion in progress...";
-    
-                const uploadTask = jobData.data.tasks.find((task: any) => task.operation === "import/upload");
-                if (!uploadTask || !uploadTask.result?.form?.url) {
-                    creatingVideoText.innerHTML = "ERROR: Upload URL not found in CloudConvert response.";
-                    return;
-                }
-    
-                const uploadUrl: string = uploadTask.result.form.url;
-                const parameters: Record<string, string> = uploadTask.result.form.parameters || {};
-    
-                const formData: FormData = new FormData();
-                for (const [key, value] of Object.entries(parameters)) {
-                    formData.append(key, value);
-                }
-                formData.append("file", blob, filename + ".webm");
-    
-                const controller: AbortController = new AbortController();
-                const timeout: NodeJS.Timeout = setTimeout(() => controller.abort(), 600000);
-                let uploadFileResponse: Response;
-                
-                try {
-                    uploadFileResponse = await fetch(uploadUrl, { 
-                        method: "POST", 
-                        body: formData, 
-                        signal: controller.signal 
-                    });
-                    clearTimeout(timeout);
-                } catch (error: any) {
-                    if (error.message.includes("Fetch is aborted")) {
-                        creatingVideoText.innerHTML = `Upload failed, network connection too slow. Consider switching to a strong wifi connection.`;
-                    }
-                    else {
-                        creatingVideoText.innerHTML = `Upload failed: ${error}`;
-                    }
-                    return;
-                }
-                    
-                if (uploadFileResponse && !uploadFileResponse.ok) {
-                    creatingVideoText.innerHTML = `File Upload Error: ${await uploadFileResponse.text()}`;
-                    return;
-                }
-    
-                creatingVideoText.innerHTML = "File uploaded successfully. Waiting for conversion...";
-    
-                const jobId: string = jobData.data.id;
-                let convertedFileUrl: string | null = null;
-                let count: number = 0;
-    
-                while (!convertedFileUrl && (count <= 60)) {
-                    await new Promise(res => setTimeout(res, 10000));
-                    count++;
-    
-                    const jobStatusResponse: Response = await fetch(`https://api.cloudconvert.com/v2/jobs/${jobId}`, {
-                        headers: { "Authorization": `Bearer ${apiKey}` }
-                    });
-    
-                    const jobStatusData: any = await jobStatusResponse.json();
-                    const exportTask = jobStatusData.data.tasks.find((task: any) => task.operation === "export/url" && task.status === "finished");
-                    convertedFileUrl = exportTask?.result?.files?.[0]?.url || null;
-                }
-    
-                if (convertedFileUrl) {
-                    const a: HTMLAnchorElement = document.createElement("a");
-                    a.href = convertedFileUrl;
-                    a.download = filename + ".mp4";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    let countDown = 10;
-                    setInterval(() => {
-                        creatingVideoText.innerHTML = "<p>" + filename + " has been automatically downloaded into your device's downloads folder.</p>";
-                        creatingVideoText.innerHTML += "<p>Returning to your tab in <b style='color: #23FE69'>" + countDown + "</b>.</p>";
-                        countDown--;
-                    }, 1000);
-                    const backButton: HTMLElement = document.getElementById("return-to-tab-button") as HTMLElement;
-                    setTimeout(() => {
-                        backButton.click();
-                    }, 10000);
-                } else {
-                    creatingVideoText.innerHTML = "Upload Failed.";
-                }
-            } catch (error: any) {
-                creatingVideoText.innerHTML = "Upload Failed: " + error.message;
-            }
-        }
+                return response.blob(); // Get the response as a Blob (binary data)
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'converted-video.mp4'; // Set the desired file name
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                setTimeout(() => {
+                    creatingVideoText.innerHTML = "Downloading " + filename;
+                    const backButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+                    backButton.click();
+                }, 10000);
+            })
+            .catch(error => {
+                creatingVideoText.innerHTML = 'There was a problem with the fetch operation:' + error.message;
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }        
     
         startButton.addEventListener('click', startRecording);
     };    

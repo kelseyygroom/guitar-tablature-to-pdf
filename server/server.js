@@ -7,21 +7,67 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 5000;
-const uploadsDir = 'uploads/';
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpegPath = require('ffmpeg-static');
+const { exec } = require('child_process');
+const uploadsDir = path.join(__dirname, 'uploads');
+// Configure Multer storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+const upload = multer({ storage });
 
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
+// Ensure the uploads directory exists
+if (!fs.existsSync('uploads/')) {
+    fs.mkdirSync('uploads/');
 }
+
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 app.use(express.json());
 app.use(cors({ origin: '*' }));
 app.options('*', cors());
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(uploadsDir));
 
 app.get('/', (req, res) => {
     res.send('Hello from Heroku!');
 });
 
-const upload = multer({ dest: 'uploads/' }); // Set a destination for uploaded files
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
+
+app.post('/convert', upload.single('video'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+
+    const inputFilePath = req.file.path;
+    const outputFileName = `${Date.now()}-converted.mp4`;
+    const outputFilePath = path.join('uploads', outputFileName);
+
+    console.log('INPUT FILE', inputFilePath);
+    exec(`${ffmpegPath} -i ${inputFilePath} ${outputFilePath}`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error: ${error.message}`);
+            return res.status(500).send('Conversion failed.');
+        }
+        console.log(`FFmpeg stdout: ${stdout}`);
+        console.log('OUTPUT FILE', outputFilePath);
+        res.download(outputFilePath, outputFileName, (err) => {
+            if (err) {
+                console.error(`Error sending file: ${err.message}`);
+                res.status(500).send('File download failed.');
+            }
+        });
+    });
+});
 
 app.post('/upload-video', upload.single('video'), (req, res) => {
   if (!req.file) {
