@@ -53,7 +53,7 @@ app.post('/convert', upload.single('video'), (req, res) => {
     const outputFilePath = path.join('uploads', outputFileName);
 
     console.log('INPUT FILE', inputFilePath);
-    exec(`${ffmpegPath} -i ${inputFilePath} ${outputFilePath}`, (error, stdout, stderr) => {
+    exec(`${ffmpegPath} -i ${inputFilePath} -vf scale=640:360 -c:v libx264 ${outputFilePath}`, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error: ${error.message}`);
             return res.status(500).send('Conversion failed.');
