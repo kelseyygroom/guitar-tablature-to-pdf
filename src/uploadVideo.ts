@@ -1,8 +1,8 @@
 import "./uploadVideo.css";
 import logo from "./images/landing-logo.svg"
 
-// const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
-const url = "http://localhost:5000/";
+const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+// const url = "http://localhost:5000/";
 const apiKey = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzBjYWM3ZjY2YWRkYWE3ZTFiNjY1ZjI5YzRkNzliZjQyZjk5NzhiZDZlYTBmMmFmN2Y5ZmRhZDc1ZDNiZTk2YWJkNjI0MjhjZDc3ZTkzNTIiLCJpYXQiOjE3NDA1NjY0MDQuODE3MjY5LCJuYmYiOjE3NDA1NjY0MDQuODE3MjcxLCJleHAiOjQ4OTYyNDAwMDQuODExNjM5LCJzdWIiOiI3MTE3MTY1MyIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSIsIndlYmhvb2sucmVhZCIsIndlYmhvb2sud3JpdGUiLCJwcmVzZXQucmVhZCIsInByZXNldC53cml0ZSJdfQ.B8py_YqzZMacZP2WnSQHJm_Gh97EvSz1j1g4nvGOsGd9DvxqUha3ZOuiSZsOD-0bItKPBFJP7PLILZd1K5YCJwvSV1e5XkmaUM4_QYo870xi8DfmNR6bN5zf5nquwj7aVORirv6_q1pzjV5tg3j0RXSMV-GSsBA4wCE3oLEOg6GtcEVdV5soLv5jwbWhauDSuFoXiZI61bQut2TsAngVUlN0wyLr3ufH68izMwRRlPJdpHh_D7KfjTdMN5Gxb9QKUGjJ0ekdw5e5JZKACSGZNJAdcHeEElcTHnFLnjn0I-4edwQaBbu1qwvEF8ZvFN0ZrPvBEUtkd5bzyuT60NOzensyfnHyYaiZd1FaiGN_bLIsW_vCfUfDWOiOAEeRHb_mpwj64y2sLT1HGFqi6rWFS3b4uNxD22TF7DM62PiS6AzCljhG4n8fScdncLmT6DuqQ7PPcj4HfE5ixd8QuuES7ZwP05RDmTeNgN-lYZ-Kkb-5l06ElwOc9K7-ORSU_iPp0pCJtf5KrtVcdqd4HZ3zgCZ7EBczKbTMusP4eCKo0r-TmoZCx0grJ83MBoPkgtRrQwzyyaLl-qq4_eSvmelYLsYS6BwLIE_YF-ljXf90JkuQIFZpCpHKICebrbGiCVrr93WTqvUz4hmrqEuilbwh-etxjF_Nd-Kq5hJ9RjZSz5s';
 
 class UploadVideo {
@@ -653,7 +653,7 @@ class UploadVideo {
             creatingVideoText.innerHTML = "Uploading video for conversion...";
     
             filename = filename.replace(/ /g, "_");
-            
+
             // Create FormData and append the video blob
             const formData: FormData = new FormData();
             formData.append("video", blob, `${filename}.webm`);
