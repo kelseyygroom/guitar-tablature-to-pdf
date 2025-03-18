@@ -1,118 +1,91 @@
+require('dotenv').config();
 const express = require('express');
-const { connectToDatabase } = require('./config/db');
-const cors = require('cors');
+const AWS = require('aws-sdk');
 const multer = require('multer');
-const { webmToMp4 } = require('webm-to-mp4'); // Import the webm-to-mp4 package
-const path = require('path');
-const fs = require('fs');
+const multerS3 = require('multer-s3');
+const cors = require('cors');
+const { connectToDatabase } = require('./config/db');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
-const ffmpeg = require('fluent-ffmpeg');
-const ffmpegPath = require('ffmpeg-static');
-const { exec } = require('child_process');
-const uploadsDir = path.join(__dirname, 'uploads');
-// Configure Multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
+
+// Initialize AWS SDK Clients
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+
+const s3 = new S3Client({
+    region: "us-east-2",
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     }
 });
-const upload = multer({ storage });
+const lambda = new AWS.Lambda();
 
-// Ensure the uploads directory exists
-if (!fs.existsSync('uploads/')) {
-    fs.mkdirSync('uploads/');
-}
+const bucketName = process.env.AWS_S3_BUCKET;
 
-ffmpeg.setFfmpegPath(ffmpegPath);
+// Configure Multer for direct S3 upload
+const upload = multer({
+    storage: multerS3({
+        s3,
+        bucket: bucketName,
+        key: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+    })
+});
 
+// Middleware
 app.use(express.json());
 app.use(cors({ origin: '*' }));
 app.options('*', cors());
-// Serve static files from the uploads directory
-app.use('/uploads', express.static(uploadsDir));
 
-app.get('/', (req, res) => {
-    res.send('Hello from Heroku!');
-});
+// Root Route
+app.get('/', (req, res) => res.send('Server is running'));
 
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir);
-}
-
+// Upload Video to S3 & Trigger AWS Lambda for Conversion
 app.post('/convert', upload.single('video'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('No file uploaded.');
-    }
+    if (!req.file) return res.status(400).send('No file uploaded.');
 
-    const inputFilePath = req.file.path;
-    const outputFileName = `${Date.now()}-converted.mp4`;
-    const outputFilePath = path.join('uploads', outputFileName);
+    const s3FileUrl = req.file.location;
+    console.log('File uploaded to S3:', s3FileUrl);
 
-    console.log('INPUT FILE', inputFilePath);
-    exec(`${ffmpegPath} -i ${inputFilePath} -vf scale=640:360 -c:v libx264 ${outputFilePath}`, (error, stdout, stderr) => {
+    // Invoke AWS Lambda Synchronously
+    const params = {
+        FunctionName: process.env.AWS_LAMBDA_FUNCTION,
+        InvocationType: 'RequestResponse', // Synchronous invocation
+        Payload: JSON.stringify({ inputFileUrl: s3FileUrl })
+    };
+
+    lambda.invoke(params, (error, data) => {
         if (error) {
-            console.error(`Error: ${error.message}`);
-            return res.status(500).send('Conversion failed.');
+            console.error('Lambda invocation error:', error);
+            return res.status(500).json({ error: 'Error triggering Lambda function.' });
         }
-        console.log(`FFmpeg stdout: ${stdout}`);
-        console.log('OUTPUT FILE', outputFilePath);
-        res.download(outputFilePath, outputFileName, (err) => {
-            if (err) {
-                console.error(`Error sending file: ${err.message}`);
-                res.status(500).send('File download failed.');
+
+        try {
+            const lambdaResponse = JSON.parse(data.Payload);
+            const lambdaBody = JSON.parse(lambdaResponse.body);
+
+            if (lambdaBody.outputFileUrl) {
+                console.log('Converted video URL:', lambdaBody.outputFileUrl);
+                res.json({ videoUrl: lambdaBody.outputFileUrl });
+            } else {
+                console.error('Lambda response missing outputFileUrl:', lambdaBody);
+                res.status(500).json({ error: 'Lambda response did not contain outputFileUrl.' });
             }
-        });
-    });
-});
-
-app.post('/upload-video', upload.single('video'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send('No file uploaded.');
-  }
-
-  const inputPath = path.join(__dirname, req.file.path);
-  const outputPath = path.join(__dirname, 'uploads', `${Date.now()}.mp4`);
-
-  // Convert WebM to MP4
-  webmToMp4(inputPath, outputPath)
-    .then(() => {
-      // Once conversion is complete, send the MP4 file back to the client
-      res.download(outputPath, (err) => {
-        if (err) {
-          console.log("Error during file download:", err);
-          return res.status(500).send("Failed to download the converted video.");
+        } catch (parseError) {
+            console.error('Error parsing Lambda response:', parseError);
+            res.status(500).json({ error: 'Invalid Lambda response.' });
         }
-
-        // Clean up by removing the input WebM and output MP4 files
-        fs.unlinkSync(inputPath);
-        fs.unlinkSync(outputPath);
-      });
-    })
-    .catch((error) => {
-      console.error("Error during WebM to MP4 conversion:", error);
-      res.status(500).send("Error during video conversion.");
     });
 });
 
+// User Authentication Routes
 app.get('/login', async (req, res) => {
-    const username = req.query.username;
-    const password = req.query.pass;
-
     try {
         const db = await connectToDatabase();
-        const accountInfo = await db.collection('userAccount').findOne({ username });
+        const account = await db.collection('userAccount').findOne({ username: req.query.username });
 
-        if (password === accountInfo.password) {
-            res.json(true);
-        }
-        else {
-            res.json(false);
-        }
-
+        if (account?.password === req.query.pass) return res.json(true);
+        res.json(false);
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -120,48 +93,29 @@ app.get('/login', async (req, res) => {
 });
 
 app.get('/getUserAccount', async (req, res) => {
-    const username = req.query.username;
-
     try {
         const db = await connectToDatabase();
-        const account = await db.collection('userAccount').findOne({ username });
+        const account = await db.collection('userAccount').findOne({ username: req.query.username });
 
-        if (account) {
-            res.json(account);
-        }
-        else {
-            res.json("No Account found.");
-        }
-
+        res.json(account || 'No Account found.');
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
+// User Account Management Routes
 app.post('/createAccount', async (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    const email = req.body.email;
-
     try {
         const db = await connectToDatabase();
-        const accountInfo = await db.collection('userAccount').insertOne({ username, password, email, tabs: [{ tabTitle: "Tutorial", tabData: {
-            highEString: "-----",
-            bString: "-----",
-            gString: "-----",
-            dString: "-----",
-            aString: "-----",
-            eString: "-----"
-        } }] });
+        const result = await db.collection('userAccount').insertOne({
+            username: req.body.username,
+            password: req.body.password,
+            email: req.body.email,
+            tabs: [{ tabTitle: "Tutorial", tabData: { highEString: "-----", bString: "-----", gString: "-----", dString: "-----", aString: "-----", eString: "-----" } }]
+        });
 
-        if (accountInfo) {
-            res.json(true);
-        }
-        else {
-            res.json(false);
-        }
-
+        res.json(!!result.insertedId);
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -169,42 +123,24 @@ app.post('/createAccount', async (req, res) => {
 });
 
 app.post('/saveTab', async (req, res) => {
-    const username = req.body.username;
-    const tabData = req.body.tabData;
-    const tabTitle = req.body.title;
-
     try {
         const db = await connectToDatabase();
-        const saveTab = await db.collection('userAccount').updateOne(
-            {
-              username, // Match the user by username
-              'tabs.tabTitle': tabTitle // Check if a tab with the same title exists
-            },
-            {
-              $set: { 'tabs.$.tabData': tabData } // Update the tab data if it exists
-            },
-            {
-              upsert: false // Do not create a new document if the username is not found
-            }
-          );
-          
-          if (saveTab.matchedCount === 0) {
-            // If no tab with the specified title exists, push a new one
+        const { username, tabTitle, tabData } = req.body;
+
+        const updateResult = await db.collection('userAccount').updateOne(
+            { username, 'tabs.tabTitle': tabTitle },
+            { $set: { 'tabs.$.tabData': tabData } },
+            { upsert: false }
+        );
+
+        if (updateResult.matchedCount === 0) {
             await db.collection('userAccount').updateOne(
-              { username },
-              {
-                $push: { tabs: { tabTitle, tabData } } // Add a new tab
-              }
+                { username },
+                { $push: { tabs: { tabTitle, tabData } } }
             );
-          }
-
-        if (saveTab) {
-            res.json(true);
-        }
-        else {
-            res.json(false);
         }
 
+        res.json(true);
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -212,31 +148,19 @@ app.post('/saveTab', async (req, res) => {
 });
 
 app.post('/deleteTab', async (req, res) => {
-    const username = req.body.username;
-    const tabTitle = req.body.title;
-
     try {
         const db = await connectToDatabase();
-        const deleteTab = await db.collection('userAccount').updateOne(
-            {
-                username, // Match the user by username
-                'tabs.tabTitle': tabTitle // Check if a tab with the same title exists
-            },
-            { 
-                $pull: { tabs: { tabTitle: tabTitle } } 
-            }
+        const deleteResult = await db.collection('userAccount').updateOne(
+            { username: req.body.username },
+            { $pull: { tabs: { tabTitle: req.body.title } } }
         );
 
-        if (deleteTab) {
-            res.json(true);
-        }
-        else {
-            res.json(false);
-        }
+        res.json(!!deleteResult.modifiedCount);
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-app.listen(PORT, () => console.log(`Server running at ${PORT}`));
+// Start Server
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
