@@ -2,9 +2,8 @@ import "./uploadVideo.css";
 import logo from "./images/landing-logo.svg"
 import { io } from 'socket.io-client';
 
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
-// const url = "http://localhost:5000/";
-const socket = io(url); // Your server URL
+// const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = "http://localhost:5000/";
 
 class UploadVideo {
     user: any;
@@ -655,16 +654,15 @@ class UploadVideo {
             creatingVideoText.innerHTML = "Uploading video for conversion...";
         
             filename = filename.replace(/ /g, "_");
-        
+            // Use URLSearchParams to parse the query string
+            const params = new URLSearchParams(window.location.href);
+
+            // Get individual parameters by name
+            const username: string = params.get('username') as string;
             // Create FormData and append the video blob
             const formData: FormData = new FormData();
-            formData.append("video", blob, `${filename}.webm`);
-            const socketId = socket.id; // Get the socket ID for this client
-            if (socketId) {
-                formData.append('socketId', socketId); // Add the socketId to the form data
-            } else {
-                console.error('socketId is undefined');
-            }        
+            formData.append("video", blob, `${filename}.webm`);     
+            formData.append('username', username);
             // Send the video to the server
             fetch(url + 'convert', {
                 method: 'POST',
@@ -682,20 +680,6 @@ class UploadVideo {
             .catch(error => {
                 creatingVideoText.innerHTML = 'Error: ' + error.message;
                 console.error('Fetch error:', error);
-            });
-        
-            // Listen for the 'videoConversionComplete' event
-            socket.on('videoConversionComplete', (data) => {
-                console.log('Video conversion completed:', data.videoUrl);
-                // Handle video URL, show the video, etc.
-                creatingVideoText.innerHTML = 'Conversion Complete!';
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = data.videoUrl;
-                a.download = filename + ".mp4";
-                document.body.appendChild(a);
-                a.click();
-                
             });
         }        
     

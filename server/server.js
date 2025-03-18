@@ -4,19 +4,14 @@ const AWS = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const cors = require('cors');
-const http = require('http');
 const { connectToDatabase } = require('./config/db');
-const socketIo = require('socket.io'); // Import socket.io
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
-const server = http.createServer(app); // Use http server for socket.io
-const io = socketIo(server, {
-    cors: {
-        origin: '*', // Allow only localhost:3000
-        methods: ['GET', 'POST'], // Allow only specific HTTP methods
-        allowedHeaders: ['Content-Type'], // Set allowed headers
-    }
-});
+const server = http.createServer(app);
+const io = socketIo(server);
+
 const PORT = process.env.PORT || 5000;
 
 // Initialize AWS SDK Clients
@@ -45,7 +40,7 @@ const upload = multer({
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: '*',
+    origin: '*', // Allow only this domain
     methods: ['*'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -57,17 +52,15 @@ app.get('/', (req, res) => res.send('Server is running'));
 app.post('/convert', upload.single('video'), (req, res) => {
     if (!req.file) return res.status(400).send('No file uploaded.');
 
+    const username = req.body.username
     const s3FileUrl = req.file.location;
     console.log('File uploaded to S3:', s3FileUrl);
 
-    // Generate a unique socket ID for this client
-    const socketId = req.body.socketId;
-
-    // Invoke AWS Lambda Synchronously
+    // Invoke AWS Lambda Asynchronously
     const params = {
         FunctionName: process.env.AWS_LAMBDA_FUNCTION,
-        InvocationType: 'RequestResponse',
-        Payload: JSON.stringify({ inputFileUrl: s3FileUrl })
+        InvocationType: 'Event', // Asynchronous invocation
+        Payload: JSON.stringify({ inputFileUrl: s3FileUrl, username }) // No socketId now
     };
 
     lambda.invoke(params, (error, data) => {
@@ -76,27 +69,10 @@ app.post('/convert', upload.single('video'), (req, res) => {
             return res.status(500).json({ error: 'Error triggering Lambda function.' });
         }
 
-        try {
-            const lambdaResponse = JSON.parse(data.Payload);
-            const lambdaBody = JSON.parse(lambdaResponse.body);
+        console.log('Lambda invoked successfully:', data);
 
-            if (lambdaBody.outputFileUrl) {
-                console.log('Converted video URL:', lambdaBody.outputFileUrl);
-                
-                // Emit socket event to notify the client that conversion is complete
-                io.to(socketId).emit('videoConversionComplete', {
-                    videoUrl: lambdaBody.outputFileUrl
-                });
-
-                res.json({ message: 'Video conversion started. Client will be notified when done.' });
-            } else {
-                console.error('Lambda response missing outputFileUrl:', lambdaBody);
-                res.status(500).json({ error: 'Lambda response did not contain outputFileUrl.' });
-            }
-        } catch (parseError) {
-            console.error('Error parsing Lambda response:', parseError);
-            res.status(500).json({ error: 'Invalid Lambda response.' });
-        }
+        // Send an immediate response
+        res.json({ message: 'Conversion started. You will be notified when done.' });
     });
 });
 
@@ -184,16 +160,30 @@ app.post('/deleteTab', async (req, res) => {
     }
 });
 
-// Start the server and WebSocket
-server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// New Route to update videoID in user data (this will be called by the Lambda function)
+app.post('/videoS3URL', async (req, res) => {
+    try {
+        const { username, videoID } = req.body;
+
+        // Connect to the database and update the user's videoID array field
+        const db = await connectToDatabase();
+
+        // Update the user's document, pushing the new videoID to the array
+        const result = await db.collection('userAccount').updateOne(
+            { username }, // Match user by username
+            { $push: { videoID: videoID } } // Push new videoID to the videoID array
+        );
+
+        if (result.modifiedCount > 0) {
+            res.json({ success: true, message: 'Video URL updated successfully!' });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
-// WebSocket connection
-io.on('connection', (socket) => {
-    console.log('Client connected:', socket.id);
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected:', socket.id);
-    });
-});
+// Start Server
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
