@@ -662,7 +662,6 @@ class UploadVideo {
             fetch(url + 'convert', {
                 method: 'POST',
                 body: formData,
-                mode: 'no-cors' // Disables CORS (opaque response, can't read the response body)
             })
             .then(response => response.json()) // Expect JSON { videoUrl: 'https://...' }
             .then(data => {
