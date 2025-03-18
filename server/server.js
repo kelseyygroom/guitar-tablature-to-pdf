@@ -34,7 +34,6 @@ const upload = multer({
 
 // Middleware
 app.use(express.json());
-// Enable CORS for the entire app
 app.use(cors({
     origin: 'https://tabtok.us', // Allow only this domain
     methods: ['GET', 'POST'],
