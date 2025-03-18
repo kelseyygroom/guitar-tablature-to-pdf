@@ -6,12 +6,9 @@ const multerS3 = require('multer-s3');
 const cors = require('cors');
 const { connectToDatabase } = require('./config/db');
 const http = require('http');
-const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
-
 const PORT = process.env.PORT || 5000;
 
 // Initialize AWS SDK Clients
@@ -60,7 +57,7 @@ app.post('/convert', upload.single('video'), (req, res) => {
     const params = {
         FunctionName: process.env.AWS_LAMBDA_FUNCTION,
         InvocationType: 'Event', // Asynchronous invocation
-        Payload: JSON.stringify({ inputFileUrl: s3FileUrl, username }) // No socketId now
+        Payload: JSON.stringify({ inputFileUrl: s3FileUrl, username })
     };
 
     lambda.invoke(params, (error, data) => {
