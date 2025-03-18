@@ -36,7 +36,7 @@ const upload = multer({
 app.use(express.json());
 app.use(cors({
     origin: '*', // Allow only this domain
-    methods: ['GET', 'POST'],
+    methods: ['*'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
