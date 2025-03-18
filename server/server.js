@@ -45,6 +45,34 @@ app.use(cors({
 // Root Route
 app.get('/', (req, res) => res.send('Server is running'));
 
+// New Route to update videoID in user data (this will be called by the Lambda function)
+app.post('/video-s3-url', async (req, res) => {
+    try {
+        const { username, videoID } = req.body;
+
+        // Connect to the database and update the user's videoID array field
+        const db = await connectToDatabase();
+        console.log('SEAN', db)
+
+        // Update the user's document, pushing the new videoID to the array
+        const result = await db.collection('userAccount').updateOne(
+            { username }, // Match user by username
+            { $push: { videoID: videoID } } // Push new videoID to the videoID array
+        );
+
+        if (result.modifiedCount > 0) {
+            res.json({ success: true, message: 'Video URL updated successfully!' });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.log('SEAN', error.message)
+
+        console.error('Error:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 // Upload Video to S3 & Trigger AWS Lambda for Conversion
 app.post('/convert', upload.single('video'), (req, res) => {
     if (!req.file) return res.status(400).send('No file uploaded.');
@@ -151,31 +179,6 @@ app.post('/deleteTab', async (req, res) => {
         );
 
         res.json(!!deleteResult.modifiedCount);
-    } catch (error) {
-        console.error('Error:', error.message);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
-
-// New Route to update videoID in user data (this will be called by the Lambda function)
-app.post('/videoS3URL', async (req, res) => {
-    try {
-        const { username, videoID } = req.body;
-
-        // Connect to the database and update the user's videoID array field
-        const db = await connectToDatabase();
-
-        // Update the user's document, pushing the new videoID to the array
-        const result = await db.collection('userAccount').updateOne(
-            { username }, // Match user by username
-            { $push: { videoID: videoID } } // Push new videoID to the videoID array
-        );
-
-        if (result.modifiedCount > 0) {
-            res.json({ success: true, message: 'Video URL updated successfully!' });
-        } else {
-            res.status(404).json({ success: false, message: 'User not found' });
-        }
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
