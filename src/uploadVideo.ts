@@ -1,8 +1,10 @@
 import "./uploadVideo.css";
 import logo from "./images/landing-logo.svg"
+import { io } from 'socket.io-client';
 
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
-// const url = "http://localhost:5000/";
+// const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = "http://localhost:5000/";
+const socket = io(url); // Your server URL
 
 class UploadVideo {
     user: any;
@@ -651,28 +653,27 @@ class UploadVideo {
     
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
             creatingVideoText.innerHTML = "Uploading video for conversion...";
-    
+        
             filename = filename.replace(/ /g, "_");
-
+        
             // Create FormData and append the video blob
             const formData: FormData = new FormData();
             formData.append("video", blob, `${filename}.webm`);
-    
+            const socketId = socket.id; // Get the socket ID for this client
+            if (socketId) {
+                formData.append('socketId', socketId); // Add the socketId to the form data
+            } else {
+                console.error('socketId is undefined');
+            }        
             // Send the video to the server
             fetch(url + 'convert', {
                 method: 'POST',
                 body: formData,
             })
-            .then(response => response.json()) // Expect JSON { videoUrl: 'https://...' }
+            .then(response => response.json()) // Expect JSON { message: 'Video conversion started.' }
             .then(data => {
-                if (data.videoUrl) {
-                    // Download the video
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = data.videoUrl;
-                    a.download = 'converted-video.mp4';
-                    document.body.appendChild(a);
-                    a.click();
+                if (data.message) {
+                    console.log(data.message); // Log the message
                 } else {
                     creatingVideoText.innerHTML = 'Video processing failed.';
                 }
@@ -680,7 +681,20 @@ class UploadVideo {
             .catch(error => {
                 creatingVideoText.innerHTML = 'Error: ' + error.message;
                 console.error('Fetch error:', error);
-            });            
+            });
+        
+            // Listen for the 'videoConversionComplete' event
+            socket.on('videoConversionComplete', (data) => {
+                console.log('Video conversion completed:', data.videoUrl);
+                // Handle video URL, show the video, etc.
+                creatingVideoText.innerHTML = 'Conversion Complete!';
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = data.videoUrl;
+                a.download = 'converted-video.mp4';
+                document.body.appendChild(a);
+                a.click();
+            });
         }        
     
         startButton.addEventListener('click', startRecording);
