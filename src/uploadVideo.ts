@@ -691,7 +691,7 @@ class UploadVideo {
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = data.videoUrl;
-                a.download = 'converted-video.mp4';
+                a.download = filename + ".mp4";
                 document.body.appendChild(a);
                 a.click();
             });
