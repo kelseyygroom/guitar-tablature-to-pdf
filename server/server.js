@@ -44,9 +44,7 @@ app.use(cors({
 app.get('/', (req, res) => res.send('Server is running'));
 
 // Upload Video to S3 & Trigger AWS Lambda for Conversion
-app.post('/convert', cors({
-    origin: '*',  // Allow all
-}, upload.single('video'), (req, res) => {
+app.post('/convert', upload.single('video'), (req, res) => {
     if (!req.file) return res.status(400).send('No file uploaded.');
 
     const s3FileUrl = req.file.location;
