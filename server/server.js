@@ -60,13 +60,10 @@ app.post('/convert', upload.single('video'), (req, res) => {
     const s3FileUrl = req.file.location;
     console.log('File uploaded to S3:', s3FileUrl);
 
-    // Generate a unique socket ID for this client
-    const socketId = req.body.socketId;
-
-    // Invoke AWS Lambda Synchronously
+    // Invoke AWS Lambda Asynchronously
     const params = {
         FunctionName: process.env.AWS_LAMBDA_FUNCTION,
-        InvocationType: 'RequestResponse',
+        InvocationType: 'Event', // Asynchronous invocation
         Payload: JSON.stringify({ inputFileUrl: s3FileUrl })
     };
 
@@ -76,27 +73,10 @@ app.post('/convert', upload.single('video'), (req, res) => {
             return res.status(500).json({ error: 'Error triggering Lambda function.' });
         }
 
-        try {
-            const lambdaResponse = JSON.parse(data.Payload);
-            const lambdaBody = JSON.parse(lambdaResponse.body);
+        console.log('Lambda invoked successfully:', data);
 
-            if (lambdaBody.outputFileUrl) {
-                console.log('Converted video URL:', lambdaBody.outputFileUrl);
-                
-                // Emit socket event to notify the client that conversion is complete
-                io.to(socketId).emit('videoConversionComplete', {
-                    videoUrl: lambdaBody.outputFileUrl
-                });
-
-                res.json({ message: 'Video conversion started. Client will be notified when done.' });
-            } else {
-                console.error('Lambda response missing outputFileUrl:', lambdaBody);
-                res.status(500).json({ error: 'Lambda response did not contain outputFileUrl.' });
-            }
-        } catch (parseError) {
-            console.error('Error parsing Lambda response:', parseError);
-            res.status(500).json({ error: 'Invalid Lambda response.' });
-        }
+        // Send an immediate response
+        res.json({ message: 'Conversion started. You will be notified when done.' });
     });
 });
 
