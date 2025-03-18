@@ -12,7 +12,7 @@ const app = express();
 const server = http.createServer(app); // Use http server for socket.io
 const io = socketIo(server, {
     cors: {
-        origin: 'http://localhost:3000', // Allow only localhost:3000
+        origin: '*', // Allow only localhost:3000
         methods: ['GET', 'POST'], // Allow only specific HTTP methods
         allowedHeaders: ['Content-Type'], // Set allowed headers
     }
