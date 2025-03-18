@@ -4,14 +4,19 @@ const AWS = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const cors = require('cors');
-const { connectToDatabase } = require('./config/db');
 const http = require('http');
-const socketIo = require('socket.io');
+const { connectToDatabase } = require('./config/db');
+const socketIo = require('socket.io'); // Import socket.io
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
-
+const server = http.createServer(app); // Use http server for socket.io
+const io = socketIo(server, {
+    cors: {
+        origin: '*', // Allow only localhost:3000
+        methods: ['GET', 'POST'], // Allow only specific HTTP methods
+        allowedHeaders: ['Content-Type'], // Set allowed headers
+    }
+});
 const PORT = process.env.PORT || 5000;
 
 // Initialize AWS SDK Clients
@@ -40,7 +45,7 @@ const upload = multer({
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: '*', // Allow only this domain
+    origin: '*',
     methods: ['*'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -55,14 +60,14 @@ app.post('/convert', upload.single('video'), (req, res) => {
     const s3FileUrl = req.file.location;
     console.log('File uploaded to S3:', s3FileUrl);
 
-    // Generate a unique socketId for the current session
-    const socketId = req.body.socketId; // Assuming the client sends this ID
+    // Generate a unique socket ID for this client
+    const socketId = req.body.socketId;
 
-    // Invoke AWS Lambda Asynchronously
+    // Invoke AWS Lambda Synchronously
     const params = {
         FunctionName: process.env.AWS_LAMBDA_FUNCTION,
-        InvocationType: 'Event', // Asynchronous invocation
-        Payload: JSON.stringify({ inputFileUrl: s3FileUrl, socketId: socketId })
+        InvocationType: 'RequestResponse',
+        Payload: JSON.stringify({ inputFileUrl: s3FileUrl })
     };
 
     lambda.invoke(params, (error, data) => {
@@ -71,10 +76,27 @@ app.post('/convert', upload.single('video'), (req, res) => {
             return res.status(500).json({ error: 'Error triggering Lambda function.' });
         }
 
-        console.log('Lambda invoked successfully:', data);
+        try {
+            const lambdaResponse = JSON.parse(data.Payload);
+            const lambdaBody = JSON.parse(lambdaResponse.body);
 
-        // Send an immediate response
-        res.json({ message: 'Conversion started. You will be notified when done.' });
+            if (lambdaBody.outputFileUrl) {
+                console.log('Converted video URL:', lambdaBody.outputFileUrl);
+                
+                // Emit socket event to notify the client that conversion is complete
+                io.to(socketId).emit('videoConversionComplete', {
+                    videoUrl: lambdaBody.outputFileUrl
+                });
+
+                res.json({ message: 'Video conversion started. Client will be notified when done.' });
+            } else {
+                console.error('Lambda response missing outputFileUrl:', lambdaBody);
+                res.status(500).json({ error: 'Lambda response did not contain outputFileUrl.' });
+            }
+        } catch (parseError) {
+            console.error('Error parsing Lambda response:', parseError);
+            res.status(500).json({ error: 'Invalid Lambda response.' });
+        }
     });
 });
 
@@ -162,22 +184,16 @@ app.post('/deleteTab', async (req, res) => {
     }
 });
 
-// WebSocket logic to listen for video conversion completion
-io.on('connection', (socket) => {
-    console.log('New WebSocket connection:', socket.id);
-
-    // Listen for the socketId to be sent from the client for tracking
-    socket.on('registerSocket', (data) => {
-        console.log('Socket registered with ID:', socket.id);
-    });
-
-    // Handle other socket events as needed
+// Start the server and WebSocket
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
-// Simulating Lambda notifying WebSocket server after conversion (Lambda side)
-function notifyClient(socketId, videoUrl) {
-    io.to(socketId).emit('videoConversionComplete', { videoUrl });
-}
+// WebSocket connection
+io.on('connection', (socket) => {
+    console.log('Client connected:', socket.id);
 
-// Start Server
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    socket.on('disconnect', () => {
+        console.log('Client disconnected:', socket.id);
+    });
+});

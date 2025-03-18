@@ -674,6 +674,7 @@ class UploadVideo {
             .then(data => {
                 if (data.message) {
                     console.log(data.message); // Log the message
+                    creatingVideoText.innerHTML = 'Conversion has begun!';
                 } else {
                     creatingVideoText.innerHTML = 'Video processing failed.';
                 }
@@ -694,6 +695,7 @@ class UploadVideo {
                 a.download = filename + ".mp4";
                 document.body.appendChild(a);
                 a.click();
+                
             });
         }        
     
