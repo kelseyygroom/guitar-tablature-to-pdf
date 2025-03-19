@@ -27,8 +27,12 @@ class Home {
     private openPopUpModal = (htmlString: string) => {
         const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
         const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
-
         popupModal.innerHTML = htmlString;
+        const cancelButton: HTMLButtonElement = document.getElementById("cancel-button") as HTMLButtonElement;
+        cancelButton.addEventListener("click", () => {
+            this.closePopupModal();
+        })
+
         popupModal.style.display = "flex";
         popupModalOverlay.style.display = "flex";
     };
@@ -73,6 +77,13 @@ class Home {
                     listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video"></i></a>';    
                 }
                 else {
+                    const label: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+                    const cancelButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+                    label.style.color = "white";
+                    label.innerHTML = "Your \"" + tab.tabTitle + "\" video is ready!";
+                    cancelButton.innerHTML = "Cool!";
+                    cancelButton.id = "cancel-button";
+                    this.openPopUpModal(label.outerHTML + cancelButton.outerHTML);
                     window.localStorage.setItem(tab.videoS3URL, "true");
                     listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video notify-icon"></i></a>';    
                 }
@@ -143,6 +154,15 @@ class Home {
         });
     }
 
+    private closePopupModal = () => {
+        const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
+        const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
+
+        popupModal.innerHTML = "";
+        popupModal.style.display = "none";
+        popupModalOverlay.style.display = "none";
+    }
+
     private createNewTab = () => {
         const createNewTabButton: HTMLButtonElement = document.getElementById('create-tab-button') as HTMLButtonElement;
 
@@ -152,6 +172,8 @@ class Home {
             const createInput: HTMLInputElement = document.createElement("input") as HTMLInputElement;
             const createButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
             const cancelButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+            cancelButton.innerHTML = "Cancel";
+            cancelButton.id = "cancel-button";
             createErrorLabel.innerHTML = "This Title is already taken.";
             cancelButton.innerHTML = "Cancel";
             createErrorLabel.id = "create-error-label";
@@ -161,7 +183,7 @@ class Home {
             createLabel.id = "create-label";
             createInput.id = "create-new-tab-input";
             createInput.placeholder = "Title";
-            this.openPopUpModal(createLabel.outerHTML + createInput.outerHTML + createErrorLabel.outerHTML + createButton.outerHTML);
+            this.openPopUpModal(createLabel.outerHTML + createInput.outerHTML + createErrorLabel.outerHTML + createButton.outerHTML + cancelButton.outerHTML);
             this.addNewTabToDb();
             cancelButton.addEventListener("click", () => {
                 // TODO

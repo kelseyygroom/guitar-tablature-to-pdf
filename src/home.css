@@ -135,6 +135,14 @@ body {
     margin-bottom: 1rem;
 }
 
+#cancel-button {
+    margin-top: .5rem;
+    width: 90%;
+    padding: .75rem;
+    border-radius: 10px;
+    background-color: white;
+}
+
 #create-button {
     margin-top: .5rem;
     width: 90%;
