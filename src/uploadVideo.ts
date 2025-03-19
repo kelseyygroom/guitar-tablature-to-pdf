@@ -668,12 +668,15 @@ class UploadVideo {
             .then(response => response.json()) // Expect JSON { message: 'Video conversion started.' }
             .then(data => {
                 if (data.message) {
-                    creatingVideoText.innerHTML = 'Conversion has begun! The video will be available for download on your home page as soon as it is finished!';
+                    creatingVideoText.innerHTML = '&#x2705; Success! The video will be available for download on your home page as soon as it is finished!';
                     setTimeout(() => {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
                 } else {
-                    creatingVideoText.innerHTML = 'Video processing failed.';
+                    creatingVideoText.innerHTML = 'Video processing failed. The something went wrond during the upload process.';
+                    setTimeout(() => {
+                        window.location.href = "home.html?username=" + username;
+                    }, 5000);
                 }
             })
             .catch(error => {
