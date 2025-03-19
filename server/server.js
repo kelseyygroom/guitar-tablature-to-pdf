@@ -46,7 +46,7 @@ app.use(cors({
 app.get('/', (req, res) => res.send('Server is running'));
 
 // New Route to update videoID in user data (this will be called by the Lambda function)
-app.post('/video-s3-url', async (req, res) => {
+app.post('/videoURL', async (req, res) => {
     try {
         const { username, videoID } = req.body;
 
