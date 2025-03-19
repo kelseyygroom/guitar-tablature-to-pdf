@@ -568,7 +568,6 @@ class UploadVideo {
     
             if (video.currentTime >= video.duration) {
                 recorder.stop();
-                console.log("stop")
                 isRecording = false;
                 return;
             }
@@ -651,17 +650,16 @@ class UploadVideo {
     
         async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
             creatingVideoText.innerHTML = "Uploading video for conversion...";
-        
             filename = filename.replace(/ /g, "_");
             // Use URLSearchParams to parse the query string
-            const params = new URLSearchParams(window.location.href);
-
-            // Get individual parameters by name
+            const params = new URLSearchParams(window.location.search);
             const username: string = params.get('username') as string;
-            // Create FormData and append the video blob
+            const title: string = params.get('title') as string;
             const formData: FormData = new FormData();
             formData.append("video", blob, `${filename}.webm`);     
             formData.append('username', username);
+            formData.append('tabTitle', title);
+
             // Send the video to the server
             fetch(url + 'convert', {
                 method: 'POST',
@@ -670,8 +668,10 @@ class UploadVideo {
             .then(response => response.json()) // Expect JSON { message: 'Video conversion started.' }
             .then(data => {
                 if (data.message) {
-                    console.log(data.message); // Log the message
-                    creatingVideoText.innerHTML = 'Conversion has begun!';
+                    creatingVideoText.innerHTML = 'Conversion has begun! The video will be available for download on your home page as soon as it is finished!';
+                    setTimeout(() => {
+                        window.location.href = "home.html?username=" + username;
+                    }, 5000);
                 } else {
                     creatingVideoText.innerHTML = 'Video processing failed.';
                 }

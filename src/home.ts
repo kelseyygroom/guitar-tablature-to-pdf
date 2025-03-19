@@ -64,7 +64,24 @@ class Home {
             // Create the tab title list item.
             listItem.id = "tab-title-" + tab.tabTitle;
             listItem.className = "list-item";
-            listItem.innerHTML = '<i style="position: absolute; height: 1rem; width: 1rem; left: 1rem;" class="fa-solid fa-guitar"></i><p>' + tab.tabTitle + '</p><i id="' + tab.tabTitle + '-icon" style="position: absolute; height: 1rem; width: 1rem; right: 1rem;" class="delete-icon fas fa-trash-can"></i>';
+
+            // Indicate to user when video is ready for download.
+            if (tab.videoS3URL) {
+                const existingURL = window.localStorage.getItem(tab.videoS3URL);
+
+                if (existingURL) {
+                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video"></i></a>';    
+                }
+                else {
+                    window.localStorage.setItem(tab.videoS3URL, "true");
+                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video notify-icon"></i></a>';    
+                }
+            }
+            else {
+                listItem.innerHTML = '<i style="position: absolute; height: 1rem; width: 1rem; left: 1rem;" class="fa-solid fa-guitar"></i>';
+            }
+
+            listItem.innerHTML += '<p>' + tab.tabTitle + '</p><i id="' + tab.tabTitle + '-icon" style="position: absolute; height: 1rem; width: 1rem; right: 1rem;" class="delete-icon fas fa-trash-can"></i>';
 
             // Open the create page when the Tab title is selected.
             const openCreatePageButton = listItem.children[1] as HTMLElement;

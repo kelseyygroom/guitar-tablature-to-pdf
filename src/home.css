@@ -233,6 +233,21 @@ a {
     animation: grow-shrink-green 1.5s infinite ease-in-out !important;
 }
 
+.notify-icon {
+    animation: grow-shrink-green-icon 1.5s infinite ease-in-out !important;
+}
+
+@keyframes grow-shrink-green-icon {
+    0%, 100% {
+        transform: scale(1); /* Original size */
+        color: white;
+    }
+    50% {
+        color: #23FE69;
+        transform: scale(1.05); /* Grows to 1.5x size */
+    }
+}
+
 @keyframes fadeIn {
     from {
       opacity: 0; /* Optional: Start with transparent */

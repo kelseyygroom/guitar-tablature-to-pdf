@@ -58,8 +58,6 @@ app.post('/videoURL', async (req, res) => {
             { $push: { "tabs.$.videoS3URL": videoID } } // Push new videoID to the videoID array inside the matching tab
         );
 
-        console.log('Result', result)
-
         if (result.modifiedCount > 0) {
             res.json({ success: true, message: 'Video URL updated successfully!' });
         } else {
