@@ -177,13 +177,19 @@ class Home {
         const tutorialBox: HTMLDivElement = document.getElementById("tab-title-Tutorial") as HTMLDivElement;
 
         if (tutorialBox) {
-            setTimeout(() => {
-                tutorialBox.style.backgroundColor = "#23FE69";
+            const firstTimeTutorial = window.localStorage.getItem("Tutorial");
 
+            if (firstTimeTutorial !== "true") {
                 setTimeout(() => {
-                    tutorialBox.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
-                }, 2000);
-            }, 1500);
+                    tutorialBox.style.backgroundColor = "#23FE69";
+    
+                    setTimeout(() => {
+                        tutorialBox.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
+                    }, 2000);
+                }, 1500);
+
+                window.localStorage.setItem("Tutorial", "true");
+            }
         }
     };
 
