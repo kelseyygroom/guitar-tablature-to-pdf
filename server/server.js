@@ -48,17 +48,17 @@ app.get('/', (req, res) => res.send('Server is running'));
 // New Route to update videoID in user data (this will be called by the Lambda function)
 app.post('/videoURL', async (req, res) => {
     try {
-        const { username, videoID } = req.body;
+        const { username, videoID, tabTitle } = req.body;
 
         // Connect to the database and update the user's videoID array field
         const db = await connectToDatabase();
-        console.log('SEAN', db)
 
-        // Update the user's document, pushing the new videoID to the array
         const result = await db.collection('userAccount').updateOne(
-            { username }, // Match user by username
-            { $push: { videoID: videoID } } // Push new videoID to the videoID array
+            { username, "tabs.tabTitle": tabTitle }, // Match user by username and specific tab
+            { $push: { "tabs.$.videoS3URL": videoID } } // Push new videoID to the videoID array inside the matching tab
         );
+
+        console.log('Result', result)
 
         if (result.modifiedCount > 0) {
             res.json({ success: true, message: 'Video URL updated successfully!' });
@@ -66,8 +66,6 @@ app.post('/videoURL', async (req, res) => {
             res.status(404).json({ success: false, message: 'User not found' });
         }
     } catch (error) {
-        console.log('SEAN', error.message)
-
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -78,6 +76,7 @@ app.post('/convert', upload.single('video'), (req, res) => {
     if (!req.file) return res.status(400).send('No file uploaded.');
 
     const username = req.body.username
+    const tabTitle = req.body.tabTitle
     const s3FileUrl = req.file.location;
     console.log('File uploaded to S3:', s3FileUrl);
 
@@ -85,7 +84,7 @@ app.post('/convert', upload.single('video'), (req, res) => {
     const params = {
         FunctionName: process.env.AWS_LAMBDA_FUNCTION,
         InvocationType: 'Event', // Asynchronous invocation
-        Payload: JSON.stringify({ inputFileUrl: s3FileUrl, username })
+        Payload: JSON.stringify({ inputFileUrl: s3FileUrl, username, tabTitle })
     };
 
     lambda.invoke(params, (error, data) => {
