@@ -149,7 +149,7 @@ class Home {
                         tabTitle: title,
                     })
                 });
-                // window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
+                window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
             };
         });
     }
