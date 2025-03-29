@@ -146,10 +146,10 @@ class Home {
                             aString: "-----",
                             eString: "-----"
                         }, 
-                        title,
+                        tabTitle: title,
                     })
                 });
-                window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
+                // window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
             };
         });
     }
@@ -185,9 +185,9 @@ class Home {
             createInput.placeholder = "Title";
             this.openPopUpModal(createLabel.outerHTML + createInput.outerHTML + createErrorLabel.outerHTML + createButton.outerHTML + cancelButton.outerHTML);
             this.addNewTabToDb();
-            cancelButton.addEventListener("click", () => {
-                // TODO
-            })
+            // cancelButton.addEventListener("click", () => {
+            //     // TODO
+            // })
         });
     };
 

@@ -590,7 +590,7 @@ class UploadVideo {
         
             chunks = [];
         
-            const estimatedFrameRate: number = 30;
+            const estimatedFrameRate: number = 60;
             const canvasStream: MediaStream = canvas.captureStream(estimatedFrameRate);
         
             let audioTracks: MediaStreamTrack[] = [];
