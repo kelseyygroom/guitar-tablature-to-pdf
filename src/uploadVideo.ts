@@ -220,7 +220,7 @@ class UploadVideo {
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Sweet!";
         backButton.innerHTML = "Ahh! Turn Back!";
-        welcomeLabel.innerHTML = "TabTok's Video Generator is currently in Beta. We're still working out a few kinks. There's a lot of cool stuff to check out! So head on in!";
+        welcomeLabel.innerHTML = "UPDATE: TabTok's Video Generator is currently in Beta. We're still working out a few kinks. There's a lot of cool stuff to check out! So head on in!";
 
         setTimeout(() => {
             this.openNotificationPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML + backButton.outerHTML);
