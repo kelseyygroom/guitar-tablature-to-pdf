@@ -167,6 +167,20 @@ body {
     left: calc(50vw - 2rem);
 }
 
+#reload-icon {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: fit-content;
+    font-size: 3rem;
+    height: 3rem;
+    margin: 1rem;
+    border-radius: 1.5rem;
+    z-index: 99999;
+    color: #F0f8ff;
+}
+
+
 #create-tab-button {
     position: fixed;
     bottom: 0px;

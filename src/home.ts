@@ -22,6 +22,7 @@ class Home {
         body.style.height = "100vh";
         this.getUserAccount();
         this.createNewTab();
+        this.reloadPage();
     };
 
     private openPopUpModal = (htmlString: string) => {
@@ -152,6 +153,14 @@ class Home {
                 window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
             };
         });
+    }
+
+    private reloadPage = () => {
+        const reloadButton: HTMLDivElement = document.getElementById("reload-icon") as HTMLDivElement;
+
+        reloadButton.addEventListener("click", () => {
+            window.location.reload();
+        })
     }
 
     private closePopupModal = () => {
