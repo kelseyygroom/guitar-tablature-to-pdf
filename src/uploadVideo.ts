@@ -526,167 +526,167 @@ class UploadVideo {
         }
     }
 
-    private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
-        const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
-        const video: any = document.createElement("video");
-        const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
-        const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
-        const creatingVideoDisplay: HTMLElement = document.getElementById("loading-modal") as HTMLElement;
-        const creatingVideoText: HTMLElement = document.getElementById("loading-message") as HTMLElement;
+    // private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
+        // const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
+        // const video: any = document.createElement("video");
+        // const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
+        // const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
+        // const creatingVideoDisplay: HTMLElement = document.getElementById("loading-modal") as HTMLElement;
+        // const creatingVideoText: HTMLElement = document.getElementById("loading-message") as HTMLElement;
     
-        let currentText: string[] = ["", "", "", "", "", ""];
-        const lineHeight: number = 50;
+        // let currentText: string[] = ["", "", "", "", "", ""];
+        // const lineHeight: number = 50;
     
-        video.style.display = "none";
-        video.src = URL.createObjectURL(src);
-        video.crossOrigin = "anonymous";
+        // video.style.display = "none";
+        // video.src = URL.createObjectURL(src);
+        // video.crossOrigin = "anonymous";
     
-        let recorder!: MediaRecorder;
-        let chunks: Blob[] = [];
-        let isRecording: boolean = false;
+        // let recorder!: MediaRecorder;
+        // let chunks: Blob[] = [];
+        // let isRecording: boolean = false;
     
-        function drawFrame(): void {
-            if (!isRecording) return;
+        // function drawFrame(): void {
+        //     if (!isRecording) return;
     
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        //     ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-            ctx.font = '48px Monospace';
-            ctx.fillStyle = 'white';
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 2;
-            ctx.textAlign = 'left';
+        //     ctx.font = '48px Monospace';
+        //     ctx.fillStyle = 'white';
+        //     ctx.strokeStyle = 'white';
+        //     ctx.lineWidth = 2;
+        //     ctx.textAlign = 'left';
     
-            currentText.forEach((text: string, index: number): void => {
-                if (text) {
-                    const textX: number = 50;
-                    const textY: number = canvas.height - (6 - index) * lineHeight - 100;
-                    ctx.fillText(text, textX, textY);
-                    ctx.strokeText(text, textX, textY);
-                }
-            });
+        //     currentText.forEach((text: string, index: number): void => {
+        //         if (text) {
+        //             const textX: number = 50;
+        //             const textY: number = canvas.height - (6 - index) * lineHeight - 100;
+        //             ctx.fillText(text, textX, textY);
+        //             ctx.strokeText(text, textX, textY);
+        //         }
+        //     });
     
-            if (video.currentTime >= video.duration) {
-                recorder.stop();
-                isRecording = false;
-                return;
-            }
+        //     if (video.currentTime >= video.duration) {
+        //         recorder.stop();
+        //         isRecording = false;
+        //         return;
+        //     }
     
-            requestAnimationFrame(drawFrame);
-        }
+        //     requestAnimationFrame(drawFrame);
+        // }
     
-        function resetTimeline(): void {
-            const timelineInput: HTMLInputElement | null = document.getElementById("video-timeline") as HTMLInputElement;
-            if (timelineInput) {
-                timelineInput.value = "0";
-                timelineInput.dispatchEvent(new Event("input"));
-            }
-        }
+        // function resetTimeline(): void {
+        //     const timelineInput: HTMLInputElement | null = document.getElementById("video-timeline") as HTMLInputElement;
+        //     if (timelineInput) {
+        //         timelineInput.value = "0";
+        //         timelineInput.dispatchEvent(new Event("input"));
+        //     }
+        // }
     
-        function startRecording(): void {
-            if (isRecording) return;
-            creatingVideoDisplay.style.display = "flex";
-            resetTimeline();
+        // function startRecording(): void {
+        //     if (isRecording) return;
+        //     creatingVideoDisplay.style.display = "flex";
+        //     resetTimeline();
         
-            chunks = [];
+        //     chunks = [];
         
-            const estimatedFrameRate: number = 60;
-            const canvasStream: MediaStream = canvas.captureStream(estimatedFrameRate);
+        //     const estimatedFrameRate: number = 60;
+        //     const canvasStream: MediaStream = canvas.captureStream(estimatedFrameRate);
         
-            let audioTracks: MediaStreamTrack[] = [];
-            if ("captureStream" in video) {
-                const audioStream: MediaStream = video.captureStream();
-                audioTracks = audioStream.getAudioTracks();
-            } else {
-                const audioContext: AudioContext = new AudioContext();
-                const source: MediaElementAudioSourceNode = audioContext.createMediaElementSource(video);
-                const dest: MediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
-                source.connect(dest);
-                source.connect(audioContext.destination);
-                audioTracks = dest.stream.getAudioTracks();
-            }
+        //     let audioTracks: MediaStreamTrack[] = [];
+        //     if ("captureStream" in video) {
+        //         const audioStream: MediaStream = video.captureStream();
+        //         audioTracks = audioStream.getAudioTracks();
+        //     } else {
+        //         const audioContext: AudioContext = new AudioContext();
+        //         const source: MediaElementAudioSourceNode = audioContext.createMediaElementSource(video);
+        //         const dest: MediaStreamAudioDestinationNode = audioContext.createMediaStreamDestination();
+        //         source.connect(dest);
+        //         source.connect(audioContext.destination);
+        //         audioTracks = dest.stream.getAudioTracks();
+        //     }
         
-            const combinedStream: MediaStream = new MediaStream([
-                ...canvasStream.getVideoTracks(),
-                ...audioTracks
-            ]);
+        //     const combinedStream: MediaStream = new MediaStream([
+        //         ...canvasStream.getVideoTracks(),
+        //         ...audioTracks
+        //     ]);
         
-            // **Check for supported MIME types**
-            let mimeType: string = "";
-            if (MediaRecorder.isTypeSupported("video/webm; codecs=vp9")) {
-                mimeType = "video/webm; codecs=vp9";
-            } else if (MediaRecorder.isTypeSupported("video/webm; codecs=vp8")) {
-                mimeType = "video/webm; codecs=vp8";
-            } else if (MediaRecorder.isTypeSupported("video/mp4; codecs=avc1.42E01E,mp4a.40.2")) {
-                mimeType = "video/mp4"; // Safari prefers MP4
-            } else {
-                creatingVideoText.innerHTML = "ERROR: Your browser does not support recording in WebM or MP4.";
-                return;
-            }
+        //     // **Check for supported MIME types**
+        //     let mimeType: string = "";
+        //     if (MediaRecorder.isTypeSupported("video/webm; codecs=vp9")) {
+        //         mimeType = "video/webm; codecs=vp9";
+        //     } else if (MediaRecorder.isTypeSupported("video/webm; codecs=vp8")) {
+        //         mimeType = "video/webm; codecs=vp8";
+        //     } else if (MediaRecorder.isTypeSupported("video/mp4; codecs=avc1.42E01E,mp4a.40.2")) {
+        //         mimeType = "video/mp4"; // Safari prefers MP4
+        //     } else {
+        //         creatingVideoText.innerHTML = "ERROR: Your browser does not support recording in WebM or MP4.";
+        //         return;
+        //     }
         
-            try {
-                recorder = new MediaRecorder(combinedStream, { mimeType });
-            } catch (e) {
-                creatingVideoText.innerHTML = `ERROR: MediaRecorder failed. Browser might not support ${mimeType}.`;
-                return;
-            }
+        //     try {
+        //         recorder = new MediaRecorder(combinedStream, { mimeType });
+        //     } catch (e) {
+        //         creatingVideoText.innerHTML = `ERROR: MediaRecorder failed. Browser might not support ${mimeType}.`;
+        //         return;
+        //     }
         
-            recorder.ondataavailable = (e: BlobEvent): void => {
-                if (e.data && e.data.size > 0) {
-                    chunks.push(e.data);
-                }
-            };
+        //     recorder.ondataavailable = (e: BlobEvent): void => {
+        //         if (e.data && e.data.size > 0) {
+        //             chunks.push(e.data);
+        //         }
+        //     };
         
-            recorder.onstop = async (): Promise<void> => {
-                const recordedBlob: Blob = new Blob(chunks, { type: mimeType });
-                await uploadAndConvert(recordedBlob, tabTitle);
-            };
+        //     recorder.onstop = async (): Promise<void> => {
+        //         const recordedBlob: Blob = new Blob(chunks, { type: mimeType });
+        //         await uploadAndConvert(recordedBlob, tabTitle);
+        //     };
         
-            recorder.start();
-            isRecording = true;
-            video.play();
-            drawFrame();
-        }        
+        //     recorder.start();
+        //     isRecording = true;
+        //     video.play();
+        //     drawFrame();
+        // }        
     
-        async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
-            creatingVideoText.innerHTML = "Uploading video for conversion...";
-            filename = filename.replace(/ /g, "_");
-            // Use URLSearchParams to parse the query string
-            const params = new URLSearchParams(window.location.search);
-            const username: string = params.get('username') as string;
-            const title: string = params.get('title') as string;
-            const formData: FormData = new FormData();
-            formData.append("video", blob, `${filename}.webm`);     
-            formData.append('username', username);
-            formData.append('tabTitle', title);
+        // async function uploadAndConvert(blob: Blob, filename: string): Promise<void> {
+        //     creatingVideoText.innerHTML = "Uploading video for conversion...";
+        //     filename = filename.replace(/ /g, "_");
+        //     // Use URLSearchParams to parse the query string
+        //     const params = new URLSearchParams(window.location.search);
+        //     const username: string = params.get('username') as string;
+        //     const title: string = params.get('title') as string;
+        //     const formData: FormData = new FormData();
+        //     formData.append("video", blob, `${filename}.webm`);     
+        //     formData.append('username', username);
+        //     formData.append('tabTitle', title);
 
-            // Send the video to the server
-            fetch(url + 'convert', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json()) // Expect JSON { message: 'Video conversion started.' }
-            .then(data => {
-                if (data.message) {
-                    creatingVideoText.innerHTML = '&#x2705; Success! The video will be available for download on your home page as soon as it is finished!';
-                    setTimeout(() => {
-                        window.location.href = "home.html?username=" + username;
-                    }, 5000);
-                } else {
-                    creatingVideoText.innerHTML = 'Video processing failed. The something went wrond during the upload process.';
-                    setTimeout(() => {
-                        window.location.href = "home.html?username=" + username;
-                    }, 5000);
-                }
-            })
-            .catch(error => {
-                creatingVideoText.innerHTML = 'Error: ' + error.message;
-                console.error('Fetch error:', error);
-            });
-        }        
+        //     // Send the video to the server
+        //     fetch(url + 'convert', {
+        //         method: 'POST',
+        //         body: formData,
+        //     })
+        //     .then(response => response.json()) // Expect JSON { message: 'Video conversion started.' }
+        //     .then(data => {
+        //         if (data.message) {
+        //             creatingVideoText.innerHTML = '&#x2705; Success! The video will be available for download on your home page as soon as it is finished!';
+        //             setTimeout(() => {
+        //                 window.location.href = "home.html?username=" + username;
+        //             }, 5000);
+        //         } else {
+        //             creatingVideoText.innerHTML = 'Video processing failed. The something went wrond during the upload process.';
+        //             setTimeout(() => {
+        //                 window.location.href = "home.html?username=" + username;
+        //             }, 5000);
+        //         }
+        //     })
+        //     .catch(error => {
+        //         creatingVideoText.innerHTML = 'Error: ' + error.message;
+        //         console.error('Fetch error:', error);
+        //     });
+        // }        
     
-        startButton.addEventListener('click', startRecording);
-    };    
+        // startButton.addEventListener('click', startRecording);
+    // };    
 
     private initVideoUpload = () => {
         // Get HTML elements
@@ -695,7 +695,7 @@ class UploadVideo {
         const videoInput = document.getElementById('video-upload') as HTMLInputElement;
         const canvas = document.getElementById('video-canvas') as HTMLCanvasElement;
         const ctx = canvas.getContext('2d')!;
-        const video: any = document.createElement("video");
+        const video: any = document.getElementById("video");
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
         const pauseIcon: HTMLElement = document.getElementById("pause-icon") as HTMLElement;
         const tabSegmentsDisplay: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
@@ -724,93 +724,158 @@ class UploadVideo {
         // Track current text for each line
         let currentText = ["", "", "", "", "", ""];
 
+        const timestamps = [
+            { time: 2, text: "Hello, world!" },
+            { time: 5, text: "This is an overlay" },
+            { time: 8, text: "Canvas on video" }
+        ];
+
+
+        video.addEventListener('play', () => {
+            canvas.width = video.clientWidth;
+            canvas.height = video.clientHeight;
+            requestAnimationFrame(drawOverlay);
+        });
+
+        function drawOverlay() {
+            if (!video.paused && !video.ended) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.font = '20px Arial';
+                timestamps.forEach(({ time, text }) => {
+                    if (Math.floor(video.currentTime) === time) {
+                        ctx.fillText(text, 50, 50);
+                    }
+                });
+                requestAnimationFrame(drawOverlay);
+            }
+        }
+
         // Handle file upload and video load
         videoInput.addEventListener("change", (event) => {
-            if (this.tabTitle === "Tutorial") {
-                this.initSelectClipTutorialFlow();
-            }
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
-            const videoCanvas: HTMLDivElement = document.getElementById("video-canvas") as HTMLDivElement;
-            const videoIcon: HTMLImageElement = document.getElementById("video-icon") as HTMLImageElement;
+            const file = (event.target as HTMLInputElement).files?.[0];
+
+            if (file) {
+                videoEditingToolsContainer.style.display = "block";
+                videoEditingToolsContainer.addEventListener("click", () => {
+                    video.play();
+                    console.log("play")
+                });
+
+                const url = URL.createObjectURL(file);
+                video.src = url;
+                video.loop = true;
+            }
 
             videoIcon.style.display = "none";
             buttonContainer.style.display = "none";
-            videoCanvas.style.display = "block";
 
-            const file = (event.target as HTMLInputElement).files?.[0];
-            if (file) {
-                // Initialize save video button.
-                this.saveVideo(file, this.tabTitle);
-                videoEditingToolsContainer.style.display = "block";
-                const unloadVideoButton: HTMLElement = document.getElementById("unmount-video-button") as HTMLElement;
-                unloadVideoButton.style.display = "block";
-
-                tabSegmentsDisplay.addEventListener("click", () => {
-                    if (this.tabTitle === "Tutorial") {
-                        this.initSelectFirstClipTutorialFlow();
-                    }
-                    tabSegmentsDisplay.style.backgroundColor = "#23FE69";
-
-                    setTimeout(() => {
-                        tabSegmentsDisplay.style.backgroundColor = "rgb(29, 29, 31, .75)";
-                    }, 500);
-
-                    const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
-                    popupModal.innerHTML = this.buildTabChunkHTML();
-                    this.addClosePopupListener();
-                    const tabChunks: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;
-
-                    for (let i: number = 0; i < tabChunks.length; i++) {
-                        tabChunks[i].addEventListener("click", (event) => {
-                            if (this.tabTitle === "Tutorial") {
-                                this.initSetStartPointFlow();
-                            }
-
-                            const selectedTabIndicator: HTMLDivElement = document.getElementById("selected-tab-indicator") as HTMLDivElement;
-
-                            for (let i: number = 0; i < tabChunks.length; i++) {
-                                tabChunks[i].classList.remove("tab-segment-selected");
-                            };
-
-                            selectedTabIndicator.style.backgroundColor = tabChunks[i].getAttribute("color")!;
-                            selectedTabIndicator.innerHTML = "Clip " + (i + 1); 
-                            this.adjustTabChunkTime(tabChunks[i]);
-                            tabChunks[i].classList.add("tab-segment-selected");
-                        });
-                    };
-                    popupModal.style.display = "flex";
-                });
-
-                unloadVideoButton.addEventListener("click", () => {
-                    if (video !== null && video !== undefined) {
-                        video.pause(); // Stop playback
-                        video.removeAttribute('src'); // Remove the src attribute
-                        video.load();  // Unload the video
-                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-                        videoEditingToolsContainer.style.display = "none";
-                        videoCanvas.style.display = "none";
-                        buttonContainer.style.display = "flex";
-                        videoIcon.style.display = "block";
-                        videoIcon.src = logo;
-                    };
-                });
-
-                const fileURL = URL.createObjectURL(file);
-                video.src = fileURL;
-                video.load();
-                video.muted = false; // Optional: Mute video by default
-
-                video.addEventListener('loadedmetadata', () => {
-                    UploadVideo.videoDuration = Number(video.duration.toFixed(0))
-                    // Set canvas dimensions to match video
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    this.TIMER = Math.round(UploadVideo.tabChunks.highEString.length * UploadVideo.videoDuration / 100)
-                    this.addMarkers();
-                    // Start drawing frames
-                    // requestAnimationFrame(drawFrame);
-                });
+            video.addEventListener('play', () => {
+                canvas.width = video.clientWidth;
+                canvas.height = video.clientHeight;
+                requestAnimationFrame(drawOverlay);
+            });
+            
+            function drawOverlay() {
+                if (!video.paused && !video.ended) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'white';
+                    ctx.font = '20px Arial';
+                    timestamps.forEach(({ time, text }) => {
+                        if (Math.floor(video.currentTime) === time) {
+                            console.log("ctx", time, text)
+                            ctx.fillText(text, 50, 50);
+                        }
+                    });
+                    requestAnimationFrame(drawOverlay);
+                }
             }
+            // if (this.tabTitle === "Tutorial") {
+            //     this.initSelectClipTutorialFlow();
+            // }
+            // const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
+            // const videoCanvas: HTMLDivElement = document.getElementById("video-canvas") as HTMLDivElement;
+            // const videoIcon: HTMLImageElement = document.getElementById("video-icon") as HTMLImageElement;
+
+            // videoIcon.style.display = "none";
+            // buttonContainer.style.display = "none";
+            // videoCanvas.style.display = "block";
+
+            // const file = (event.target as HTMLInputElement).files?.[0];
+            // if (file) {
+            //     // Initialize save video button.
+            //     this.saveVideo(file, this.tabTitle);
+            //     videoEditingToolsContainer.style.display = "block";
+            //     const unloadVideoButton: HTMLElement = document.getElementById("unmount-video-button") as HTMLElement;
+            //     unloadVideoButton.style.display = "block";
+
+            //     tabSegmentsDisplay.addEventListener("click", () => {
+            //         if (this.tabTitle === "Tutorial") {
+            //             this.initSelectFirstClipTutorialFlow();
+            //         }
+            //         tabSegmentsDisplay.style.backgroundColor = "#23FE69";
+
+            //         setTimeout(() => {
+            //             tabSegmentsDisplay.style.backgroundColor = "rgb(29, 29, 31, .75)";
+            //         }, 500);
+
+            //         const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
+            //         popupModal.innerHTML = this.buildTabChunkHTML();
+            //         this.addClosePopupListener();
+            //         const tabChunks: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;
+
+            //         for (let i: number = 0; i < tabChunks.length; i++) {
+            //             tabChunks[i].addEventListener("click", (event) => {
+            //                 if (this.tabTitle === "Tutorial") {
+            //                     this.initSetStartPointFlow();
+            //                 }
+
+            //                 const selectedTabIndicator: HTMLDivElement = document.getElementById("selected-tab-indicator") as HTMLDivElement;
+
+            //                 for (let i: number = 0; i < tabChunks.length; i++) {
+            //                     tabChunks[i].classList.remove("tab-segment-selected");
+            //                 };
+
+            //                 selectedTabIndicator.style.backgroundColor = tabChunks[i].getAttribute("color")!;
+            //                 selectedTabIndicator.innerHTML = "Clip " + (i + 1); 
+            //                 this.adjustTabChunkTime(tabChunks[i]);
+            //                 tabChunks[i].classList.add("tab-segment-selected");
+            //             });
+            //         };
+            //         popupModal.style.display = "flex";
+            //     });
+
+            //     unloadVideoButton.addEventListener("click", () => {
+            //         if (video !== null && video !== undefined) {
+            //             video.pause(); // Stop playback
+            //             video.removeAttribute('src'); // Remove the src attribute
+            //             video.load();  // Unload the video
+            //             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            //             videoEditingToolsContainer.style.display = "none";
+            //             videoCanvas.style.display = "none";
+            //             buttonContainer.style.display = "flex";
+            //             videoIcon.style.display = "block";
+            //             videoIcon.src = logo;
+            //         };
+            //     });
+
+            //     const fileURL = URL.createObjectURL(file);
+            //     video.src = fileURL;
+            //     video.load();
+            //     video.muted = false; // Optional: Mute video by default
+
+            //     video.addEventListener('loadedmetadata', () => {
+            //         UploadVideo.videoDuration = Number(video.duration.toFixed(0))
+            //         // Set canvas dimensions to match video
+            //         canvas.width = video.videoWidth;
+            //         canvas.height = video.videoHeight;
+            //         this.TIMER = Math.round(UploadVideo.tabChunks.highEString.length * UploadVideo.videoDuration / 100)
+            //         this.addMarkers();
+            //         // Start drawing frames
+            //         // requestAnimationFrame(drawFrame);
+            //     });
+            // }
         });
 
         // Function to update text for each line based on video time

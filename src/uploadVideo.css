@@ -180,14 +180,22 @@ a {
     animation: grow-shrink-green 1.5s infinite ease-in-out !important;
 }
 
-#video-canvas {
+#video-container {
     position: fixed;
     width: 100vw;
     border-style: solid;
     left: 0px;
     top: 0px;
     background-color: #1D1D1F;
-    display: none;
+}
+
+#video-canvas {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    border-style: solid;
+    left: 0px;
+    top: 0px;
 }
 
 input[type="file"] {
