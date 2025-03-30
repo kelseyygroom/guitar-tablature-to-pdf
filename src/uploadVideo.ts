@@ -13,6 +13,7 @@ class UploadVideo {
     private static selectedTabChunkId: any;
     private static videoDuration: number;
     private tabClipSegmentColors: string[];
+    private static isVideoPlaying: boolean = false;
 
     constructor() {
         this.user = {};
@@ -331,16 +332,22 @@ class UploadVideo {
             markerEndTimes.push(time.end);
         });
 
-        // Function to create markers
         markersContainer.innerHTML = ""; // Clear existing markers
-    
+        console.log("markers", startEndTimes)
+
+        // Function to create markers
         markerTimes.forEach((time: any, index: number) => {
             const marker = document.createElement("div");
             marker.classList.add("marker");
 
             // Position the marker based on time
             const percent = (time / videoDuration) * 100;
+            console.log("time,", time, ", videoDuration, ", videoDuration)
+            console.log("perect,", percent)
+
             const percentEnd = (markerEndTimes[index] / videoDuration) * 100;
+            console.log("perectEnd,", percentEnd)
+
             marker.style.left = `${percent}%`;
             marker.style.width = `${percentEnd - percent}%`;
             marker.style.backgroundColor = `${this.tabClipSegmentColors[index]}`;
@@ -435,19 +442,20 @@ class UploadVideo {
         const tabSegmentStartButton: HTMLDivElement = document.getElementById("start-tab-segment-button") as HTMLDivElement;
         const tabSegmentEndButton: HTMLDivElement = document.getElementById("end-tab-segment-button") as HTMLDivElement;
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
-        
+
         if (!tabSegmentStartButton || !tabSegmentEndButton) return;
         tabSegmentStartButton.addEventListener("click", () => {
             tabSegmentStartButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
                 tabSegmentStartButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
-            }, 1000);
+            }, 500);
 
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
                     UploadVideo.tabChunks.highEString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
-
+                    console.log("highE", timeline, timeline.value, Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100))
+                    console.log("duration", UploadVideo.videoDuration)
                 if (UploadVideo.tabChunks.bString[i].id === Number(UploadVideo.selectedTabChunkId)) {
                     UploadVideo.tabChunks.bString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
@@ -485,7 +493,7 @@ class UploadVideo {
             tabSegmentEndButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
                 tabSegmentEndButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
-            }, 1000);
+            }, 500);
 
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
@@ -698,7 +706,6 @@ class UploadVideo {
         const video: any = document.getElementById("video");
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
         const pauseIcon: HTMLElement = document.getElementById("pause-icon") as HTMLElement;
-        const tabSegmentsDisplay: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
         videoIcon.src = logo;
         pauseIcon.style.display = "flex";
 
@@ -724,32 +731,32 @@ class UploadVideo {
         // Track current text for each line
         let currentText = ["", "", "", "", "", ""];
 
-        const timestamps = [
-            { time: 2, text: "Hello, world!" },
-            { time: 5, text: "This is an overlay" },
-            { time: 8, text: "Canvas on video" }
-        ];
+        // const timestamps = [
+        //     { time: 2, text: "Hello, world!" },
+        //     { time: 5, text: "This is an overlay" },
+        //     { time: 8, text: "Canvas on video" }
+        // ];
 
 
-        video.addEventListener('play', () => {
-            canvas.width = video.clientWidth;
-            canvas.height = video.clientHeight;
-            requestAnimationFrame(drawOverlay);
-        });
+        // video.addEventListener('play', () => {
+        //     canvas.width = video.clientWidth;
+        //     canvas.height = video.clientHeight;
+        //     requestAnimationFrame(drawOverlay);
+        // });
 
-        function drawOverlay() {
-            if (!video.paused && !video.ended) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'white';
-                ctx.font = '20px Arial';
-                timestamps.forEach(({ time, text }) => {
-                    if (Math.floor(video.currentTime) === time) {
-                        ctx.fillText(text, 50, 50);
-                    }
-                });
-                requestAnimationFrame(drawOverlay);
-            }
-        }
+        // function drawOverlay() {
+        //     if (!video.paused && !video.ended) {
+        //         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //         ctx.fillStyle = 'white';
+        //         ctx.font = '20px Arial';
+        //         timestamps.forEach(({ time, text }) => {
+        //             if (Math.floor(video.currentTime) === time) {
+        //                 ctx.fillText(text, 50, 50);
+        //             }
+        //         });
+        //         requestAnimationFrame(drawOverlay);
+        //     }
+        // }
 
         // Handle file upload and video load
         videoInput.addEventListener("change", (event) => {
@@ -757,19 +764,43 @@ class UploadVideo {
             const file = (event.target as HTMLInputElement).files?.[0];
 
             if (file) {
+                // Initialize the Tutorial Flow.
+                if (this.tabTitle === "Tutorial") {
+                    this.initSelectClipTutorialFlow();
+                }
+                
+                // Initialize the Select Clip Feature.
+                this.selectClip();
+
+                // Dislplay the Video Editing Tools & hide the Video Upload UI.
                 videoEditingToolsContainer.style.display = "block";
+                videoIcon.style.display = "none";
+                buttonContainer.style.display = "none";
+
+                // Add the Video Play & Pause listener.
                 videoEditingToolsContainer.addEventListener("click", () => {
-                    video.play();
-                    console.log("play")
+                    if (!UploadVideo.isVideoPlaying) {
+                        video.play();
+                        console.log("Video is playing.")
+                        UploadVideo.isVideoPlaying = true;
+                        pauseIcon.style.display = "none";
+                    }
+                    else {
+                        video.pause();
+                        console.log("Video is paused.")   
+                        UploadVideo.isVideoPlaying = false;
+                        pauseIcon.style.display = "flex";
+                    }
                 });
 
                 const url = URL.createObjectURL(file);
                 video.src = url;
                 video.loop = true;
-            }
 
-            videoIcon.style.display = "none";
-            buttonContainer.style.display = "none";
+                video.addEventListener("loadedmetadata", () => {
+                    UploadVideo.videoDuration = video.duration;
+                });
+            }
 
             video.addEventListener('play', () => {
                 canvas.width = video.clientWidth;
@@ -778,22 +809,35 @@ class UploadVideo {
             });
             
             function drawOverlay() {
-                if (!video.paused && !video.ended) {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = 'white';
-                    ctx.font = '20px Arial';
-                    timestamps.forEach(({ time, text }) => {
-                        if (Math.floor(video.currentTime) === time) {
-                            console.log("ctx", time, text)
-                            ctx.fillText(text, 50, 50);
-                        }
-                    });
-                    requestAnimationFrame(drawOverlay);
+                if (video.paused || video.ended) {
+                    return;
                 }
+    
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+                // Draw video frame to canvas
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+                // Set text style
+                ctx.font = '30px Monospace';
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.textAlign = 'left';
+    
+                // Display all six strings stacked vertically
+                currentText.forEach((text, index) => {
+                    if (text) {
+                        const textX = 50;
+                        const textY = canvas.height - (6 - index) * lineHeight - 100;
+                        ctx.fillText(text, textX, textY);
+                        ctx.strokeText(text, textX, textY);
+                    }
+                });
+    
+                requestAnimationFrame(drawOverlay);
             }
-            // if (this.tabTitle === "Tutorial") {
-            //     this.initSelectClipTutorialFlow();
-            // }
+
             // const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
             // const videoCanvas: HTMLDivElement = document.getElementById("video-canvas") as HTMLDivElement;
             // const videoIcon: HTMLImageElement = document.getElementById("video-icon") as HTMLImageElement;
@@ -889,25 +933,25 @@ class UploadVideo {
             });
         }
 
-        // Toggle play/pause on click
-        videoEditingToolsContainer.addEventListener("click", () => {
-            if (!video.src) {
-                return;
-            }
+        // // Toggle play/pause on click
+        // videoEditingToolsContainer.addEventListener("click", () => {
+        //     if (!video.src) {
+        //         return;
+        //     }
 
-            if (video.paused) {
-                requestAnimationFrame(drawFrame)
-                video.play();
-                pauseIcon.style.display = "none";
-            } else {
-                video.pause();
-                pauseIcon.style.display = "flex";
-            }
-        });
+        //     if (video.paused) {
+        //         requestAnimationFrame(drawFrame)
+        //         video.play();
+        //         pauseIcon.style.display = "none";
+        //     } else {
+        //         video.pause();
+        //         pauseIcon.style.display = "flex";
+        //     }
+        // });
 
-        timeline.addEventListener("change", () => {
-            drawFrame();
-        })
+        // timeline.addEventListener("change", () => {
+        //     drawFrame();
+        // })
 
         function drawSingleFrame() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -938,36 +982,47 @@ class UploadVideo {
             updateText(strings6, times6, 5);
         });
 
-        function drawFrame(): void {
-            if (video.paused || video.ended) {
-                return;
-            }
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw video frame to canvas
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // Set text style
-            ctx.font = '48px Monospace';
-            ctx.fillStyle = 'white';
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 2;
-            ctx.textAlign = 'left';
-
-            // Display all six strings stacked vertically
-            currentText.forEach((text, index) => {
-                if (text) {
-                    const textX = 50;
-                    const textY = canvas.height - (6 - index) * lineHeight - 100;
-                    ctx.fillText(text, textX, textY);
-                    ctx.strokeText(text, textX, textY);
-                }
-            });
-
-            requestAnimationFrame(drawFrame);
-        }
     };
+
+    private selectClip = () => {
+        const tabSegmentsDisplay: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
+
+        tabSegmentsDisplay.addEventListener("click", () => {
+            if (this.tabTitle === "Tutorial") {
+                this.initSelectFirstClipTutorialFlow();
+            }
+            tabSegmentsDisplay.style.backgroundColor = "#23FE69";
+
+            setTimeout(() => {
+                tabSegmentsDisplay.style.backgroundColor = "rgb(29, 29, 31, .75)";
+            }, 500);
+
+            const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
+            popupModal.innerHTML = this.buildTabChunkHTML();
+            this.addClosePopupListener();
+            const tabChunks: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;
+
+            for (let i: number = 0; i < tabChunks.length; i++) {
+                tabChunks[i].addEventListener("click", (event) => {
+                    if (this.tabTitle === "Tutorial") {
+                        this.initSetStartPointFlow();
+                    }
+
+                    const selectedTabIndicator: HTMLDivElement = document.getElementById("selected-tab-indicator") as HTMLDivElement;
+
+                    for (let i: number = 0; i < tabChunks.length; i++) {
+                        tabChunks[i].classList.remove("tab-segment-selected");
+                    };
+
+                    selectedTabIndicator.style.backgroundColor = tabChunks[i].getAttribute("color")!;
+                    selectedTabIndicator.innerHTML = "Clip " + (i + 1); 
+                    this.adjustTabChunkTime(tabChunks[i]);
+                    tabChunks[i].classList.add("tab-segment-selected");
+                });
+            };
+            popupModal.style.display = "flex";
+        });
+    }
 
     private getUserAccount = async () => {
         // Get the query string from the URL
