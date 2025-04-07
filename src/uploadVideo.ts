@@ -541,47 +541,48 @@ class UploadVideo {
         const creatingVideoText: HTMLElement = document.getElementById("loading-message") as HTMLElement;
 
         startButton.addEventListener("click", () => {
+            creatingVideoDisplay.style.display = "flex";
             creatingVideoText.innerHTML = "Uploading video for conversion...";
-                const filename = tabTitle.replace(/ /g, "_");
-                // Use URLSearchParams to parse the query string
-                const params = new URLSearchParams(window.location.search);
-                const username: string = params.get('username') as string;
-                const title: string = params.get('title') as string;
-                const formData: FormData = new FormData();
-                formData.append("video", src, `${filename}.webm`);     
-                formData.append('username', username);
-                formData.append('tabTitle', title);
-                formData.append('tabData', JSON.stringify(UploadVideo.tabChunks));
+            const filename = tabTitle.replace(/ /g, "_");
+            // Use URLSearchParams to parse the query string
+            const params = new URLSearchParams(window.location.search);
+            const username: string = params.get('username') as string;
+            const title: string = params.get('title') as string;
+            const formData: FormData = new FormData();
+            formData.append("video", src, `${filename}.webm`);     
+            formData.append('username', username);
+            formData.append('tabTitle', title);
+            formData.append('tabData', JSON.stringify(UploadVideo.tabChunks));
 
-                // Create a new AbortController instance
-                controller = new AbortController();
-                const signal = controller.signal;
+            // Create a new AbortController instance
+            controller = new AbortController();
+            const signal = controller.signal;
 
-                // Send the video to the server
-                fetch(url + 'convert', {
-                    method: 'POST',
-                    body: formData,
-                    signal
-                })
-                .then(response => response.json()) // Expect JSON { message: 'Video conversion started.' }
-                .then(data => {
-                    console.log("yo")
-                    if (data.message) {
-                        creatingVideoText.innerHTML = '&#x2705; Success! The video will be available for download on your home page as soon as it is finished!';
-                        setTimeout(() => {
-                            window.location.href = "home.html?username=" + username;
-                        }, 5000);
-                    } else {
-                        creatingVideoText.innerHTML = 'Video processing failed. The something went wrond during the upload process.';
-                        setTimeout(() => {
-                            window.location.href = "home.html?username=" + username;
-                        }, 5000);
-                    }
-                })
-                .catch(error => {
-                    creatingVideoText.innerHTML = 'Error: ' + error.message;
-                    console.error('Fetch error:', error);
-                });
+            // Send the video to the server
+            fetch(url + 'convert', {
+                method: 'POST',
+                body: formData,
+                signal
+            })
+            .then(response => response.json()) // Expect JSON { message: 'Video conversion started.' }
+            .then(data => {
+                console.log("yo")
+                if (data.message) {
+                    creatingVideoText.innerHTML = '&#x2705; Success! The video will be available for download on your home page as soon as it is finished!';
+                    setTimeout(() => {
+                        window.location.href = "home.html?username=" + username;
+                    }, 5000);
+                } else {
+                    creatingVideoText.innerHTML = 'Video processing failed. The something went wrond during the upload process.';
+                    setTimeout(() => {
+                        window.location.href = "home.html?username=" + username;
+                    }, 5000);
+                }
+            })
+            .catch(error => {
+                creatingVideoText.innerHTML = 'Error: ' + error.message;
+                console.error('Fetch error:', error);
+            });
         });
 
         // const video: any = document.createElement("video");
