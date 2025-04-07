@@ -541,6 +541,7 @@ class UploadVideo {
         const creatingVideoText: HTMLElement = document.getElementById("loading-message") as HTMLElement;
 
         startButton.addEventListener("click", () => {
+            console.log("START")
             creatingVideoDisplay.style.display = "flex";
             creatingVideoText.innerHTML = "Uploading video for conversion...";
             const filename = tabTitle.replace(/ /g, "_");
