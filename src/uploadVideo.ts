@@ -569,12 +569,12 @@ class UploadVideo {
                     if (data.message) {
                         creatingVideoText.innerHTML = '&#x2705; Success! The video will be available for download on your home page as soon as it is finished!';
                         setTimeout(() => {
-                            // window.location.href = "home.html?username=" + username;
+                            window.location.href = "home.html?username=" + username;
                         }, 5000);
                     } else {
                         creatingVideoText.innerHTML = 'Video processing failed. The something went wrond during the upload process.';
                         setTimeout(() => {
-                            // window.location.href = "home.html?username=" + username;
+                            window.location.href = "home.html?username=" + username;
                         }, 5000);
                     }
                 })
