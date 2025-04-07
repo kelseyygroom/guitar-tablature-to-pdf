@@ -3,6 +3,7 @@ import logo from "./images/landing-logo.svg"
 
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 // const url = "http://localhost:5000/";
+let controller; // Keep track of the current controller
 
 class UploadVideo {
     user: any;
@@ -534,8 +535,55 @@ class UploadVideo {
         }
     }
 
-    // private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
-        // const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
+    private saveVideo = async (src: Blob, tabTitle: string): Promise<void> => {
+        const startButton: HTMLElement = document.getElementById('start-record') as HTMLElement;
+        const creatingVideoDisplay: HTMLElement = document.getElementById("loading-modal") as HTMLElement;
+        const creatingVideoText: HTMLElement = document.getElementById("loading-message") as HTMLElement;
+
+        startButton.addEventListener("click", () => {
+            creatingVideoText.innerHTML = "Uploading video for conversion...";
+                const filename = tabTitle.replace(/ /g, "_");
+                // Use URLSearchParams to parse the query string
+                const params = new URLSearchParams(window.location.search);
+                const username: string = params.get('username') as string;
+                const title: string = params.get('title') as string;
+                const formData: FormData = new FormData();
+                formData.append("video", src, `${filename}.webm`);     
+                formData.append('username', username);
+                formData.append('tabTitle', title);
+                formData.append('tabData', JSON.stringify(UploadVideo.tabChunks));
+
+                // Create a new AbortController instance
+                controller = new AbortController();
+                const signal = controller.signal;
+
+                // Send the video to the server
+                fetch(url + 'convert', {
+                    method: 'POST',
+                    body: formData,
+                    signal
+                })
+                .then(response => response.json()) // Expect JSON { message: 'Video conversion started.' }
+                .then(data => {
+                    console.log("yo")
+                    if (data.message) {
+                        creatingVideoText.innerHTML = '&#x2705; Success! The video will be available for download on your home page as soon as it is finished!';
+                        setTimeout(() => {
+                            // window.location.href = "home.html?username=" + username;
+                        }, 5000);
+                    } else {
+                        creatingVideoText.innerHTML = 'Video processing failed. The something went wrond during the upload process.';
+                        setTimeout(() => {
+                            // window.location.href = "home.html?username=" + username;
+                        }, 5000);
+                    }
+                })
+                .catch(error => {
+                    creatingVideoText.innerHTML = 'Error: ' + error.message;
+                    console.error('Fetch error:', error);
+                });
+        });
+
         // const video: any = document.createElement("video");
         // const canvas: HTMLCanvasElement = document.getElementById("video-canvas") as HTMLCanvasElement;
         // const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
@@ -694,7 +742,7 @@ class UploadVideo {
         // }        
     
         // startButton.addEventListener('click', startRecording);
-    // };    
+    };    
 
     private initVideoUpload = () => {
         // Get HTML elements
@@ -731,32 +779,6 @@ class UploadVideo {
         // Track current text for each line
         let currentText = ["", "", "", "", "", ""];
 
-        // const timestamps = [
-        //     { time: 2, text: "Hello, world!" },
-        //     { time: 5, text: "This is an overlay" },
-        //     { time: 8, text: "Canvas on video" }
-        // ];
-
-
-        // video.addEventListener('play', () => {
-        //     canvas.width = video.clientWidth;
-        //     canvas.height = video.clientHeight;
-        //     requestAnimationFrame(drawOverlay);
-        // });
-
-        // function drawOverlay() {
-        //     if (!video.paused && !video.ended) {
-        //         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        //         ctx.fillStyle = 'white';
-        //         ctx.font = '20px Arial';
-        //         timestamps.forEach(({ time, text }) => {
-        //             if (Math.floor(video.currentTime) === time) {
-        //                 ctx.fillText(text, 50, 50);
-        //             }
-        //         });
-        //         requestAnimationFrame(drawOverlay);
-        //     }
-        // }
 
         // Handle file upload and video load
         videoInput.addEventListener("change", (event) => {
@@ -768,7 +790,7 @@ class UploadVideo {
                 if (this.tabTitle === "Tutorial") {
                     this.initSelectClipTutorialFlow();
                 }
-                
+
                 // Initialize the Select Clip Feature.
                 this.selectClip();
 
@@ -799,6 +821,7 @@ class UploadVideo {
 
                 video.addEventListener("loadedmetadata", () => {
                     UploadVideo.videoDuration = video.duration;
+                    this.saveVideo(file, this.tabTitle)
                 });
             }
 
