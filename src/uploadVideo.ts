@@ -299,7 +299,7 @@ class UploadVideo {
     };
 
     public init = () => {
-        this.initNotificationFlow();
+        // this.initNotificationFlow();
 
         // TODO: If firefox or safari modible doesn't work reactivate.
         // if (this.detectBrowser() === "Safari Mobile" || this.detectBrowser() === "Firefox") {
@@ -542,7 +542,7 @@ class UploadVideo {
 
         startButton.addEventListener("click", () => {
             creatingVideoDisplay.style.display = "flex";
-            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x1F4FC; Uploading Video</p>";
+            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x1F4FC; Uploading Video.</p>";
             const filename = tabTitle.replace(/ /g, "_");
             const params = new URLSearchParams(window.location.search);
             const username: string = params.get('username') as string;
@@ -566,7 +566,7 @@ class UploadVideo {
             .then(data => {
                 console.log("yo")
                 if (data.message) {
-                    creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video</p>";
+                    creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
                     setTimeout(() => {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
@@ -944,7 +944,7 @@ class UploadVideo {
         };
 
         // The counter doubles as the length of the string that gets displayed on the video.
-        let counter: number = 33;
+        let counter: number = 31;
         let timer: number = this.TIMER;
 
         for (let i: number = 0; i < highESplitArray.length; i++) {
@@ -956,13 +956,19 @@ class UploadVideo {
             eReturnArray.push(eSplitArray[i]);
 
             if (i === counter || i === highESplitArray.length - 1) {
+                highEReturnArray.unshift("E|");
+                bReturnArray.unshift("B|");
+                gReturnArray.unshift("G|");
+                dReturnArray.unshift("D|");
+                aReturnArray.unshift("A|");
+                eReturnArray.unshift("E|");
                 returnObj.highEString.push({text: highEReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 returnObj.bString.push({text: bReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 returnObj.gString.push({text: gReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 returnObj.dString.push({text: dReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 returnObj.aString.push({text: aReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 returnObj.eString.push({text: eReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
-                counter += 33;
+                counter += 31;
                 timer += this.TIMER;
                 highEReturnArray.splice(0, i);
                 bReturnArray.splice(0, i);

@@ -94,7 +94,7 @@ body {
     top: 10vh;
     width: 100vw;
     height: 90vh;
-    animation: slideInFromBottom .25s;
+    animation: slideInFromBottom 2s;
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -102,7 +102,7 @@ body {
     z-index: 99999;
     overflow: scroll !important;
     padding-top: 1rem;
-    background: rgba(43, 43, 43, 0.2);
+    background: #1D1D1F;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -115,7 +115,7 @@ body {
     top: 0vh;
     width: 100vw;
     height: 100vh;
-    animation: slideInFromBottom .25s;
+    animation: slideInFromBottom 2s;
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -123,7 +123,7 @@ body {
     z-index: 99999;
     overflow: scroll !important;
     padding-top: 1rem;
-    background: rgba(43, 43, 43, 0.2);
+    background: #1D1D1F;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -564,7 +564,7 @@ input[type="file"] {
     left: 0px;
     top: 10vh;
     width: 100vw;
-    animation: slideInFromBottom .25s;
+    animation: slideInFromBottom 2s;
     justify-content: center;
     align-items: center;
 }
@@ -660,13 +660,16 @@ input[type="file"] {
 }
 
 @keyframes slideInFromBottom {
-    from {
+    0% {
       transform: translateY(100%); /* Start off-screen to the right */
       opacity: 0; /* Optional: Start with transparent */
     }
-    to {
+    50% {
       transform: translateY(0); /* Slide to its original position */
       opacity: 1; /* Optional: Fully visible */
+    }
+    100% {
+      background-color: #1D1D1F;
     }
 }
 
