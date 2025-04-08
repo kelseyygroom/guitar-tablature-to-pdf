@@ -206,11 +206,11 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Let's upload it!";
-        welcomeLabel.innerHTML = "TabTok's Video Generator is currently in Beta. We're still working out a few kinks. There's a lot of cool stuff to check out! Let's upload the video you would like to add your tabs to. You can upload a video up to 5 minutes long.";
+        welcomeLabel.innerHTML = "TabTok's Tab Video Feature is now operational! There's a lot of cool stuff to check out! Let's upload the video you would like to add your tabs to. You can upload a video up to 1 minute long.";
 
         setTimeout(() => {
             this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
-        }, 10);
+        }, 1);
     };
 
     // Notifications.
@@ -220,13 +220,13 @@ class UploadVideo {
         const backButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         backButton.id = "welcome-back-button";
         welcomeButton.id = "welcome-confirm-button";
-        welcomeButton.innerHTML = "Sweet!";
-        backButton.innerHTML = "Ahh! Turn Back!";
+        welcomeButton.innerHTML = "Sweet";
+        backButton.innerHTML = "Go back";
         welcomeLabel.innerHTML = "TabTok's Tab Video Feature is now operational! Enjoy the Feature!";
 
         setTimeout(() => {
             this.openNotificationPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML + backButton.outerHTML);
-        }, 10);
+        }, 1);
     };
 
     // Select Clip
@@ -239,7 +239,7 @@ class UploadVideo {
 
         setTimeout(() => {
             this.openSelectClipPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
-        }, 1000);
+        }, 1);
     };
 
     // First Clip
@@ -252,7 +252,7 @@ class UploadVideo {
 
         setTimeout(() => {
             this.openSelectFirstClipPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
-        }, 1000);
+        }, 1);
     };
 
     // Start Point
@@ -265,7 +265,7 @@ class UploadVideo {
 
         setTimeout(() => {
             this.openSetStartPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
-        }, 1000);
+        }, 1);
     };
 
     // End Point
@@ -278,7 +278,7 @@ class UploadVideo {
 
         setTimeout(() => {
             this.openSetEndPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
-        }, 1000);
+        }, 1);
     };
 
     // MP4
@@ -291,7 +291,7 @@ class UploadVideo {
 
         setTimeout(() => {
             this.openTutorialDownloadPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
-        }, 1000);
+        }, 1);
     };
 
     private initTutorial = () => {
@@ -543,7 +543,7 @@ class UploadVideo {
         startButton.addEventListener("click", () => {
             console.log("START")
             creatingVideoDisplay.style.display = "flex";
-            creatingVideoText.innerHTML = "Uploading video for conversion...";
+            creatingVideoText.innerHTML = "<p style='text-align: center;'>Just One Second...</p><p style='text-align: center;'>&#x1F4FC; Uploading Video.</p>";
             const filename = tabTitle.replace(/ /g, "_");
             // Use URLSearchParams to parse the query string
             const params = new URLSearchParams(window.location.search);
@@ -568,7 +568,7 @@ class UploadVideo {
             .then(data => {
                 console.log("yo")
                 if (data.message) {
-                    creatingVideoText.innerHTML = '&#x2705; Success! The video will be available for download on your home page as soon as it is finished!';
+                    creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
                     setTimeout(() => {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
@@ -629,7 +629,7 @@ class UploadVideo {
             const file = (event.target as HTMLInputElement).files?.[0];
 
             if (file) {
-                videoDisplay.style.display = "block";
+                videoDisplay.style.display = "flex";
                 // Initialize the Tutorial Flow.
                 if (this.tabTitle === "Tutorial") {
                     this.initSelectClipTutorialFlow();

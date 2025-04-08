@@ -187,6 +187,7 @@ a {
     left: 0px;
     top: 0px;
     background-color: #1D1D1F;
+    display: none;
 }
 
 #video-canvas {
@@ -344,10 +345,6 @@ input[type="file"] {
     padding: .5rem;
     border-radius: 10px;
     transition: all .25s;
-}
-
-#video-container {
-    display: none;
 }
 
 #pause-icon {
