@@ -541,11 +541,9 @@ class UploadVideo {
         const creatingVideoText: HTMLElement = document.getElementById("loading-message") as HTMLElement;
 
         startButton.addEventListener("click", () => {
-            console.log("START")
             creatingVideoDisplay.style.display = "flex";
-            creatingVideoText.innerHTML = "<p style='text-align: center;'>Just One Second...</p><p style='text-align: center;'>&#x1F4FC; Uploading Video.</p>";
+            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x1F4FC; Uploading Video.</p>";
             const filename = tabTitle.replace(/ /g, "_");
-            // Use URLSearchParams to parse the query string
             const params = new URLSearchParams(window.location.search);
             const username: string = params.get('username') as string;
             const title: string = params.get('title') as string;
@@ -558,13 +556,13 @@ class UploadVideo {
             controller = new AbortController();
             const signal = controller.signal;
 
-            // Send the video to the server
+            // Send the video and tabData to the server
             fetch(url + 'convert', {
                 method: 'POST',
                 body: formData,
                 signal
             })
-            .then(response => response.json()) // Expect JSON { message: 'Video conversion started.' }
+            .then(response => response.json())
             .then(data => {
                 console.log("yo")
                 if (data.message) {
@@ -683,18 +681,23 @@ class UploadVideo {
                 // Draw video frame to canvas
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-                // Set text style
-                ctx.font = '30px Monospace';
+                const textWidthRatio = 0.75; // 75% of video width
+                const baseFontRatio = 0.033; // 5% of width for font size (adjust this as needed)
+                const lineHeightRatio = 0.1
+                const canvasWidth = ctx.canvas.width;
+                const fontSize = canvasWidth * baseFontRatio;
+                
+                ctx.font = `${fontSize}px Monospace`;
                 ctx.fillStyle = 'white';
                 ctx.strokeStyle = 'white';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = fontSize * 0.002; // optional: adjust line width based on font size
                 ctx.textAlign = 'left';
     
                 // Display all six strings stacked vertically
                 currentText.forEach((text, index) => {
                     if (text) {
                         const textX = 50;
-                        const textY = canvas.height - (6 - index) * lineHeight - 100;
+                        const textY = canvas.height - (6 - index) * (lineHeightRatio * 100) - 50;
                         ctx.fillText(text, textX, textY);
                         ctx.strokeText(text, textX, textY);
                     }

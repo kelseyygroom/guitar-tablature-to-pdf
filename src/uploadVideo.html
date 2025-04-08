@@ -25,13 +25,19 @@
         </div>
         <div id="pause-icon" class="fas fa-play"></div>
     </div>
-    <div id="video-container">
-        <video id="video" controls playsinline>
-            <source type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <canvas id="video-canvas"></canvas>
+
+    <div id="video-container" class="fixed-backdrop">
+        <div class="video-container-backdrop">
+            <div class="video-container">
+                <video id="video" controls playsinline>
+                    <source type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <canvas id="video-canvas"></canvas>
+            </div>
+        </div>
     </div>
+    
     <img id="video-icon" class="fas fa-video"></img>
     <div id="upload-video-buttons-container">
         <input type="file" id="video-upload" hidden accept="video/*">
