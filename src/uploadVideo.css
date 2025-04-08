@@ -346,6 +346,10 @@ input[type="file"] {
     transition: all .25s;
 }
 
+#video-container {
+    display: none;
+}
+
 #pause-icon {
     position: absolute;
     width: 10vw;

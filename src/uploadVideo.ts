@@ -625,10 +625,12 @@ class UploadVideo {
 
         // Handle file upload and video load
         videoInput.addEventListener("change", (event) => {
+            const videoDisplay: HTMLElement = document.getElementById('video-container') as HTMLElement;
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
             const file = (event.target as HTMLInputElement).files?.[0];
 
             if (file) {
+                videoDisplay.style.display = "block";
                 // Initialize the Tutorial Flow.
                 if (this.tabTitle === "Tutorial") {
                     this.initSelectClipTutorialFlow();
@@ -646,13 +648,11 @@ class UploadVideo {
                 videoEditingToolsContainer.addEventListener("click", () => {
                     if (!UploadVideo.isVideoPlaying) {
                         video.play();
-                        console.log("Video is playing.")
                         UploadVideo.isVideoPlaying = true;
                         pauseIcon.style.display = "none";
                     }
                     else {
                         video.pause();
-                        console.log("Video is paused.")   
                         UploadVideo.isVideoPlaying = false;
                         pauseIcon.style.display = "flex";
                     }
