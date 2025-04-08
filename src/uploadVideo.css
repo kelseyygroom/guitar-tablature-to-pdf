@@ -188,6 +188,7 @@ a {
     width: 75vw;
     aspect-ratio: 9 / 16;
     border-radius: 3px;
+    margin-bottom: 2rem;
 }
 
 .fixed-backdrop {
