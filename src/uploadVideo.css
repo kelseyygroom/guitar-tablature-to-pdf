@@ -185,7 +185,7 @@ a {
     left: 0px;
     top: 0px;
     background-color: #1D1D1F;
-    width: 75vw;
+    width: 90vw;
     aspect-ratio: 9 / 16;
     border-radius: 3px;
 }
@@ -216,6 +216,10 @@ a {
     object-fit: cover;
     border-radius: 5px;
     border-width: 3px;
+    box-shadow: -6px -6px 14px rgba(118, 118, 118, 0.2),
+    -6px -6px 10px rgba(122, 122, 122, 0.2),
+    6px 6px 8px rgba(67, 67, 67, 0.3),
+    6px 6px 10px rgba(0, 0, 0, .05);
 }
 
 /* video {
@@ -278,26 +282,36 @@ input[type="file"] {
 
 .fa-arrow-right-to-bracket {
     position: absolute;
-    right: 5vw;
-    bottom: 17.5vh;
+    right: 0vw;
+    bottom: 5vh;
     z-index: 99999;
-    background-color: rgb(29, 29, 31, .75);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 99999;
     padding: .75rem;
-    border-radius: 10px;
+    color: #5DCCF5;
     transition: all .5s;
-    color: #964FF6;
+    width: 7vw;
+    background-color: rgb(29, 29, 31, .75);
+    background: rgba(43, 43, 43, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .fa-arrow-right-from-bracket {
     position: absolute;
-    left: 5vw;
-    bottom: 17.5vh;
+    left: 0vw;
+    bottom: 5vh;
     z-index: 99999;
-    background-color: rgb(29, 29, 31, .75);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 99999;
     padding: .75rem;
-    border-radius: 10px;
     transition: all .5s;
-    color: #5DCCF5;
+    color: #964FF6;
+    width: 7vw;
+    background-color: rgb(29, 29, 31, .75);
+    background: rgba(43, 43, 43, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .tab-segment-selected {
@@ -371,7 +385,7 @@ input[type="file"] {
     right: 1rem;
     top: 1rem;
     z-index: 99999;
-    background-color: rgb(29, 29, 31, .75);
+    background-color: rgba(43, 43, 43, 0.2);
     padding: .5rem;
     border-radius: 10px;
     transition: all .25s;
@@ -425,28 +439,38 @@ input[type="file"] {
 }
 
 .slider-container {
-    width: calc(90vw - 1rem);    
+    width: calc(100vw - 1rem);    
     position: absolute;
-    bottom: 10vh;
-    left: 5vw;
+    bottom: 0vh;
+    left: 0vw;
     overflow: hidden;
-    background-color: rgb(29, 29, 31, .75);
+    background-color: rgba(43, 43, 43, 0.2);
     padding: .5rem;
-    border-radius: 10px;
+    background: rgba(43, 43, 43, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 9999;
+    height: calc(5vh - 1rem);
 }
 
 .selected-tab-container {
-    width: calc(50vw - 1rem);    
+    width: calc(75vw - 1rem);    
     position: absolute;
-    bottom: 17.5vh;
-    left: 25vw;
+    bottom: 5vh;
+    left: 12.5vw;
     overflow: hidden;
     background-color: rgb(29, 29, 31, .75);
     padding: .5rem;
-    border-radius: 10px; 
+    background: rgba(43, 43, 43, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 9999;
 }
 
 #selected-tab-indicator {
+    width: calc(75vw - 1.5rem);
     margin-block: 2px;
     border-radius: 5px;
     border-color: #444;
@@ -649,12 +673,10 @@ input[type="file"] {
 @keyframes grow-shrink-green {
     0%, 100% {
         background-color: white;
-        transform: scale(1); /* Original size */
         color: #1D1D1F;
     }
     50% {
         background-color: #23FE69;
-        transform: scale(1.05); /* Grows to 1.5x size */
         border-color: #F0f8ff;
     }
 }

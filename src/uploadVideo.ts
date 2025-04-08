@@ -448,7 +448,7 @@ class UploadVideo {
         tabSegmentStartButton.addEventListener("click", () => {
             tabSegmentStartButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
-                tabSegmentStartButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
+                tabSegmentStartButton.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
             }, 500);
 
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
@@ -493,7 +493,7 @@ class UploadVideo {
             }
             tabSegmentEndButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
-                tabSegmentEndButton.style.backgroundColor = "rgb(29, 29, 31, .75)";
+                tabSegmentEndButton.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
             }, 500);
 
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
@@ -542,7 +542,7 @@ class UploadVideo {
 
         startButton.addEventListener("click", () => {
             creatingVideoDisplay.style.display = "flex";
-            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x1F4FC; Uploading Video.</p>";
+            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x1F4FC; Uploading Video</p>";
             const filename = tabTitle.replace(/ /g, "_");
             const params = new URLSearchParams(window.location.search);
             const username: string = params.get('username') as string;
@@ -566,7 +566,7 @@ class UploadVideo {
             .then(data => {
                 console.log("yo")
                 if (data.message) {
-                    creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
+                    creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video</p>";
                     setTimeout(() => {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
@@ -683,7 +683,7 @@ class UploadVideo {
     
                 const textWidthRatio = 0.75; // 75% of video width
                 const baseFontRatio = 0.033; // 5% of width for font size (adjust this as needed)
-                const lineHeightRatio = 0.1
+                const lineHeightRatio = 0.15
                 const canvasWidth = ctx.canvas.width;
                 const fontSize = canvasWidth * baseFontRatio;
                 
@@ -862,7 +862,7 @@ class UploadVideo {
             tabSegmentsDisplay.style.backgroundColor = "#23FE69";
 
             setTimeout(() => {
-                tabSegmentsDisplay.style.backgroundColor = "rgb(29, 29, 31, .75)";
+                tabSegmentsDisplay.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
             }, 500);
 
             const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
