@@ -601,18 +601,6 @@ input[type="file"] {
         width: 100vw;   
     }
 
-    #video-canvas {
-        position: fixed;
-        width: 25vw;
-        height: auto;
-        border-style: solid;
-        left: 35.75vw;
-        right: 35.5vw;
-        top: 0px;
-        background-color: #1D1D1F;
-        display: none;
-    }
-
     #upload-video-buttons-container {
         position: fixed;
         width: 100vw;
