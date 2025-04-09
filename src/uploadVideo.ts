@@ -656,6 +656,9 @@ class UploadVideo {
                 });
 
                 const url = URL.createObjectURL(file);
+                video.style.width = "1080px";
+                video.style.height = "1920px";
+                video.style.visibility = "hidden";
                 video.src = url;
                 video.loop = true;
 

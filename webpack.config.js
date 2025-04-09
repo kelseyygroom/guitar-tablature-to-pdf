@@ -11,7 +11,8 @@ module.exports = {
     home: './src/home.ts',
     signup: './src/signup.ts',
     uploadVideo: './src/uploadVideo.ts',
-    signin: './src/signin.ts'
+    signin: './src/signin.ts',
+    deleteUser: "./src/deleteUser.ts"
   },
   output: {
     filename: '[name].bundle.js',
@@ -50,32 +51,37 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
-      chunks: ['index'], // Specify the chunks for this HTML
+      chunks: ['index'],
     }),
     new HtmlWebpackPlugin({
       template: './src/create.html',
       filename: 'create.html',
-      chunks: ['create'], // Specify the chunks for this HTML
+      chunks: ['create'],
     }),
     new HtmlWebpackPlugin({
       template: './src/home.html',
       filename: 'home.html',
-      chunks: ['home'], // Specify the chunks for this HTML
+      chunks: ['home'],
     }),
     new HtmlWebpackPlugin({
       template: './src/signup.html',
       filename: 'signup.html',
-      chunks: ['signup'], // Specify the chunks for this HTML
+      chunks: ['signup'],
     }),
     new HtmlWebpackPlugin({
       template: './src/uploadVideo.html',
       filename: 'uploadVideo.html',
-      chunks: ['uploadVideo'], // Specify the chunks for this HTML
+      chunks: ['uploadVideo'],
     }),
     new HtmlWebpackPlugin({
       template: './src/signin.html',
       filename: 'signin.html',
-      chunks: ['signin'], // Specify the chunks for this HTML
+      chunks: ['signin'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/deleteUser.html',
+      filename: 'deleteUser.html',
+      chunks: ['deleteUser'],
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css', // Output CSS file names

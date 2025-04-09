@@ -769,7 +769,7 @@ class Create {
 
         setTimeout(() => {
             this.openExportPopupModal(exportLabel.outerHTML + exportButton.outerHTML);
-        }, 1500);
+        }, 1);
     };
 
     // Tutorial Welcome.
@@ -782,7 +782,7 @@ class Create {
 
         setTimeout(() => {
             this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
-        }, 1500);
+        }, 1);
     };
 
     // Tutorial New Line.
@@ -797,7 +797,7 @@ class Create {
             
             setTimeout(() => {
                 this.openNewLinePopupModal(newLineLabel.outerHTML + newLineButton.outerHTML);
-            }, 1000);
+            }, 1);
         });
     };
 
