@@ -98,7 +98,7 @@ class Create {
         }
 
         const usernameLabel: HTMLDivElement = document.getElementById("username-label") as HTMLDivElement;
-        usernameLabel.innerHTML = this.tabTitle + '<i style="height: 1rem; width: 1rem; margin-bottom: 3px;" class="fas fa-floppy-disk" id="save-button"></i>';
+        usernameLabel.innerHTML = this.tabTitle;
         this.exit();
         this.buildTabCellRows();
 
@@ -189,13 +189,14 @@ class Create {
             })
 
             if (response) {
-                saveTabButton.classList.add("tab-cell-active-tutorial-icon");
+                saveTabButton.classList.add("tab-cell-active-tutorial");
                 saveTabButton.style.color = "white";
 
                 setTimeout(() => {
-                    saveTabButton.classList.remove("tab-cell-active-tutorial-icon");
+                    saveTabButton.classList.remove("tab-cell-active-tutorial");
+                    saveTabButton.style.color = "#1D1D1F";
                     this.formatTabForPDFExport(tabData)
-                }, 1000);
+                }, 1500);
             }
         })
     };
