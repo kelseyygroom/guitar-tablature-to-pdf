@@ -289,6 +289,11 @@ input[type="file"] {
     transition: all .5s;
     width: 100%;
     text-align: center;
+    border-radius: 5px;
+    margin-inline: 1rem;
+    border-style: solid;
+    border-color: #1D1D1F;
+    background-color: white;
 }
 
 .fa-arrow-right-from-bracket {
@@ -298,6 +303,11 @@ input[type="file"] {
     color: #964FF6;
     width: 100%;
     text-align: center;
+    border-radius: 5px;
+    margin-inline: 1rem;
+    border-style: solid;
+    border-color: #1D1D1F;
+    background-color: white;
 }
 
 .tab-segment-selected {
@@ -464,14 +474,14 @@ input[type="file"] {
     border-radius: 5px;
     border-color: #444;
     background-color: white;
-    padding: .25rem;
+    padding: .75rem;
     font-size: small;
     color: #1D1D1F;
     opacity: .9;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 12px;
+    height: 100%;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -571,7 +581,7 @@ input[type="file"] {
         left: 0px;
         top: 0px;
         background-color: #1D1D1F;
-        width: 25vw;
+        width: 22.5vw;
         aspect-ratio: 9 / 16;
     }
 

@@ -448,7 +448,7 @@ class UploadVideo {
         tabSegmentStartButton.addEventListener("click", () => {
             tabSegmentStartButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
-                tabSegmentStartButton.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
+                tabSegmentStartButton.style.backgroundColor = "white";
             }, 500);
 
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
@@ -493,7 +493,7 @@ class UploadVideo {
             }
             tabSegmentEndButton.style.backgroundColor = "#23FE69";
             setTimeout(() => {
-                tabSegmentEndButton.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
+                tabSegmentEndButton.style.backgroundColor = "white";
             }, 500);
 
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
@@ -854,17 +854,12 @@ class UploadVideo {
     };
 
     private selectClip = () => {
-        const tabSegmentsDisplay: HTMLElement = document.getElementById("view-tab-chunks-button") as HTMLElement;
+        const tabSegmentsDisplay: HTMLElement = document.getElementById("selected-tab-indicator") as HTMLElement;
 
         tabSegmentsDisplay.addEventListener("click", () => {
             if (this.tabTitle === "Tutorial") {
                 this.initSelectFirstClipTutorialFlow();
             }
-            tabSegmentsDisplay.style.backgroundColor = "#23FE69";
-
-            setTimeout(() => {
-                tabSegmentsDisplay.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
-            }, 500);
 
             const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
             popupModal.innerHTML = this.buildTabChunkHTML();
