@@ -625,8 +625,11 @@ class UploadVideo {
             const videoDisplay: HTMLElement = document.getElementById('video-container') as HTMLElement;
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
             const file = (event.target as HTMLInputElement).files?.[0];
+            console.log((event.target as HTMLInputElement).files?.[0].type);
 
             if (file) {
+                console.log(file.name, file.type, file.size);
+                videoDisplay.innerHTML += file.name + file.type + file.size
                 videoDisplay.style.display = "flex";
                 // Initialize the Tutorial Flow.
                 if (this.tabTitle === "Tutorial") {
