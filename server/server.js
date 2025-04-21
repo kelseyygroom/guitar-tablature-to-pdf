@@ -78,6 +78,7 @@ app.post('/convert', upload.single('video'), (req, res) => {
     const s3FileUrl = req.file.location;
     const tabData = req.body.tabData;
 
+    console.log("input file", req.file)
     // Invoke AWS Lambda Asynchronously
     const params = {
         FunctionName: process.env.AWS_LAMBDA_FUNCTION,

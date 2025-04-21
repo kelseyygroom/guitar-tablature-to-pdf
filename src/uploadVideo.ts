@@ -548,7 +548,7 @@ class UploadVideo {
             const username: string = params.get('username') as string;
             const title: string = params.get('title') as string;
             const formData: FormData = new FormData();
-            formData.append("video", src, `${filename}.webm`);     
+            formData.append("video", src, `${filename}.mp4`);     
             formData.append('username', username);
             formData.append('tabTitle', title);
             formData.append('tabData', JSON.stringify(UploadVideo.tabChunks));
@@ -629,7 +629,6 @@ class UploadVideo {
 
             if (file) {
                 console.log(file.name, file.type, file.size);
-                videoDisplay.innerHTML += file.name + file.type + file.size
                 videoDisplay.style.display = "flex";
                 // Initialize the Tutorial Flow.
                 if (this.tabTitle === "Tutorial") {
