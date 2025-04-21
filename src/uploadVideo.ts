@@ -664,7 +664,6 @@ class UploadVideo {
                 video.loop = true;
 
                 video.addEventListener("loadedmetadata", () => {
-                    window.URL.revokeObjectURL(video.src);
                     const duration = video.duration;
                     console.log("🎥 Video duration:", duration);
                     if (duration > 30) {
