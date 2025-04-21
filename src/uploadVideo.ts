@@ -4,6 +4,7 @@ import logo from "./images/landing-logo.svg"
 const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
 // const url = "http://localhost:5000/";
 let controller; // Keep track of the current controller
+let lastSelectedFile = null;
 
 class UploadVideo {
     user: any;
@@ -663,9 +664,17 @@ class UploadVideo {
                 video.loop = true;
 
                 video.addEventListener("loadedmetadata", () => {
-                    UploadVideo.videoDuration = video.duration;
-                    this.saveVideo(file, this.tabTitle)
-                });
+                    window.URL.revokeObjectURL(video.src);
+                    const duration = video.duration;
+                    console.log("🎥 Video duration:", duration);
+                    if (duration > 30) {
+                        alert("The video you chose or recorded is too long, please keep the video under 30 seconds.")
+                        window.location.reload();
+                    } else {
+                        UploadVideo.videoDuration = video.duration;
+                        this.saveVideo(file, this.tabTitle)
+                    }
+                }, { once: true });
             }
 
             video.addEventListener('play', () => {
@@ -708,89 +717,6 @@ class UploadVideo {
     
                 requestAnimationFrame(drawOverlay);
             }
-
-            // const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
-            // const videoCanvas: HTMLDivElement = document.getElementById("video-canvas") as HTMLDivElement;
-            // const videoIcon: HTMLImageElement = document.getElementById("video-icon") as HTMLImageElement;
-
-            // videoIcon.style.display = "none";
-            // buttonContainer.style.display = "none";
-            // videoCanvas.style.display = "block";
-
-            // const file = (event.target as HTMLInputElement).files?.[0];
-            // if (file) {
-            //     // Initialize save video button.
-            //     this.saveVideo(file, this.tabTitle);
-            //     videoEditingToolsContainer.style.display = "block";
-            //     const unloadVideoButton: HTMLElement = document.getElementById("unmount-video-button") as HTMLElement;
-            //     unloadVideoButton.style.display = "block";
-
-            //     tabSegmentsDisplay.addEventListener("click", () => {
-            //         if (this.tabTitle === "Tutorial") {
-            //             this.initSelectFirstClipTutorialFlow();
-            //         }
-            //         tabSegmentsDisplay.style.backgroundColor = "#23FE69";
-
-            //         setTimeout(() => {
-            //             tabSegmentsDisplay.style.backgroundColor = "rgb(29, 29, 31, .75)";
-            //         }, 500);
-
-            //         const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
-            //         popupModal.innerHTML = this.buildTabChunkHTML();
-            //         this.addClosePopupListener();
-            //         const tabChunks: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("tab-chunk-text") as HTMLCollectionOf<HTMLElement>;
-
-            //         for (let i: number = 0; i < tabChunks.length; i++) {
-            //             tabChunks[i].addEventListener("click", (event) => {
-            //                 if (this.tabTitle === "Tutorial") {
-            //                     this.initSetStartPointFlow();
-            //                 }
-
-            //                 const selectedTabIndicator: HTMLDivElement = document.getElementById("selected-tab-indicator") as HTMLDivElement;
-
-            //                 for (let i: number = 0; i < tabChunks.length; i++) {
-            //                     tabChunks[i].classList.remove("tab-segment-selected");
-            //                 };
-
-            //                 selectedTabIndicator.style.backgroundColor = tabChunks[i].getAttribute("color")!;
-            //                 selectedTabIndicator.innerHTML = "Clip " + (i + 1); 
-            //                 this.adjustTabChunkTime(tabChunks[i]);
-            //                 tabChunks[i].classList.add("tab-segment-selected");
-            //             });
-            //         };
-            //         popupModal.style.display = "flex";
-            //     });
-
-            //     unloadVideoButton.addEventListener("click", () => {
-            //         if (video !== null && video !== undefined) {
-            //             video.pause(); // Stop playback
-            //             video.removeAttribute('src'); // Remove the src attribute
-            //             video.load();  // Unload the video
-            //             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-            //             videoEditingToolsContainer.style.display = "none";
-            //             videoCanvas.style.display = "none";
-            //             buttonContainer.style.display = "flex";
-            //             videoIcon.style.display = "block";
-            //             videoIcon.src = logo;
-            //         };
-            //     });
-
-            //     const fileURL = URL.createObjectURL(file);
-            //     video.src = fileURL;
-            //     video.load();
-            //     video.muted = false; // Optional: Mute video by default
-
-            //     video.addEventListener('loadedmetadata', () => {
-            //         UploadVideo.videoDuration = Number(video.duration.toFixed(0))
-            //         // Set canvas dimensions to match video
-            //         canvas.width = video.videoWidth;
-            //         canvas.height = video.videoHeight;
-            //         this.TIMER = Math.round(UploadVideo.tabChunks.highEString.length * UploadVideo.videoDuration / 100)
-            //         this.addMarkers();
-            //         // Start drawing frames
-            //         // requestAnimationFrame(drawFrame);
-            //     });
-            // }
         });
 
         // Function to update text for each line based on video time
