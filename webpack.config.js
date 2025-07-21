@@ -3,7 +3,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
+const dotenv = require('dotenv');
+const webpack = require('webpack');
 
+// Load environment variables from .env file
+const env = dotenv.config().parsed || {};
+
+// Format into DefinePlugin-compliant object:
+const envKeys = Object.keys(env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+  return prev;
+}, {});
+ 
 module.exports = {
   entry: {
     index: './src/main.ts',
@@ -46,8 +57,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules']
   },
   plugins: [
+    new webpack.DefinePlugin(envKeys),
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',

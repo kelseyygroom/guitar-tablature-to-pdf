@@ -1,6 +1,6 @@
 import "./home.css"
 import emblem from './images/main-logo.svg'
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = process.env.SERVER_URL;
 // const url = "http://localhost:5000/";
 
 // I started to speed through this, it's 4am and I'm just trying to get it done at this point. I want to deploy a working prototype already! 

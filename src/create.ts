@@ -1,7 +1,7 @@
 import './create.css';
 import jsPDF from "jspdf";
 import emblem from './images/main-logo.svg'
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = process.env.SERVER_URL;
 // const url = "http://localhost:5000/";
 
 class Create {
