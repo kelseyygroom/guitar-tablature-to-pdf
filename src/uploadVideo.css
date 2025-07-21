@@ -447,7 +447,7 @@ input[type="file"] {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     z-index: 9999;
-    height: calc(5vh - 1rem);
+    height: calc(12.5vh - 1rem);
 }
 
 .selected-tab-container {
@@ -456,7 +456,7 @@ input[type="file"] {
     display: flex;
     flex-direction: row;
     align-items: center;
-    bottom: 5vh;
+    bottom: 12.5vh;
     left: 0vw;
     overflow: hidden;
     background-color: rgb(29, 29, 31, .75);
