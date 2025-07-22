@@ -316,6 +316,7 @@ class UploadVideo {
 
     private addClosePopupListener = () => {
         const closeIcon: HTMLElement = document.getElementById("close-tab-chunk-container-icon") as HTMLElement;
+
         closeIcon.addEventListener("click", () => {
             const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
             popupModal.style.display = "none";
@@ -417,11 +418,62 @@ class UploadVideo {
             tabChunkContainer.append(tabChunk);
         };
 
+        let colorRadioButtonsHTMLString = "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-black' name='font-color' value='black' checked />";
+        colorRadioButtonsHTMLString += "<label for='font-color-black'>Black</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-red' name='font-color' value='red' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-red'>Red</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-blue' name='font-color' value='blue' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-blue'>Blue</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-purple' name='font-color' value='purple' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-purple'>Purple</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-green' name='font-color' value='green' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-green'>Green</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-orange' name='font-color' value='orange' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-orange'>Orange</label>";
+        colorRadioButtonsHTMLString += "</div>";
+
+        let fontButtonsHTMLString = "<div>";
+        fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-Inconsolata-Regular' name='font-type' value='Inconsolata-Regular' checked />";
+        fontButtonsHTMLString += "<label for='font-Inconsolata-Regular'>Inconsolata Regular</label>";
+        fontButtonsHTMLString += "</div>";
+        fontButtonsHTMLString += "<div>";
+        fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-RobotoMono-VariableFont_wght' name='font-type' value='RobotoMono-VariableFont_wght' />";
+        fontButtonsHTMLString += "<label for='font-RobotoMono-VariableFont_wght'>Roboto Mono</label>";
+        fontButtonsHTMLString += "</div>";
+        fontButtonsHTMLString += "<div>";
+        fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-Doto-Regular' name='font-type' value='Doto-Regular' />";
+        fontButtonsHTMLString += "<label for='font-Doto-Regular'>Doto Regular</label>";
+        fontButtonsHTMLString += "</div>";
+
         const closeIcon = document.createElement("i");
+        const colorContainer = document.createElement("div");
+        const fontContainer = document.createElement("div");
+        colorContainer.innerHTML = colorRadioButtonsHTMLString;
+        fontContainer.innerHTML = fontButtonsHTMLString;
+        colorContainer.style.width = "100%";
+        fontContainer.style.width = "100%";
+        colorContainer.style.paddingLeft = "2rem";
+        fontContainer.style.paddingLeft = "2rem";
+        colorContainer.style.paddingBlock = ".25rem";
+        fontContainer.style.paddingBlock = ".25rem";
+        fontContainer.style.paddingBottom = "6rem";
         closeIcon.classList.add("fas");
         closeIcon.classList.add("fa-angle-down");
         closeIcon.id = "close-tab-chunk-container-icon"
         tabChunkContainer.prepend(closeIcon);
+        tabChunkContainer.append(colorContainer);
+        tabChunkContainer.append(fontContainer);
 
         return tabChunkContainer.outerHTML;
     };
@@ -549,18 +601,25 @@ class UploadVideo {
             const username: string = params.get('username') as string;
             const title: string = params.get('title') as string;
             const formData: FormData = new FormData();
+            const checkedFontRadio = document.querySelectorAll('input[type="radio"].font-radio:checked') as NodeListOf<HTMLInputElement>;
+            const checkedColorRadio = document.querySelectorAll('input[type="radio"].color-radio:checked');
+            const fontTypeInput = checkedFontRadio[0] as HTMLInputElement;
+            const fontType = fontTypeInput.value;
+            const fontColorInput = checkedColorRadio[0] as HTMLInputElement;
+            const fontColor = fontColorInput.value;
+
             formData.append("video", src, `${filename}.mp4`);     
             formData.append('username', username);
             formData.append('tabTitle', title);
             formData.append('tabData', JSON.stringify(UploadVideo.tabChunks));
-            formData.append('tabColor', "red");
-            formData.append('tabFont', "Inconsolata-Regular");
+            formData.append('tabColor', fontColor);
+            formData.append('tabFont', fontType);
 
             // Create a new AbortController instance
             controller = new AbortController();
             const signal = controller.signal;
 
-            // Send the video and tabData to the server
+            // // Send the video and tabData to the server
             fetch(url + 'convert', {
                 method: 'POST',
                 body: formData,
@@ -568,7 +627,6 @@ class UploadVideo {
             })
             .then(response => response.json())
             .then(data => {
-                console.log("yo")
                 if (data.message) {
                     creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
                     setTimeout(() => {
