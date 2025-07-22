@@ -207,7 +207,7 @@ a {
     display: flex;
 }
 
-#video-canvas, video {
+#video-canvas, #video {
     position: absolute;
     border-style: solid;
     left: 0px;

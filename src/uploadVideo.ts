@@ -553,6 +553,9 @@ class UploadVideo {
             formData.append('username', username);
             formData.append('tabTitle', title);
             formData.append('tabData', JSON.stringify(UploadVideo.tabChunks));
+            formData.append('tabColor', "red");
+            formData.append('tabFont', "Inconsolata-Regular");
+
             // Create a new AbortController instance
             controller = new AbortController();
             const signal = controller.signal;
