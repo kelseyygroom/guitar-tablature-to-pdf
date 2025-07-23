@@ -4,7 +4,7 @@ import logo from "./images/landing-logo.svg"
 const url = process.env.SERVER_URL;
 // const url = "http://localhost:5000/";
 let controller; // Keep track of the current controller
-let lastSelectedFile = null;
+let modifiedTabChunks: any = null;
 
 class UploadVideo {
     user: any;
@@ -336,7 +336,6 @@ class UploadVideo {
         });
 
         markersContainer.innerHTML = ""; // Clear existing markers
-        console.log("markers", startEndTimes)
 
         // Function to create markers
         markerTimes.forEach((time: any, index: number) => {
@@ -345,12 +344,7 @@ class UploadVideo {
 
             // Position the marker based on time
             const percent = (time / videoDuration) * 100;
-            console.log("time,", time, ", videoDuration, ", videoDuration)
-            console.log("perect,", percent)
-
             const percentEnd = (markerEndTimes[index] / videoDuration) * 100;
-            console.log("perectEnd,", percentEnd)
-
             marker.style.left = `${percent}%`;
             marker.style.width = `${percentEnd - percent}%`;
             marker.style.backgroundColor = `${this.tabClipSegmentColors[index]}`;
@@ -508,8 +502,7 @@ class UploadVideo {
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
                     UploadVideo.tabChunks.highEString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
-                    console.log("highE", timeline, timeline.value, Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100))
-                    console.log("duration", UploadVideo.videoDuration)
+                
                 if (UploadVideo.tabChunks.bString[i].id === Number(UploadVideo.selectedTabChunkId)) {
                     UploadVideo.tabChunks.bString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
@@ -575,6 +568,7 @@ class UploadVideo {
                 }
             };
 
+            modifiedTabChunks = UploadVideo.tabChunks;
             this.addMarkers();
             this.initVideoUpload();
         });
@@ -604,14 +598,15 @@ class UploadVideo {
             const checkedFontRadio = document.querySelectorAll('input[type="radio"].font-radio:checked') as NodeListOf<HTMLInputElement>;
             const checkedColorRadio = document.querySelectorAll('input[type="radio"].color-radio:checked');
             const fontTypeInput = checkedFontRadio[0] as HTMLInputElement;
-            const fontType = fontTypeInput.value;
+            const fontType = fontTypeInput ? fontTypeInput.value : "Inconsolata-Regular";
             const fontColorInput = checkedColorRadio[0] as HTMLInputElement;
-            const fontColor = fontColorInput.value;
+            const fontColor = fontColorInput ? fontColorInput.value : "Black";
+            const tabData = JSON.stringify(modifiedTabChunks) || JSON.stringify(UploadVideo.tabChunks)
 
             formData.append("video", src, `${filename}.mp4`);     
             formData.append('username', username);
             formData.append('tabTitle', title);
-            formData.append('tabData', JSON.stringify(UploadVideo.tabChunks));
+            formData.append('tabData', tabData);
             formData.append('tabColor', fontColor);
             formData.append('tabFont', fontType);
 
@@ -619,7 +614,7 @@ class UploadVideo {
             controller = new AbortController();
             const signal = controller.signal;
 
-            // // Send the video and tabData to the server
+            // Send the video and tabData to the server
             fetch(url + 'convert', {
                 method: 'POST',
                 body: formData,
@@ -687,10 +682,8 @@ class UploadVideo {
             const videoDisplay: HTMLElement = document.getElementById('video-container') as HTMLElement;
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
             const file = (event.target as HTMLInputElement).files?.[0];
-            console.log((event.target as HTMLInputElement).files?.[0].type);
 
             if (file) {
-                console.log(file.name, file.type, file.size);
                 videoDisplay.style.display = "flex";
                 // Initialize the Tutorial Flow.
                 if (this.tabTitle === "Tutorial") {
