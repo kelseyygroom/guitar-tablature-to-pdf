@@ -589,7 +589,7 @@ class UploadVideo {
 
         startButton.addEventListener("click", () => {
             creatingVideoDisplay.style.display = "flex";
-            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x1F4FC; Uploading Video.</p>";
+            creatingVideoText.innerHTML = "<p style='text-align: center;'>Uploading your video to TabTok...</p>";
             const filename = tabTitle.replace(/ /g, "_");
             const params = new URLSearchParams(window.location.search);
             const username: string = params.get('username') as string;
@@ -628,14 +628,17 @@ class UploadVideo {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
                 } else {
-                    creatingVideoText.innerHTML = 'Video processing failed. The something went wrond during the upload process.';
+                    creatingVideoText.innerHTML = 'Oh no! There was problem uploading your video to TabTok 😭';
                     setTimeout(() => {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
                 }
             })
             .catch(error => {
-                creatingVideoText.innerHTML = 'Error: ' + error.message;
+                creatingVideoText.innerHTML = "Oh no! There was problem uploading your video to TabTok 😭";
+                setTimeout(() => {
+                    window.location.href = "home.html?username=" + username;
+                }, 7500);
                 console.error('Fetch error:', error);
             });
         });
