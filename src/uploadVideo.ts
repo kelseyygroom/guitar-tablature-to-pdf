@@ -601,7 +601,11 @@ class UploadVideo {
             const fontType = fontTypeInput ? fontTypeInput.value : "Inconsolata-Regular";
             const fontColorInput = checkedColorRadio[0] as HTMLInputElement;
             const fontColor = fontColorInput ? fontColorInput.value : "Black";
-            const tabData = JSON.stringify(modifiedTabChunks) || JSON.stringify(UploadVideo.tabChunks)
+            let tabData = JSON.stringify(UploadVideo.tabChunks);
+
+            if (modifiedTabChunks !== null && modifiedTabChunks !== undefined) {
+                tabData = JSON.stringify(modifiedTabChunks);
+            }
 
             formData.append("video", src, `${filename}.mp4`);     
             formData.append('username', username);
