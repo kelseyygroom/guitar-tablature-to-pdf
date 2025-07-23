@@ -71,7 +71,7 @@ class Home {
             listItem.className = "list-item";
 
             // Indicate to user when video is ready for download.
-            if (tab.videoS3URL && tab.videoS3URL.length > 1) {
+            if (tab.videoS3URL && tab.videoS3URL.length >= 1) {
                 const existingURL = window.localStorage.getItem(tab.videoS3URL);
 
                 if (existingURL) {
