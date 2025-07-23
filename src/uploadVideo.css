@@ -207,9 +207,13 @@ a {
     display: flex;
 }
 
+input[type="radio"] {
+    accent-color:green;
+}
+
 label {
     background-color: #1D1D1F;
-    color: white;
+    color: rgb(89, 89, 89);
     width: 100%;
 }
 

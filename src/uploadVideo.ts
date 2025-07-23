@@ -413,6 +413,7 @@ class UploadVideo {
         };
 
         let colorRadioButtonsHTMLString = "<div>";
+        colorRadioButtonsHTMLString += "<div style='color: grey; margin-bottom: .25rem; padding-left: .25rem; font-size: 1.5rem;'>Font Color</div>";
         colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-black' name='font-color' value='black' checked />";
         colorRadioButtonsHTMLString += "<label for='font-color-black'>Black</label>";
         colorRadioButtonsHTMLString += "</div>";
@@ -438,6 +439,7 @@ class UploadVideo {
         colorRadioButtonsHTMLString += "</div>";
 
         let fontButtonsHTMLString = "<div>";
+        fontButtonsHTMLString += "<div style='color: grey; margin-bottom: .25rem; padding-left: .25rem; font-size: 1.5rem;'>Font Family</div>";
         fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-Inconsolata-Regular' name='font-type' value='Inconsolata-Regular' checked />";
         fontButtonsHTMLString += "<label for='font-Inconsolata-Regular'>Inconsolata Regular</label>";
         fontButtonsHTMLString += "</div>";
