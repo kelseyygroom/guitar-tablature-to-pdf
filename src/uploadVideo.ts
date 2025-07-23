@@ -413,7 +413,7 @@ class UploadVideo {
         };
 
         let colorRadioButtonsHTMLString = "<div>";
-        colorRadioButtonsHTMLString += "<div style='color: grey; margin-bottom: .25rem; padding-left: .25rem; font-size: 1.5rem;'>Font Color</div>";
+        colorRadioButtonsHTMLString += "<div style='color: grey; margin-bottom: .25rem; padding-left: .25rem; font-size: 1.5rem;'>Background Color</div>";
         colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-black' name='font-color' value='black' checked />";
         colorRadioButtonsHTMLString += "<label for='font-color-black'>Black</label>";
         colorRadioButtonsHTMLString += "</div>";
