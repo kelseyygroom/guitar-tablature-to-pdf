@@ -603,10 +603,13 @@ class UploadVideo {
             const fontType = fontTypeInput ? fontTypeInput.value : "Inconsolata-Regular";
             const fontColorInput = checkedColorRadio[0] as HTMLInputElement;
             const fontColor = fontColorInput ? fontColorInput.value : "Black";
-            let tabData = JSON.stringify(UploadVideo.tabChunks);
+            let tabData = JSON.stringify(modifiedTabChunks);
 
-            if (modifiedTabChunks !== null && modifiedTabChunks !== undefined) {
-                tabData = JSON.stringify(modifiedTabChunks);
+            // TODO... This is a questionable method of handling sending the updated tabChunks to the lambda conversion function...
+            // However this solves the double API call issue, as well as the modified chunks issue. Consider improving this later...
+            if (!modifiedTabChunks) {
+                tabData = JSON.stringify(UploadVideo.tabChunks);
+                return;
             }
 
             formData.append("video", src, `${filename}.mp4`);     
