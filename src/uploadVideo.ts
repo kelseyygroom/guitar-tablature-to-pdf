@@ -526,10 +526,10 @@ class UploadVideo {
                 }
             };
 
+            modifiedTabChunks = UploadVideo.tabChunks;
             this.addMarkers();
             this.initVideoUpload();
 
-            // TODO: Remove this when you are finished polishing the video feature.
             if (this.tabTitle === "Tutorial") {
                 this.initSetEndPointFlow();
             }
