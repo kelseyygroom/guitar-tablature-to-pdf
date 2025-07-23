@@ -637,7 +637,7 @@ class UploadVideo {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
                 } else {
-                    creatingVideoText.innerHTML = 'Oh no! There was problem uploading your video to TabTok 😭';
+                    creatingVideoText.innerHTML = 'Oh no! There was problem uploading your video to TabTok 😭. Try switching to wifi, or a stronger 5G signal.';
                     setTimeout(() => {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
@@ -732,8 +732,8 @@ class UploadVideo {
                 video.addEventListener("loadedmetadata", () => {
                     const duration = video.duration;
                     console.log("🎥 Video duration:", duration);
-                    if (duration > 30) {
-                        alert("The video you chose or recorded is too long, please keep the video under 30 seconds.")
+                    if (duration > 60) {
+                        alert("The video you chose or recorded is too long, please keep the video under 60 seconds.")
                         window.location.reload();
                     } else {
                         UploadVideo.videoDuration = video.duration;
