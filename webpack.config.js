@@ -5,6 +5,40 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 const dotenv = require('dotenv');
 const webpack = require('webpack');
+const SitemapPlugin = require('sitemap-webpack-plugin').default;
+
+const paths = [
+  {
+    path: '/',
+    lastmod: '2025-07-21',
+    priority: 1.0,
+    changefreq: 'weekly'
+  },
+  {
+    path: '/signin',
+    lastmod: '2025-07-21',
+    priority: 0.8,
+    changefreq: 'monthly'
+  },
+  {
+    path: '/signup',
+    lastmod: '2025-07-21',
+    priority: 0.8,
+    changefreq: 'monthly'
+  },
+  {
+    path: '/home',
+    lastmod: '2025-07-21',
+    priority: 0.8,
+    changefreq: 'monthly'
+  },
+  {
+    path: '/create',
+    lastmod: '2025-07-21',
+    priority: 0.8,
+    changefreq: 'monthly'
+  }
+];
 
 // Load environment variables from .env file
 const env = dotenv.config().parsed || {};
@@ -60,6 +94,7 @@ module.exports = {
     modules: [path.resolve(__dirname, 'src'), 'node_modules']
   },
   plugins: [
+    new SitemapPlugin({ base: 'https://tabtok.us/', paths, options: {} }),
     new webpack.DefinePlugin(envKeys),
     new HtmlWebpackPlugin({
       template: './src/index.html',
