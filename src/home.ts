@@ -233,7 +233,7 @@ class Home {
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
 
         // Set user account image and name.
-        userAccountLabel.innerHTML = userAccountData.username + "'s Tabs";
+        userAccountLabel.innerHTML = userAccountData.username.length >= 1 ? userAccountData.username : "Test User";
         // Include this icon when you create the menu.
         //  + "<i class='fas fa-bars'></i>";
         this.user = userAccountData;
