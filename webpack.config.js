@@ -107,11 +107,6 @@ module.exports = {
       chunks: ['create'],
     }),
     new HtmlWebpackPlugin({
-      template: './src/home.html',
-      filename: 'home.html',
-      chunks: ['home'],
-    }),
-    new HtmlWebpackPlugin({
       template: './src/signup.html',
       filename: 'signup.html',
       chunks: ['signup'],
