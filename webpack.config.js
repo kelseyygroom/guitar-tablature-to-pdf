@@ -6,6 +6,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const dotenv = require('dotenv');
 const webpack = require('webpack');
 const SitemapPlugin = require('sitemap-webpack-plugin').default;
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const paths = [
   {
@@ -94,6 +95,14 @@ module.exports = {
     modules: [path.resolve(__dirname, 'src'), 'node_modules']
   },
   plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'ads.txt'), 
+          to: path.resolve(__dirname, 'dist'),      
+        }
+      ]
+    }),
     new SitemapPlugin({ base: 'https://tabtok.us/', paths, options: {} }),
     new webpack.DefinePlugin(envKeys),
     new HtmlWebpackPlugin({
