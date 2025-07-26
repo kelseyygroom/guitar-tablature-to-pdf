@@ -28,12 +28,6 @@ const paths = [
     changefreq: 'monthly'
   },
   {
-    path: '/home',
-    lastmod: '2025-07-21',
-    priority: 0.8,
-    changefreq: 'monthly'
-  },
-  {
     path: '/create',
     lastmod: '2025-07-21',
     priority: 0.8,
@@ -109,6 +103,11 @@ module.exports = {
       template: './src/index.html',
       filename: 'index.html',
       chunks: ['index'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/home.html',
+      filename: 'home.html',
+      chunks: ['home'],
     }),
     new HtmlWebpackPlugin({
       template: './src/create.html',
