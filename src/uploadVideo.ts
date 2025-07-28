@@ -1,10 +1,10 @@
 import "./uploadVideo.css";
 import logo from "./images/landing-logo.svg"
 
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = process.env.SERVER_URL;
 // const url = "http://localhost:5000/";
 let controller; // Keep track of the current controller
-let lastSelectedFile = null;
+let modifiedTabChunks: any = null;
 
 class UploadVideo {
     user: any;
@@ -316,6 +316,7 @@ class UploadVideo {
 
     private addClosePopupListener = () => {
         const closeIcon: HTMLElement = document.getElementById("close-tab-chunk-container-icon") as HTMLElement;
+
         closeIcon.addEventListener("click", () => {
             const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
             popupModal.style.display = "none";
@@ -335,7 +336,6 @@ class UploadVideo {
         });
 
         markersContainer.innerHTML = ""; // Clear existing markers
-        console.log("markers", startEndTimes)
 
         // Function to create markers
         markerTimes.forEach((time: any, index: number) => {
@@ -344,12 +344,7 @@ class UploadVideo {
 
             // Position the marker based on time
             const percent = (time / videoDuration) * 100;
-            console.log("time,", time, ", videoDuration, ", videoDuration)
-            console.log("perect,", percent)
-
             const percentEnd = (markerEndTimes[index] / videoDuration) * 100;
-            console.log("perectEnd,", percentEnd)
-
             marker.style.left = `${percent}%`;
             marker.style.width = `${percentEnd - percent}%`;
             marker.style.backgroundColor = `${this.tabClipSegmentColors[index]}`;
@@ -417,11 +412,64 @@ class UploadVideo {
             tabChunkContainer.append(tabChunk);
         };
 
+        let colorRadioButtonsHTMLString = "<div>";
+        colorRadioButtonsHTMLString += "<div style='color: grey; margin-bottom: .25rem; padding-left: .25rem; font-size: 1.5rem;'>Background Color</div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-black' name='font-color' value='black' checked />";
+        colorRadioButtonsHTMLString += "<label for='font-color-black'>Black</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-red' name='font-color' value='red' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-red'>Red</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-blue' name='font-color' value='blue' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-blue'>Blue</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-purple' name='font-color' value='purple' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-purple'>Purple</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-green' name='font-color' value='green' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-green'>Green</label>";
+        colorRadioButtonsHTMLString += "</div>";
+        colorRadioButtonsHTMLString += "<div>";
+        colorRadioButtonsHTMLString += "<input type='radio' class='color-radio' id='font-color-orange' name='font-color' value='orange' />";
+        colorRadioButtonsHTMLString += "<label for='font-color-orange'>Orange</label>";
+        colorRadioButtonsHTMLString += "</div>";
+
+        let fontButtonsHTMLString = "<div>";
+        fontButtonsHTMLString += "<div style='color: grey; margin-bottom: .25rem; padding-left: .25rem; font-size: 1.5rem;'>Font Family</div>";
+        fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-Inconsolata-Regular' name='font-type' value='Inconsolata-Regular' checked />";
+        fontButtonsHTMLString += "<label for='font-Inconsolata-Regular'>Inconsolata Regular</label>";
+        fontButtonsHTMLString += "</div>";
+        fontButtonsHTMLString += "<div>";
+        fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-RobotoMono-VariableFont_wght' name='font-type' value='RobotoMono-VariableFont_wght' />";
+        fontButtonsHTMLString += "<label for='font-RobotoMono-VariableFont_wght'>Roboto Mono</label>";
+        fontButtonsHTMLString += "</div>";
+        fontButtonsHTMLString += "<div>";
+        fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-Doto-Regular' name='font-type' value='Doto-Regular' />";
+        fontButtonsHTMLString += "<label for='font-Doto-Regular'>Doto Regular</label>";
+        fontButtonsHTMLString += "</div>";
+
         const closeIcon = document.createElement("i");
+        const colorContainer = document.createElement("div");
+        const fontContainer = document.createElement("div");
+        colorContainer.innerHTML = colorRadioButtonsHTMLString;
+        fontContainer.innerHTML = fontButtonsHTMLString;
+        colorContainer.style.width = "100%";
+        fontContainer.style.width = "100%";
+        colorContainer.style.paddingLeft = "2rem";
+        fontContainer.style.paddingLeft = "2rem";
+        colorContainer.style.paddingBlock = ".25rem";
+        fontContainer.style.paddingBlock = ".25rem";
+        fontContainer.style.paddingBottom = "6rem";
         closeIcon.classList.add("fas");
         closeIcon.classList.add("fa-angle-down");
         closeIcon.id = "close-tab-chunk-container-icon"
         tabChunkContainer.prepend(closeIcon);
+        tabChunkContainer.append(colorContainer);
+        tabChunkContainer.append(fontContainer);
 
         return tabChunkContainer.outerHTML;
     };
@@ -456,8 +504,7 @@ class UploadVideo {
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
                     UploadVideo.tabChunks.highEString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
-                    console.log("highE", timeline, timeline.value, Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100))
-                    console.log("duration", UploadVideo.videoDuration)
+                
                 if (UploadVideo.tabChunks.bString[i].id === Number(UploadVideo.selectedTabChunkId)) {
                     UploadVideo.tabChunks.bString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
                 }
@@ -479,10 +526,10 @@ class UploadVideo {
                 }
             };
 
+            modifiedTabChunks = UploadVideo.tabChunks;
             this.addMarkers();
             this.initVideoUpload();
 
-            // TODO: Remove this when you are finished polishing the video feature.
             if (this.tabTitle === "Tutorial") {
                 this.initSetEndPointFlow();
             }
@@ -523,6 +570,7 @@ class UploadVideo {
                 }
             };
 
+            modifiedTabChunks = UploadVideo.tabChunks;
             this.addMarkers();
             this.initVideoUpload();
         });
@@ -543,16 +591,35 @@ class UploadVideo {
 
         startButton.addEventListener("click", () => {
             creatingVideoDisplay.style.display = "flex";
-            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x1F4FC; Uploading Video.</p>";
+            creatingVideoText.innerHTML = "<p style='text-align: center;'>Uploading your video to TabTok...</p>";
             const filename = tabTitle.replace(/ /g, "_");
             const params = new URLSearchParams(window.location.search);
             const username: string = params.get('username') as string;
             const title: string = params.get('title') as string;
             const formData: FormData = new FormData();
+            const checkedFontRadio = document.querySelectorAll('input[type="radio"].font-radio:checked') as NodeListOf<HTMLInputElement>;
+            const checkedColorRadio = document.querySelectorAll('input[type="radio"].color-radio:checked');
+            const fontTypeInput = checkedFontRadio[0] as HTMLInputElement;
+            const fontType = fontTypeInput ? fontTypeInput.value : "Inconsolata-Regular";
+            const fontColorInput = checkedColorRadio[0] as HTMLInputElement;
+            const fontColor = fontColorInput ? fontColorInput.value : "Black";
+            let tabData = JSON.stringify(modifiedTabChunks);
+
+            // TODO... This is a questionable method of handling sending the updated tabChunks to the lambda conversion function...
+            // However this solves the double API call issue, as well as the modified chunks issue. Consider improving this later...
+
+            if (!modifiedTabChunks) {
+                tabData = JSON.stringify(UploadVideo.tabChunks);
+                return;
+            }
+
             formData.append("video", src, `${filename}.mp4`);     
             formData.append('username', username);
             formData.append('tabTitle', title);
-            formData.append('tabData', JSON.stringify(UploadVideo.tabChunks));
+            formData.append('tabData', tabData);
+            formData.append('tabColor', fontColor);
+            formData.append('tabFont', fontType);
+
             // Create a new AbortController instance
             controller = new AbortController();
             const signal = controller.signal;
@@ -565,21 +632,23 @@ class UploadVideo {
             })
             .then(response => response.json())
             .then(data => {
-                console.log("yo")
                 if (data.message) {
                     creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
                     setTimeout(() => {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
                 } else {
-                    creatingVideoText.innerHTML = 'Video processing failed. Something went wrong during the upload process.';
+                    creatingVideoText.innerHTML = 'Oh no! There was problem uploading your video to TabTok 😭. Try switching to wifi, or a stronger 5G signal.';
                     setTimeout(() => {
                         window.location.href = "home.html?username=" + username;
                     }, 5000);
                 }
             })
             .catch(error => {
-                creatingVideoText.innerHTML = 'Error: ' + error.message;
+                creatingVideoText.innerHTML = "Oh no! There was problem uploading your video to TabTok 😭";
+                setTimeout(() => {
+                    window.location.href = "home.html?username=" + username;
+                }, 7500);
                 console.error('Fetch error:', error);
             });
         });
@@ -626,10 +695,8 @@ class UploadVideo {
             const videoDisplay: HTMLElement = document.getElementById('video-container') as HTMLElement;
             const buttonContainer: HTMLDivElement = document.getElementById("upload-video-buttons-container") as HTMLDivElement;
             const file = (event.target as HTMLInputElement).files?.[0];
-            console.log((event.target as HTMLInputElement).files?.[0].type);
 
             if (file) {
-                console.log(file.name, file.type, file.size);
                 videoDisplay.style.display = "flex";
                 // Initialize the Tutorial Flow.
                 if (this.tabTitle === "Tutorial") {
@@ -666,8 +733,8 @@ class UploadVideo {
                 video.addEventListener("loadedmetadata", () => {
                     const duration = video.duration;
                     console.log("🎥 Video duration:", duration);
-                    if (duration > 30) {
-                        alert("The video you chose or recorded is too long, please keep the video under 30 seconds.")
+                    if (duration > 60) {
+                        alert("The video you chose or recorded is too long, please keep the video under 60 seconds.")
                         window.location.reload();
                     } else {
                         UploadVideo.videoDuration = video.duration;

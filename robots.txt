@@ -1,0 +1,70 @@
+# ✅ Allow Google and all major search engines to fully crawl your site
+
+User-agent: Googlebot
+Disallow:
+
+User-agent: Googlebot-Image
+Disallow:
+
+User-agent: Adsbot-Google
+Disallow:
+
+User-agent: Bingbot
+Disallow:
+
+User-agent: Slurp  # Yahoo
+Disallow:
+
+User-agent: DuckDuckBot
+Disallow:
+
+User-agent: Applebot
+Disallow:
+
+User-agent: Twitterbot
+Disallow:
+
+# 🚫 Block aggressive SEO crawlers and bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: Scrapy
+Disallow: /
+
+User-agent: python-requests
+Disallow: /
+
+User-agent: curl
+Disallow: /
+
+User-agent: wget
+Disallow: /
+
+User-agent: HTTrack
+Disallow: /
+
+# 🛡️ Block sensitive or non-public directories from all other bots
+User-agent: *
+Disallow: /admin/
+Disallow: /login/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /api/
+Disallow: /tmp/
+Disallow: /private/
+Allow: /

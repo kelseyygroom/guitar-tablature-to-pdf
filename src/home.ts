@@ -1,6 +1,6 @@
 import "./home.css"
 import emblem from './images/main-logo.svg'
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = process.env.SERVER_URL;
 // const url = "http://localhost:5000/";
 
 // I started to speed through this, it's 4am and I'm just trying to get it done at this point. I want to deploy a working prototype already! 
@@ -71,7 +71,7 @@ class Home {
             listItem.className = "list-item";
 
             // Indicate to user when video is ready for download.
-            if (tab.videoS3URL) {
+            if (tab.videoS3URL && tab.videoS3URL.length >= 1) {
                 const existingURL = window.localStorage.getItem(tab.videoS3URL);
 
                 if (existingURL) {
@@ -233,7 +233,7 @@ class Home {
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
 
         // Set user account image and name.
-        userAccountLabel.innerHTML = userAccountData.username + "'s Tabs";
+        userAccountLabel.innerHTML = userAccountData.username.length >= 1 ? userAccountData.username : "Test User";
         // Include this icon when you create the menu.
         //  + "<i class='fas fa-bars'></i>";
         this.user = userAccountData;

@@ -207,7 +207,17 @@ a {
     display: flex;
 }
 
-#video-canvas, video {
+input[type="radio"] {
+    accent-color:green;
+}
+
+label {
+    background-color: #1D1D1F;
+    color: rgb(89, 89, 89);
+    width: 100%;
+}
+
+#video-canvas, #video {
     position: absolute;
     border-style: solid;
     left: 0px;
@@ -447,7 +457,7 @@ input[type="file"] {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     z-index: 9999;
-    height: calc(5vh - 1rem);
+    height: calc(12.5vh - 1rem);
 }
 
 .selected-tab-container {
@@ -456,7 +466,7 @@ input[type="file"] {
     display: flex;
     flex-direction: row;
     align-items: center;
-    bottom: 5vh;
+    bottom: 12.5vh;
     left: 0vw;
     overflow: hidden;
     background-color: rgb(29, 29, 31, .75);
@@ -493,7 +503,6 @@ input[type="file"] {
 
 .markers {
     position: absolute;
-    top: 50%;
     left: 0;
     width: 100%;
     height: 4px;

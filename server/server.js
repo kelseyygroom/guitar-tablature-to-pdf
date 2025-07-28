@@ -6,7 +6,7 @@ const multerS3 = require('multer-s3');
 const cors = require('cors');
 const { connectToDatabase } = require('./config/db');
 const http = require('http');
-
+const cron = require('node-cron');
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
@@ -26,7 +26,7 @@ const lambda = new AWS.Lambda();
 const bucketName = process.env.AWS_S3_BUCKET;
 
 // Configure Multer for direct S3 upload
-const upload = multer({
+const upload = multer({    
     storage: multerS3({
         s3,
         bucket: bucketName,
@@ -50,6 +50,7 @@ app.post('/videoURL', async (req, res) => {
     try {
         const { username, videoID, tabTitle } = req.body;
 
+        scheduleDeletionInOneDay(videoID, username)
         // Connect to the database and update the user's videoID array field
         const db = await connectToDatabase();
 
@@ -77,13 +78,14 @@ app.post('/convert', upload.single('video'), (req, res) => {
     const tabTitle = req.body.tabTitle
     const s3FileUrl = req.file.location;
     const tabData = req.body.tabData;
+    const tabColor = req.body.tabColor;
+    const tabFont = req.body.tabFont;
 
-    console.log("input file", req.file)
     // Invoke AWS Lambda Asynchronously
     const params = {
         FunctionName: process.env.AWS_LAMBDA_FUNCTION,
         InvocationType: 'Event', // Asynchronous invocation
-        Payload: JSON.stringify({ inputFileUrl: s3FileUrl, username, tabTitle, tabData })
+        Payload: JSON.stringify({ inputFileUrl: s3FileUrl, username, tabTitle, tabData, tabColor, tabFont })
     };
 
     lambda.invoke(params, (error, data) => {
@@ -182,6 +184,40 @@ app.post('/deleteTab', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+function scheduleDeletionInOneDay(videoS3URL, username) {
+    const now = new Date();
+    const deletionTime = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours later
+    
+    const minute = deletionTime.getMinutes();
+    const hour = deletionTime.getHours();
+    const day = deletionTime.getDate();
+    const month = deletionTime.getMonth() + 1;
+    
+    const cronTime = `${minute} ${hour} ${day} ${month} *`;
+
+    const job = cron.schedule(cronTime, async () => {    
+
+      try {
+        const db = await connectToDatabase();
+        await db.collection('userAccount').updateMany(
+            { "username": username, "tabs.videoS3URL": videoS3URL },
+            {
+              $pull: {
+                "tabs.$[].videoS3URL": videoS3URL
+              }
+            }
+          )
+        console.log(`✅ Deleted video ${videoS3URL}`);
+      } catch (err) {
+        console.error(`❌ Error deleting video ${videoS3URL}`, err);
+      } finally {
+        job.stop();
+      }
+    });
+  
+    console.log(`Scheduled ${videoS3URL} for deletion.`);
+}
 
 // Start Server
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

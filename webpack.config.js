@@ -3,7 +3,47 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
+const dotenv = require('dotenv');
+const webpack = require('webpack');
+const SitemapPlugin = require('sitemap-webpack-plugin').default;
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const paths = [
+  {
+    path: '/',
+    lastmod: '2025-07-21',
+    priority: 1.0,
+    changefreq: 'weekly'
+  },
+  {
+    path: '/signin',
+    lastmod: '2025-07-21',
+    priority: 0.8,
+    changefreq: 'monthly'
+  },
+  {
+    path: '/signup',
+    lastmod: '2025-07-21',
+    priority: 0.8,
+    changefreq: 'monthly'
+  },
+  {
+    path: '/create',
+    lastmod: '2025-07-21',
+    priority: 0.8,
+    changefreq: 'monthly'
+  }
+];
+
+// Load environment variables from .env file
+const env = dotenv.config().parsed || {};
+
+// Format into DefinePlugin-compliant object:
+const envKeys = Object.keys(env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+  return prev;
+}, {});
+ 
 module.exports = {
   entry: {
     index: './src/main.ts',
@@ -46,22 +86,33 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules']
   },
   plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'ads.txt'), 
+          to: path.resolve(__dirname, 'dist'),      
+        }
+      ]
+    }),
+    new SitemapPlugin({ base: 'https://tabtok.us/', paths, options: {} }),
+    new webpack.DefinePlugin(envKeys),
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
       chunks: ['index'],
     }),
     new HtmlWebpackPlugin({
-      template: './src/create.html',
-      filename: 'create.html',
-      chunks: ['create'],
-    }),
-    new HtmlWebpackPlugin({
       template: './src/home.html',
       filename: 'home.html',
       chunks: ['home'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/create.html',
+      filename: 'create.html',
+      chunks: ['create'],
     }),
     new HtmlWebpackPlugin({
       template: './src/signup.html',
