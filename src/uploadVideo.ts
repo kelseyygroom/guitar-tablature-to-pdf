@@ -207,7 +207,7 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Let's upload it!";
-        welcomeLabel.innerHTML = "TabTok's Tab Video Feature is now operational! There's a lot of cool stuff to check out! Let's upload the video you would like to add your tabs to. You can upload a video up to 1 minute long.";
+        welcomeLabel.innerHTML = "<h3>Time to create your first TabTok Video!</h3> <p>Now grab your guitar and take your video!</p> <p>You can upload a video up to 1 minute long.</p> <p>Since this is the tutorial, try playing an open string and hold it for 10 seconds.</p>";
 
         setTimeout(() => {
             this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -236,7 +236,7 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Now that our video is uploaded, we'll have to select the first clip and place it on the timeline so that it matches up with our fingers.";
+        welcomeLabel.innerHTML = "<h3>Time to match the clip!</h3><p>We must first select the clip we would like to place on our video timeline.</p><p>Let's open our editing tools by selecting \"Select Clip\".</p>";
 
         setTimeout(() => {
             this.openSelectClipPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -248,8 +248,8 @@ class UploadVideo {
         const welcomeLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
-        welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Now select the clip that you'd like to edit. How about this first one?";
+        welcomeButton.innerHTML = "Let's select it!";
+        welcomeLabel.innerHTML = "<h3>Great Work!</h3><p>Now that our editing tools are open, let's select the clip we will place on the video timeline.</p><p>How about this first one?</p>";
 
         setTimeout(() => {
             this.openSelectFirstClipPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -262,7 +262,7 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Now let's set the starting point for this segment of your tab. The starting point will be set wherever the dot on the scroll bar is when the start button is clicked.";
+        welcomeLabel.innerHTML = "<h3>Excellent!<br> Now match the clip to the video.</h3><p>First close the video editing tools using the down arrow.</p> <p>Then scroll the point on the video that you plucked the open string, then pause at that point of the video.</p> <p>Click the flashing 'Begin Clip' button.</p> <p>The start time of the clip will be set where the dot on the scroll bar is.</p>";
 
         setTimeout(() => {
             this.openSetStartPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -275,7 +275,7 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Nice! You'll see that the colored bar that matches the clip color on the timeline has adjusted to display the clip's new starting position. Next let's set the ending point for this segment of your tab. The ending point will be set wherever the dot on the scroll bar is when the end button is clicked.";
+        welcomeLabel.innerHTML = "<h3>Good Work!<br> Now set the end time for the clip.</h3><p>You'll see that the green colored bar has moved on the timeline.</p><p>This means the clip will appear on the video beginning at this point.</p><p>Now we end the clip the same way, but this time try using the flashing \"End Clip\" button.</p> ";
 
         setTimeout(() => {
             this.openSetEndPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -288,7 +288,7 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Awesome! Now that we've set our clips so they can match our fingers, we're ready to download our video for TickTok, Instagram, and Twitter! Click the download button and we'll guide you through the download!";
+        welcomeLabel.innerHTML = "<h3>Finished!</h3><p>See how easy this is?</p><h3>Now generate and download your TabTok video!</h3><p>Make sure to watch the video all the way through. When finished, click the flashing \"Download Video\" button on the top right.</p><p>Since this is the Tutorial, a video will not be created at this time.</p>";
 
         setTimeout(() => {
             this.openTutorialDownloadPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -629,10 +629,10 @@ class UploadVideo {
     
     private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, username: string, retries = 3): Promise<void> => {
         if (this.tabTitle === "Tutorial") {
-            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Great work! The tutorial is complete!</p><p style='text-align: center;'>You'll be returned to your home page where you can create your first very own TabTok video!</p><p style='text-align: center;'>Try creating your very first tab, and add it to your video!</p><p style='text-align: center;'></p>";
+            creatingVideoText.innerHTML = "<h3 style='text-align: center;'>&#x2705; Great work! The tutorial is complete!</h3><p style='text-align: center;'>You'll be returned to your home page where you can create your very own TabTok video!</p><p style='text-align: center;'>Try creating your own tabs, and add them to your guitar videos!</p><p style='text-align: center;'>Feel free to delete the tutorial at this time, or keep it around in case you have questions!</p>";
             setTimeout(() => {
                 window.location.href = "home.html?username=" + username;
-            }, 10000);
+            }, 12500);
             return;
         }
         else {
@@ -648,7 +648,7 @@ class UploadVideo {
     
                 if (!res.ok) throw new Error('Server error');
     
-                creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
+                creatingVideoText.innerHTML = "<h3 style='text-align: center;'>&#x2705; Upload Complete!</h3><p style='text-align: center;'>Your video will be available for download on the homepage in a few minutes.</p>";
                 setTimeout(() => {
                     window.location.href = "home.html?username=" + username;
                 }, 5000);

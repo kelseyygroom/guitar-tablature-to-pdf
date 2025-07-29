@@ -543,14 +543,18 @@ input[type="file"] {
     z-index: 999999;
 }
 
+h3 {
+    color: gold;
+}
+
 .tutorial-modal {
     width: calc(90vw - 2rem);
-    height: calc(30vh - 2rem);;
+    height: calc(50vh - 2rem);;
     background-color: #1D1D1F;
     animation: slideInFromBottom .5s;
     position: fixed;
     left: 5vw;
-    top: calc(37.5vh - 2rem);
+    top: calc(25vh - 2rem);
     border-radius: 10px;
     z-index: 9999999;
     display: none;
