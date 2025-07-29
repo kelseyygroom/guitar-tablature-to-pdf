@@ -632,38 +632,39 @@ class UploadVideo {
             }, 10000);
             return;
         }
-
-        controller = new AbortController();
-        const signal = controller.signal;
-
-        try {
-            const res = await fetch(url + 'convert', {
-                method: 'POST',
-                body: formData,
-                signal
-            });
-
-            if (!res.ok) throw new Error('Server error');
-
-            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
-            setTimeout(() => {
-                window.location.href = "home.html?username=" + username;
-            }, 5000);
-
-            return await res.json();
-        } catch (err) {
-            if (retries > 0) {
-                creatingVideoText.innerHTML = "🟡 Retrying video upload (" + retries + ") attempts left.";
-                
-                console.warn('Retrying upload...', retries);
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                return this.uploadWithRetry(formData, creatingVideoText, username, retries - 1);
-            } else {
+        else {
+            controller = new AbortController();
+            const signal = controller.signal;
+    
+            try {
+                const res = await fetch(url + 'convert', {
+                    method: 'POST',
+                    body: formData,
+                    signal
+                });
+    
+                if (!res.ok) throw new Error('Server error');
+    
+                creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
                 setTimeout(() => {
-                    creatingVideoText.innerHTML = "There was problem uploading your video to TabTok 😭";
                     window.location.href = "home.html?username=" + username;
-                }, 7500);
-                throw err;
+                }, 5000);
+    
+                return await res.json();
+            } catch (err) {
+                if (retries > 0) {
+                    creatingVideoText.innerHTML = "🟡 Retrying video upload (" + retries + ") attempts left.";
+                    
+                    console.warn('Retrying upload...', retries);
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    return this.uploadWithRetry(formData, creatingVideoText, username, retries - 1);
+                } else {
+                    setTimeout(() => {
+                        creatingVideoText.innerHTML = "There was problem uploading your video to TabTok 😭";
+                        window.location.href = "home.html?username=" + username;
+                    }, 7500);
+                    throw err;
+                }
             }
         }
     }
