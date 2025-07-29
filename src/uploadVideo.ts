@@ -626,7 +626,7 @@ class UploadVideo {
     
     private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, username: string, retries = 3): Promise<void> => {
         if (this.tabTitle === "Tutorial") {
-            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Great work! The tutorial is complete! You'll be returned to your home page where you can create your first very own TabTok video! Try creating your very first tab, and add it to your video!</p><p style='text-align: center;'></p>";
+            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Great work! The tutorial is complete!</p><p style='text-align: center;'>You'll be returned to your home page where you can create your first very own TabTok video!</p><p style='text-align: center;'>Try creating your very first tab, and add it to your video!</p><p style='text-align: center;'></p>";
             setTimeout(() => {
                 window.location.href = "home.html?username=" + username;
             }, 10000);
