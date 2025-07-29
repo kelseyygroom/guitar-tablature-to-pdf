@@ -224,7 +224,7 @@ class Home {
 
             if (firstTimeTutorial !== "true") {
                 setTimeout(() => {
-                    tutorialBox.style.backgroundColor = "#23FE69";
+                    tutorialBox.style.backgroundColor = "#C8B273;";
     
                     setTimeout(() => {
                         tutorialBox.style.backgroundColor = "rgba(43, 43, 43, 0.2)";

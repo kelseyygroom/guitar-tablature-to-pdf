@@ -495,7 +495,7 @@ class UploadVideo {
 
         if (!tabSegmentStartButton || !tabSegmentEndButton) return;
         tabSegmentStartButton.addEventListener("click", () => {
-            tabSegmentStartButton.style.backgroundColor = "#23FE69";
+            tabSegmentStartButton.style.backgroundColor = "#C8B273";
             setTimeout(() => {
                 tabSegmentStartButton.style.backgroundColor = "white";
             }, 500);
@@ -538,7 +538,7 @@ class UploadVideo {
             if (this.tabTitle === "Tutorial") {
                 this.initSaveMP4Flow();
             }
-            tabSegmentEndButton.style.backgroundColor = "#23FE69";
+            tabSegmentEndButton.style.backgroundColor = "#C8B273";
             setTimeout(() => {
                 tabSegmentEndButton.style.backgroundColor = "white";
             }, 500);
@@ -629,7 +629,7 @@ class UploadVideo {
     
     private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, username: string, retries = 3): Promise<void> => {
         if (this.tabTitle === "Tutorial") {
-            creatingVideoText.innerHTML = "<h3 style='text-align: center;'>&#x2705; Great work! The tutorial is complete!</h3><p style='text-align: center;'>You'll be returned to your home page where you can create your very own TabTok video!</p><p style='text-align: center;'>Try creating your own tabs, and add them to your guitar videos!</p><p style='text-align: center;'>Feel free to delete the tutorial at this time, or keep it around in case you have questions!</p>";
+            creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Great work! The tutorial is complete!</h3><p style='text-align: center;'>You'll be returned to your home page where you can create your very own TabTok video!</p><p style='text-align: center;'>Try creating your own tabs, and add them to your guitar videos!</p><p style='text-align: center;'>Feel free to delete the tutorial at this time, or keep it around in case you have questions!</p>";
             setTimeout(() => {
                 window.location.href = "home.html?username=" + username;
             }, 12500);
@@ -648,7 +648,7 @@ class UploadVideo {
     
                 if (!res.ok) throw new Error('Server error');
     
-                creatingVideoText.innerHTML = "<h3 style='text-align: center;'>&#x2705; Upload Complete!</h3><p style='text-align: center;'>Your video will be available for download on the homepage in a few minutes.</p>";
+                creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Upload Complete!</h3><p style='text-align: center;'>Your video will be available for download on the homepage in a few minutes.</p>";
                 setTimeout(() => {
                     window.location.href = "home.html?username=" + username;
                 }, 5000);

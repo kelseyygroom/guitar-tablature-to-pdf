@@ -23,10 +23,6 @@ html {
     color: #C8B273;
 }
 
-i {
-    color: #C8B273;
-}
-
 .header i {
     margin-inline: .5rem;
 }
@@ -72,7 +68,7 @@ h3 {
 
 .popup-modal {
     width: calc(90vw - 2rem);
-    height: calc(27.5vh - 2rem);;
+    height: calc(33.5vh - 2rem);;
     background-color: #1D1D1F;
     animation: slideInFromBottom .5s;
     position: fixed;
@@ -100,7 +96,7 @@ h3 {
     margin: 10px;
     list-style-type: none;
     padding: 1.5em 5em;
-    background:#C8B273;
+    background: white;
     border: none;
     border-radius: .5rem;
     color: #444;
@@ -123,7 +119,7 @@ h3 {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    color:#C8B273;
+    color: white;
     display: flex;
     align-items: center;
 }
@@ -143,7 +139,7 @@ h3 {
 
 #create-label {
     width: 90%;
-    color:#C8B273;
+    color: #C8B273;
     margin-bottom: 1rem;
 }
 
@@ -152,7 +148,7 @@ h3 {
     width: 90%;
     padding: .75rem;
     border-radius: 10px;
-    background-color:#C8B273;
+    background-color: white;
 }
 
 #create-button {
@@ -160,38 +156,40 @@ h3 {
     width: 90%;
     padding: .75rem;
     border-radius: 10px;
-    background-color:#C8B273;
+    background-color: white;
 }
 
 #create-error-label {
     width: 90%;
-    color:#C8B273;
+    color: white;
     margin-top: .5rem;
     animation: fadeIn 1s;
-    color:#C8B273;
+    color: white;
     font-size: small;
     display: none;
 }
 
-#loading-icon {
-    position: fixed;
-    top: calc(50vh - 2rem);
-    left: calc(50vw - 2rem);
-}
 
 #reload-icon {
     position: fixed;
     bottom: 5vh;
     left: 0px;
     width: fit-content;
-    font-size: 3rem;
     height: 3rem;
     margin: 1rem;
     border-radius: 1.5rem;
+    background-color: #1D1D1F;
     z-index: 99999;
     color: #C8B273;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
 }
 
+#reload-icon i {
+    margin-left: .5rem;
+}
 
 #create-tab-button {
     position: fixed;
@@ -282,10 +280,10 @@ a {
 @keyframes grow-shrink-green-icon {
     0%, 100% {
         transform: scale(1); /* Original size */
-        color:#C8B273;
+        color: white;
     }
     50% {
-        color: #23FE69;
+        color: #C8B273;
         transform: scale(1.05); /* Grows to 1.5x size */
     }
 }
@@ -312,12 +310,12 @@ a {
 
 @keyframes grow-shrink-green {
     0%, 100% {
-        background-color:#C8B273;
+        background-color: white;
         transform: scale(1); /* Original size */
         color: #1D1D1F;
     }
     50% {
-        background-color: #23FE69;
+        background-color: #C8B273;
         transform: scale(1.05); /* Grows to 1.5x size */
         border-color: #F0f8ff;
     }

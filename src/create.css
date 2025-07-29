@@ -227,7 +227,7 @@ button i {
     height: 2rem;
     width: 100vw;
     background-color: #1D1D1F;
-    color: white;
+    color: #C8B273;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -375,7 +375,7 @@ select {
         color: #1D1D1F;
     }
     50% {
-        background-color: #23FE69;
+        background-color: #C8B273;;
         transform: scale(1.05); /* Grows to 1.5x size */
         border-color: #F0f8ff;
     }
@@ -387,7 +387,7 @@ select {
         color: #1D1D1F;
     }
     50% {
-        color: #23FE69;
+        color: #C8B273;;
         transform: scale(1.05); /* Grows to 1.5x size */
     }
 }
