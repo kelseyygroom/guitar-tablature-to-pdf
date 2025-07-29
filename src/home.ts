@@ -65,8 +65,6 @@ class Home {
 
         this.tabs.forEach(tab => {
             const listItem = document.createElement("li");
-
-            // Create the tab title list item.
             listItem.id = "tab-title-" + tab.tabTitle;
             listItem.className = "list-item";
 
@@ -104,6 +102,20 @@ class Home {
             tabListContainer.append(listItem);
         })
     };
+
+    // TODO... This is not great, clean it up later...
+    private static deleteS3LinkOnVideoDownload = (username: string, videoS3URL: string ) => {
+        console.log(username, videoS3URL)
+        // Send the video and tabData to the server
+        fetch(url + 'deleteS3Link', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, videoS3URL })
+        })
+        .then(response => response.json())
+    }
 
     private checkIfTabExists = (title: string) => {
         let tabExists = false;

@@ -620,39 +620,68 @@ class UploadVideo {
             formData.append('tabColor', fontColor);
             formData.append('tabFont', fontType);
 
-            // Create a new AbortController instance
-            controller = new AbortController();
-            const signal = controller.signal;
+            this.uploadWithRetry(formData, creatingVideoText, username)
+            // // Send the video and tabData to the server
+            // fetch(url + 'convert', {
+            //     method: 'POST',
+            //     body: formData            })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.message) {
+            //         creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
+            //         setTimeout(() => {
+            //             window.location.href = "home.html?username=" + username;
+            //         }, 5000);
+            //     } else {
+            //         creatingVideoText.innerHTML = 'Oh no! There was problem uploading your video to TabTok 😭. Try switching to wifi, or a stronger 5G signal.';
+            //         setTimeout(() => {
+            //             window.location.href = "home.html?username=" + username;
+            //         }, 5000);
+            //     }
+            // })
+            // .catch(error => {
+            //     creatingVideoText.innerHTML = "Oh no! There was problem uploading your video to TabTok 😭";
+            //     setTimeout(() => {
+            //         window.location.href = "home.html?username=" + username;
+            //     }, 7500);
+            //     console.error('Fetch error:', error);
+            // });
+        });
+    }; 
+    
+    private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, username: string, retries = 3): Promise<void> => {
+        controller = new AbortController();
+        const signal = controller.signal;
 
-            // Send the video and tabData to the server
-            fetch(url + 'convert', {
+        try {
+            const res = await fetch(url + 'convert', {
                 method: 'POST',
                 body: formData,
                 signal
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
-                    setTimeout(() => {
-                        window.location.href = "home.html?username=" + username;
-                    }, 5000);
-                } else {
-                    creatingVideoText.innerHTML = 'Oh no! There was problem uploading your video to TabTok 😭. Try switching to wifi, or a stronger 5G signal.';
-                    setTimeout(() => {
-                        window.location.href = "home.html?username=" + username;
-                    }, 5000);
-                }
-            })
-            .catch(error => {
-                creatingVideoText.innerHTML = "Oh no! There was problem uploading your video to TabTok 😭";
+            });
+
+            if (!res.ok) throw new Error('Server error');
+
+            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
+            setTimeout(() => {
+                window.location.href = "home.html?username=" + username;
+            }, 5000);
+
+            return await res.json();
+        } catch (err) {
+            if (retries > 0) {
+                creatingVideoText.innerHTML = "Oh no! There was problem uploading your video to TabTok 😭 retrying " + retries + "times.";
                 setTimeout(() => {
                     window.location.href = "home.html?username=" + username;
                 }, 7500);
-                console.error('Fetch error:', error);
-            });
-        });
-    };    
+                console.warn('Retrying upload...', retries);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                return this.uploadWithRetry(formData, creatingVideoText, username, retries - 1);
+            } else {
+                throw err;
+            }
+        }
+    }
 
     private initVideoUpload = () => {
         // Get HTML elements
