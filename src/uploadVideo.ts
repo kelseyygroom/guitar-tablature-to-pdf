@@ -448,8 +448,8 @@ class UploadVideo {
         fontButtonsHTMLString += "<label for='font-RobotoMono-VariableFont_wght'>Roboto Mono</label>";
         fontButtonsHTMLString += "</div>";
         fontButtonsHTMLString += "<div>";
-        fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-Doto-Regular' name='font-type' value='Doto-Regular' />";
-        fontButtonsHTMLString += "<label for='font-Doto-Regular'>Doto Regular</label>";
+        // fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-Doto-Regular' name='font-type' value='Doto-Regular' />";
+        // fontButtonsHTMLString += "<label for='font-Doto-Regular'>Doto Regular</label>";
         fontButtonsHTMLString += "</div>";
 
         const closeIcon = document.createElement("i");
@@ -502,33 +502,32 @@ class UploadVideo {
 
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.highEString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.highEString[i].time.start = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
                 
                 if (UploadVideo.tabChunks.bString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.bString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.bString[i].time.start = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
 
                 if (UploadVideo.tabChunks.gString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.gString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.gString[i].time.start = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
 
                 if (UploadVideo.tabChunks.dString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.dString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.dString[i].time.start = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
 
                 if (UploadVideo.tabChunks.aString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.aString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.aString[i].time.start = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
 
                 if (UploadVideo.tabChunks.eString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.eString[i].time.start = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.eString[i].time.start = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
             };
 
             modifiedTabChunks = UploadVideo.tabChunks;
             this.addMarkers();
-            this.initVideoUpload();
 
             if (this.tabTitle === "Tutorial") {
                 this.initSetEndPointFlow();
@@ -545,34 +544,38 @@ class UploadVideo {
             }, 500);
 
             for (let i: number = 0; i < Object.keys(UploadVideo.tabChunks.highEString).length; i++) {
+                // Prevent end time from being greater less than start time.
+                if (UploadVideo.tabChunks.highEString[i].time.start > timeline.value) {
+                    return;
+                }
+
                 if (UploadVideo.tabChunks.highEString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.highEString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.highEString[i].time.end = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
 
                 if (UploadVideo.tabChunks.bString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.bString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.bString[i].time.end = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
 
                 if (UploadVideo.tabChunks.gString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.gString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.gString[i].time.end = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
 
                 if (UploadVideo.tabChunks.dString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.dString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.dString[i].time.end = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
 
                 if (UploadVideo.tabChunks.aString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.aString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.aString[i].time.end = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
 
                 if (UploadVideo.tabChunks.eString[i].id === Number(UploadVideo.selectedTabChunkId)) {
-                    UploadVideo.tabChunks.eString[i].time.end = Math.round(Number(timeline.value) * UploadVideo.videoDuration / 100);
+                    UploadVideo.tabChunks.eString[i].time.end = Number(timeline.value) * UploadVideo.videoDuration / 100;
                 }
             };
 
             modifiedTabChunks = UploadVideo.tabChunks;
             this.addMarkers();
-            this.initVideoUpload();
         });
     };
 
@@ -679,6 +682,7 @@ class UploadVideo {
         const video: any = document.getElementById("video");
         const timeline = document.getElementById("video-timeline") as HTMLInputElement;
         const pauseIcon: HTMLElement = document.getElementById("pause-icon") as HTMLElement;
+        const playPauseArea: HTMLDivElement = document.getElementById("play-pause-area") as HTMLDivElement;
         videoIcon.src = logo;
         pauseIcon.style.display = "flex";
 
@@ -726,8 +730,21 @@ class UploadVideo {
                 videoIcon.style.display = "none";
                 buttonContainer.style.display = "none";
 
-                // Add the Video Play & Pause listener.
-                videoEditingToolsContainer.addEventListener("click", () => {
+                // No need for two listeners, can clean up.
+                pauseIcon.addEventListener("click", () => {
+                    if (!UploadVideo.isVideoPlaying) {
+                        video.play();
+                        UploadVideo.isVideoPlaying = true;
+                        pauseIcon.style.display = "none";
+                    }
+                    else {
+                        video.pause();
+                        UploadVideo.isVideoPlaying = false;
+                        pauseIcon.style.display = "flex";
+                    }
+                });
+
+                playPauseArea.addEventListener("click", () => {
                     if (!UploadVideo.isVideoPlaying) {
                         video.play();
                         UploadVideo.isVideoPlaying = true;
@@ -811,26 +828,6 @@ class UploadVideo {
             });
         }
 
-        // // Toggle play/pause on click
-        // videoEditingToolsContainer.addEventListener("click", () => {
-        //     if (!video.src) {
-        //         return;
-        //     }
-
-        //     if (video.paused) {
-        //         requestAnimationFrame(drawFrame)
-        //         video.play();
-        //         pauseIcon.style.display = "none";
-        //     } else {
-        //         video.pause();
-        //         pauseIcon.style.display = "flex";
-        //     }
-        // });
-
-        // timeline.addEventListener("change", () => {
-        //     drawFrame();
-        // })
-
         function drawSingleFrame() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -845,7 +842,7 @@ class UploadVideo {
             video.currentTime = seekTime;
             drawSingleFrame(); // Draw the current frame
             video.pause(); // Pause the video
-            pauseIcon.style.display = "flex";
+            // pauseIcon.style.display = "flex";
         });
 
         // Update text for all six lines
