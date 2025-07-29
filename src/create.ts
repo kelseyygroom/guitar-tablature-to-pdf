@@ -180,12 +180,14 @@ class Create {
 
         saveTabButton.addEventListener("click", async () => {
             const tabData: any = this.translateTabCellsToData();
+            console.log(this.tabTitle, tabData, this.user.username)
+
             const response = await fetch(url + "saveTab", {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ tabData, username: this.user.username, title: this.tabTitle })
+                body: JSON.stringify({ tabData, username: this.user.username, tabTitle: this.tabTitle })
             })
 
             if (response) {
