@@ -262,7 +262,7 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "<h3>Excellent!<br> Now match the clip to the video.</h3><p>First close the video editing tools using the down arrow.</p> <p>Then scroll the point on the video that you plucked the open string, then pause at that point of the video.</p> <p>Click the flashing 'Begin Clip' button.</p> <p>The start time of the clip will be set where the dot on the scroll bar is.</p>";
+        welcomeLabel.innerHTML = "<h3>Excellent!</h3><h3> Now match the clip to the video.</h3><p>First close the video editing tools using the down arrow.</p> <p>Then scroll the point on the video that you plucked the open string, then pause at that point of the video.</p> <p>Click the flashing 'Begin Clip' button.</p> <p>The start time of the clip will be set where the dot on the scroll bar is.</p>";
 
         setTimeout(() => {
             this.openSetStartPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -275,7 +275,7 @@ class UploadVideo {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "<h3>Good Work!<br> Now set the end time for the clip.</h3><p>You'll see that the green colored bar has moved on the timeline.</p><p>This means the clip will appear on the video beginning at this point.</p><p>Now we end the clip the same way, but this time try using the flashing \"End Clip\" button.</p> ";
+        welcomeLabel.innerHTML = "<h3>Good Work!</h3><h3> Now set the end time for the clip.</h3><p>You'll see that the green colored bar has moved on the timeline.</p><p>This means the clip will appear on the video beginning at this point.</p><p>Now we end the clip the same way, but this time try using the flashing \"End Clip\" button.</p> ";
 
         setTimeout(() => {
             this.openSetEndPointPopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);

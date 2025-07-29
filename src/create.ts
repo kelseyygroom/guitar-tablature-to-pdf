@@ -708,7 +708,7 @@ class Create {
         const saveButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         saveButton.id = "save-confirm-button";
         saveButton.innerHTML = "Got it!";
-        saveLabel.innerHTML = "<h3>Excellent!</h3> <p style='color: white;'>Now you can add new lines, and change the fret numbers!<p><p style='color: gold;'>Save the tab using the \"Save Tab\" button.";
+        saveLabel.innerHTML = "<h3>Excellent!</h3> <p style='color: white;'>Now you can add new lines, and change the fret numbers!<p><p style='color: #C8B273;'>Save the tab using the \"Save Tab\" button.";
         
         this.openSavePopupModal(saveLabel.outerHTML + saveButton.outerHTML);
     };
@@ -766,7 +766,7 @@ class Create {
         saveButton.classList.remove("tab-cell-active-tutorial");
         exportButton.id = "export-confirm-button";
         exportButton.innerHTML = "Got it!";
-        exportLabel.innerHTML = "<h3>Fantastic job!</h3> <p style='color: white;'>The tab has been saved to your profile.</p><p style='color: white;'>It's time to generate the TabTok Tutorial Video!</p><p style='color: gold;'>Select the \"Generate Video\" button to open the video generator.";
+        exportLabel.innerHTML = "<h3>Fantastic job!</h3> <p style='color: white;'>The tab has been saved to your profile.</p><p style='color: white;'>It's time to generate the TabTok Tutorial Video!</p><p style='color: #C8B273;'>Select the \"Generate Video\" button to open the video generator.";
 
         setTimeout(() => {
             this.openExportPopupModal(exportLabel.outerHTML + exportButton.outerHTML);
@@ -779,7 +779,7 @@ class Create {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "<h3>Welcome to the tutorial!</h3> <p style='color: white;'>Let's do a quick walk through so we can get the ropes.</p> <p style='color: gold;'>Start by adding a new line.</p>";
+        welcomeLabel.innerHTML = "<h3>Welcome to the tutorial!</h3> <p style='color: white;'>Let's do a quick walk through so we can get the ropes.</p> <p style='color: #C8B273;'>Start by adding a new line.</p>";
 
         setTimeout(() => {
             this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -794,7 +794,7 @@ class Create {
             const newLineButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
             newLineButton.id = "new-line-confirm-button";
             newLineButton.innerHTML = "Got it!";
-            newLineLabel.innerHTML = "<h3>Great!</h3> <p style='color: white;'>Now let's change one of the frets to a new number.</p> <p style='color: gold;'>Add a zero to one of our frets.</p>";
+            newLineLabel.innerHTML = "<h3>Great!</h3> <p style='color: white;'>Now let's change one of the frets to a new number.</p> <p style='color: #C8B273;'>Add a zero to one of our frets.</p>";
             
             setTimeout(() => {
                 this.openNewLinePopupModal(newLineLabel.outerHTML + newLineButton.outerHTML);
