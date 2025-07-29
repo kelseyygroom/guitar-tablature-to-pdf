@@ -79,7 +79,7 @@ class Home {
                     const label: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
                     const cancelButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
                     label.style.color = "white";
-                    label.innerHTML = "<h3>Your \"" + tab.tabTitle + "\" video is ready!</h3> <p>Click the flashing green video icon to download it.</p>";
+                    label.innerHTML = "<h3>Your \"" + tab.tabTitle + "\" video is ready!</h3> <p>Click the flashing video icon to download it.</p>";
                     cancelButton.innerHTML = "Cool!";
                     cancelButton.id = "cancel-button";
                     this.openPopUpModal(label.outerHTML + cancelButton.outerHTML);

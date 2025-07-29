@@ -443,11 +443,11 @@ class UploadVideo {
         fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-Inconsolata-Regular' name='font-type' value='Inconsolata-Regular' checked />";
         fontButtonsHTMLString += "<label for='font-Inconsolata-Regular'>Inconsolata Regular</label>";
         fontButtonsHTMLString += "</div>";
-        fontButtonsHTMLString += "<div>";
-        fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-RobotoMono-VariableFont_wght' name='font-type' value='RobotoMono-VariableFont_wght' />";
-        fontButtonsHTMLString += "<label for='font-RobotoMono-VariableFont_wght'>Roboto Mono</label>";
-        fontButtonsHTMLString += "</div>";
-        fontButtonsHTMLString += "<div>";
+        // fontButtonsHTMLString += "<div>";
+        // fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-RobotoMono-VariableFont_wght' name='font-type' value='RobotoMono-VariableFont_wght' />";
+        // fontButtonsHTMLString += "<label for='font-RobotoMono-VariableFont_wght'>Roboto Mono</label>";
+        // fontButtonsHTMLString += "</div>";
+        // fontButtonsHTMLString += "<div>";
         // fontButtonsHTMLString += "<input type='radio' class='font-radio' id='font-Doto-Regular' name='font-type' value='Doto-Regular' />";
         // fontButtonsHTMLString += "<label for='font-Doto-Regular'>Doto Regular</label>";
         fontButtonsHTMLString += "</div>";

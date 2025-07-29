@@ -710,7 +710,7 @@ class Create {
         const saveButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         saveButton.id = "save-confirm-button";
         saveButton.innerHTML = "Got it!";
-        saveLabel.innerHTML = "<h3>Excellent!</h3> <p style='color: white;'>Now you can add new lines, and change the fret numbers!<p><p style='color: #C8B273;'>Save the tab using the \"Save Tab\" button.";
+        saveLabel.innerHTML = "<h3>Excellent!</h3> <p style='color: white;'>Now you can add new lines, and change the fret numbers!<p><p style='color: #C8B273;'>Next, save the tab using the \"Save Tab\" button.";
         
         this.openSavePopupModal(saveLabel.outerHTML + saveButton.outerHTML);
     };
