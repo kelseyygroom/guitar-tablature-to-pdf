@@ -185,6 +185,25 @@ app.post('/deleteTab', async (req, res) => {
     }
 });
 
+app.post('/deleteS3Link', async (req, res) => {
+    const { username, videoS3URL } = req.body;
+
+    try {
+        const db = await connectToDatabase();
+        await db.collection('userAccount').updateMany(
+            { "username": username, "tabs.videoS3URL": videoS3URL },
+            {
+              $pull: {
+                "tabs.$[].videoS3URL": videoS3URL
+              }
+            }
+          )
+        console.log(`✅ Deleted video ${videoS3URL}`);
+      } catch (err) {
+        console.error(`❌ Error deleting video ${videoS3URL}`, err);
+      }
+});
+
 function scheduleDeletionInOneDay(videoS3URL, username) {
     const now = new Date();
     const deletionTime = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours later
