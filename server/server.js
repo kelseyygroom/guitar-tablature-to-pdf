@@ -146,15 +146,20 @@ app.post('/createAccount', async (req, res) => {
 });
 
 app.post('/saveTab', async (req, res) => {
-    try {
-        const db = await connectToDatabase();
-        const { username, tabTitle, tabData } = req.body;
+    const { username, tabTitle, tabData } = req.body;
 
+    if (!username || !tabTitle || !tabData) {
+        res.json(true);
+        return;
+    }
+
+    try {
         if (tabTitle === "Tutorial") {
             res.json(true);
             return;
         }
         else {
+            const db = await connectToDatabase();            
             const updateResult = await db.collection('userAccount').updateOne(
                 { username, 'tabs.tabTitle': tabTitle },
                 { $set: { 'tabs.$.tabData': tabData } },
