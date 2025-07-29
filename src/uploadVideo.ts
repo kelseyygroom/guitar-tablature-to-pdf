@@ -670,14 +670,16 @@ class UploadVideo {
             return await res.json();
         } catch (err) {
             if (retries > 0) {
-                creatingVideoText.innerHTML = "Oh no! There was problem uploading your video to TabTok 😭 retrying " + retries + "times.";
-                setTimeout(() => {
-                    window.location.href = "home.html?username=" + username;
-                }, 7500);
+                creatingVideoText.innerHTML = "🟡 Retrying video upload (" + retries + ") times.";
+                
                 console.warn('Retrying upload...', retries);
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 return this.uploadWithRetry(formData, creatingVideoText, username, retries - 1);
             } else {
+                setTimeout(() => {
+                    creatingVideoText.innerHTML = "There was problem uploading your video to TabTok 😭";
+                    window.location.href = "home.html?username=" + username;
+                }, 7500);
                 throw err;
             }
         }
