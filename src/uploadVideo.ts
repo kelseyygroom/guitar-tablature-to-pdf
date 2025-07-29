@@ -68,7 +68,7 @@ class UploadVideo {
     private openSelectFirstClipPopupModal = (htmlString: string) => {
         const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
         const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
-        const tabChunksButton: HTMLButtonElement = document.getElementById("view-tab-chunks-button") as HTMLButtonElement;
+        const tabChunksButton: HTMLButtonElement = document.getElementById("selected-tab-indicator") as HTMLButtonElement;
         popupModal.innerHTML = htmlString;
         popupModal.style.display = "flex";
         popupModalOverlay.style.display = "flex";
@@ -97,7 +97,7 @@ class UploadVideo {
 
         const confirmWelcomeButton: HTMLButtonElement = document.getElementById("welcome-confirm-button") as HTMLButtonElement;
         confirmWelcomeButton.addEventListener("click", () => {
-            const tabChunksButton: HTMLButtonElement = document.getElementById("view-tab-chunks-button") as HTMLButtonElement;
+            const tabChunksButton: HTMLButtonElement = document.getElementById("selected-tab-indicator") as HTMLButtonElement;
             const popupModal: HTMLDivElement = document.getElementById("tutorial-modal") as HTMLDivElement;
             const popupModalOverlay: HTMLDivElement = document.getElementById("tutorial-modal-overlay") as HTMLDivElement;
             popupModal.style.display = "none";
@@ -607,7 +607,6 @@ class UploadVideo {
 
             // TODO... This is a questionable method of handling sending the updated tabChunks to the lambda conversion function...
             // However this solves the double API call issue, as well as the modified chunks issue. Consider improving this later...
-
             if (!modifiedTabChunks) {
                 tabData = JSON.stringify(UploadVideo.tabChunks);
                 return;
@@ -620,36 +619,20 @@ class UploadVideo {
             formData.append('tabColor', fontColor);
             formData.append('tabFont', fontType);
 
+            // Upload Video.
             this.uploadWithRetry(formData, creatingVideoText, username)
-            // // Send the video and tabData to the server
-            // fetch(url + 'convert', {
-            //     method: 'POST',
-            //     body: formData            })
-            // .then(response => response.json())
-            // .then(data => {
-            //     if (data.message) {
-            //         creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Upload Complete!</p><p style='text-align: center;'>Check back on your homepage in a few minutes to download your video.</p>";
-            //         setTimeout(() => {
-            //             window.location.href = "home.html?username=" + username;
-            //         }, 5000);
-            //     } else {
-            //         creatingVideoText.innerHTML = 'Oh no! There was problem uploading your video to TabTok 😭. Try switching to wifi, or a stronger 5G signal.';
-            //         setTimeout(() => {
-            //             window.location.href = "home.html?username=" + username;
-            //         }, 5000);
-            //     }
-            // })
-            // .catch(error => {
-            //     creatingVideoText.innerHTML = "Oh no! There was problem uploading your video to TabTok 😭";
-            //     setTimeout(() => {
-            //         window.location.href = "home.html?username=" + username;
-            //     }, 7500);
-            //     console.error('Fetch error:', error);
-            // });
         });
     }; 
     
     private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, username: string, retries = 3): Promise<void> => {
+        if (this.tabTitle === "Tutorial") {
+            creatingVideoText.innerHTML = "<p style='text-align: center;'>&#x2705; Great work! The tutorial is complete! You'll be returned to your home page where you can create your first very own TabTok video! Try creating your very first tab, and add it to your video!</p><p style='text-align: center;'></p>";
+            setTimeout(() => {
+                window.location.href = "home.html?username=" + username;
+            }, 10000);
+            return;
+        }
+
         controller = new AbortController();
         const signal = controller.signal;
 
@@ -670,7 +653,7 @@ class UploadVideo {
             return await res.json();
         } catch (err) {
             if (retries > 0) {
-                creatingVideoText.innerHTML = "🟡 Retrying video upload (" + retries + ") times.";
+                creatingVideoText.innerHTML = "🟡 Retrying video upload (" + retries + ") attempts left.";
                 
                 console.warn('Retrying upload...', retries);
                 await new Promise(resolve => setTimeout(resolve, 2000));

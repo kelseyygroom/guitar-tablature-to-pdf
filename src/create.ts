@@ -718,7 +718,7 @@ class Create {
         const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
         const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
         popupModal.innerHTML = htmlString;
-        saveButton.classList.add("tab-cell-active-tutorial-icon");
+        saveButton.classList.add("tab-cell-active-tutorial");
         popupModal.style.display = "flex";
         popupModalOverlay.style.display = "flex";
         const confirmSaveButton: HTMLButtonElement = document.getElementById("save-confirm-button") as HTMLButtonElement;
@@ -753,8 +753,8 @@ class Create {
             const exportButton: HTMLElement = document.getElementById("export-button") as HTMLElement;
             exportButton.classList.add("tab-cell-active-tutorial");
 
-            const pdfButton: HTMLElement = document.getElementById("pdf-button") as HTMLElement;
-            pdfButton.classList.add("tab-cell-active-tutorial");
+            // const pdfButton: HTMLElement = document.getElementById("pdf-button") as HTMLElement;
+            // pdfButton.classList.add("tab-cell-active-tutorial");
         })
     };
 
@@ -763,7 +763,7 @@ class Create {
         const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
         const exportLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const exportButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
-        saveButton.classList.remove("tab-cell-active-tutorial-icon");
+        saveButton.classList.remove("tab-cell-active-tutorial");
         exportButton.id = "export-confirm-button";
         exportButton.innerHTML = "Got it!";
         exportLabel.innerHTML = "Excellent! Now that our tab has been saved, let's create a video with our tab on it! That way we can post it to TickTok, Instagram, Twitter, and more!";
