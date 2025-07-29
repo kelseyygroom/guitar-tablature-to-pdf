@@ -152,29 +152,23 @@ app.post('/saveTab', async (req, res) => {
         res.json(true);
         return;
     }
-
+    
     try {
-        if (tabTitle === "Tutorial") {
-            res.json(true);
-            return;
-        }
-        else {
-            const db = await connectToDatabase();            
-            const updateResult = await db.collection('userAccount').updateOne(
-                { username, 'tabs.tabTitle': tabTitle },
-                { $set: { 'tabs.$.tabData': tabData } },
-                { upsert: false }
+        const db = await connectToDatabase();
+        const updateResult = await db.collection('userAccount').updateOne(
+            { username, 'tabs.tabTitle': tabTitle },
+            { $set: { 'tabs.$.tabData': tabData } },
+            { upsert: false }
+        );
+
+        if (updateResult.matchedCount === 0) {
+            await db.collection('userAccount').updateOne(
+                { username },
+                { $push: { tabs: { tabTitle, tabData } } }
             );
-    
-            if (updateResult.matchedCount === 0) {
-                await db.collection('userAccount').updateOne(
-                    { username },
-                    { $push: { tabs: { tabTitle, tabData } } }
-                );
-            }
-    
-            res.json(true);
         }
+
+        res.json(true);
     } catch (error) {
         console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
