@@ -114,7 +114,6 @@ class Home {
             const s3url = s3URLIcon.id.split("icon-")[1];
 
             s3URLIcon.addEventListener("click", () => {
-                console.log("click", s3url)
                 this.deleteS3LinkOnVideoDownload(this.user.username, s3url);
             })
         };

@@ -107,7 +107,8 @@ app.get('/login', async (req, res) => {
         const db = await connectToDatabase();
         const account = await db.collection('userAccount').findOne({ username: req.query.username });
 
-        if (account?.password === req.query.pass) return res.json(true);
+        console.log("pass", easySalt(account?.password, false))
+        if (easySalt(account?.password, false) === req.query.pass) return res.json(true);
         res.json(false);
     } catch (error) {
         console.error('Error:', error.message);
@@ -133,7 +134,7 @@ app.post('/createAccount', async (req, res) => {
         const db = await connectToDatabase();
         const result = await db.collection('userAccount').insertOne({
             username: req.body.username,
-            password: req.body.password,
+            password: easySalt(req.body.password, true),
             email: req.body.email,
             tabs: [{ tabTitle: "Tutorial", tabData: { highEString: "-----", bString: "-----", gString: "-----", dString: "-----", aString: "-----", eString: "-----" } }]
         });
@@ -148,7 +149,6 @@ app.post('/createAccount', async (req, res) => {
 app.post('/saveTab', async (req, res) => {
     const { username, tabTitle, tabData } = req.body;
 
-    console.log(username, tabData, tabTitle)
     if (!username || !tabTitle || !tabData) {
         res.json(true);
         return;
@@ -209,6 +209,46 @@ app.post('/deleteS3Link', async (req, res) => {
         console.error(`❌ Error deleting video ${videoS3URL}`, err);
       }
 });
+
+function easySalt(str, encrypt = true) {
+    const map = {
+        // Lowercase
+        a: 'q', b: 'w', c: 'e', d: 'r', e: 't',
+        f: 'y', g: 'u', h: 'i', i: 'o', j: 'p',
+        k: 'a', l: 's', m: 'd', n: 'f', o: 'g',
+        p: 'h', q: 'j', r: 'k', s: 'l', t: 'z',
+        u: 'x', v: 'c', w: 'v', x: 'b', y: 'n', z: 'm',
+
+        // Uppercase
+        A: 'Q', B: 'W', C: 'E', D: 'R', E: 'T',
+        F: 'Y', G: 'U', H: 'I', I: 'O', J: 'P',
+        K: 'A', L: 'S', M: 'D', N: 'F', O: 'G',
+        P: 'H', Q: 'J', R: 'K', S: 'L', T: 'Z',
+        U: 'X', V: 'C', W: 'V', X: 'B', Y: 'N', Z: 'M',
+
+        // Digits
+        '0': '5', '1': '9', '2': '8', '3': '7', '4': '6',
+        '5': '0', '6': '4', '7': '3', '8': '2', '9': '1',
+
+        // Special characters
+        '!': '~', '@': '`', '#': '|', '$': '<', '%': '>',
+        '^': '+', '&': '-', '*': '=', '(': '[', ')': ']',
+        '_': '{', '+': '}', '-': '\\', '=': ':', '{': '"',
+        '}': ';', '[': ',', ']': '.', '|': '/', '\\': '?',
+        ':': '!', ';': '@', '"': '#', '\'': '$', '<': '%',
+        '>': '^', ',': '&', '.': '*', '/': '(', '?': ')',
+        '`': '_', '~': "'"
+    };
+  
+    const swap = encrypt ? map : Object.fromEntries(
+      Object.entries(map).map(([k, v]) => [v, k])
+    );
+  
+    return str
+      .split('')
+      .map(char => swap[char] || char)
+      .join('');
+  }
 
 function scheduleDeletionInOneDay(videoS3URL, username) {
     const now = new Date();
