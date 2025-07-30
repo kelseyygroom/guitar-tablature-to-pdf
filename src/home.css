@@ -231,6 +231,33 @@ a {
 
 }
 
+#loading-icon {
+    transition: all;
+    animation: fadeIn 1s;    
+}
+
+.notify {
+    animation: grow-shrink-green 1.5s infinite ease-in-out !important;
+}
+
+.notify-icon {
+    animation: grow-shrink-green-icon 1.5s infinite ease-in-out !important;
+}
+
+@media (max-width: 600px) and (orientation:portrait) {
+    .header {
+        padding-top: 3rem;
+    }
+
+    #tab-list-container {
+        margin-top: 5.5rem;
+    }
+
+    #username-label {
+        top: 3rem;
+    }
+}
+
 @media (min-width: 600px) and (orientation:landscape) {
     #create-tab-button {
         bottom: 0px;
@@ -262,19 +289,6 @@ a {
     #tab-list-container {
         margin-top: 3.5rem;
     }
-}
-
-#loading-icon {
-    transition: all;
-    animation: fadeIn 1s;    
-}
-
-.notify {
-    animation: grow-shrink-green 1.5s infinite ease-in-out !important;
-}
-
-.notify-icon {
-    animation: grow-shrink-green-icon 1.5s infinite ease-in-out !important;
 }
 
 @keyframes grow-shrink-green-icon {

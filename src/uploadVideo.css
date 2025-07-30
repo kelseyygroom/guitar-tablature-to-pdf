@@ -658,6 +658,16 @@ h3 {
     }
 }
 
+@media (max-width: 600px) and (orientation:portrait) {
+    .fa-download {
+        top: 3rem;
+    }
+
+    .fa-arrow-left {
+        top: 3rem;
+    }
+}
+
 /** Animations **/
 
 @keyframes fadeIn {

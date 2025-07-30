@@ -415,14 +415,27 @@ select {
 }
 
 @media (max-width: 600px) and (orientation:portrait) {
+    .header {
+        padding-top: 3rem;
+    }
+
+    #tab-list-container {
+        margin-top: 5.5rem;
+    }
+
+    #username-label {
+        top: 3rem;
+    }
+
     .tab-cell-container {
-        top: 14.25rem;
+        top: 17.25rem;
         width: calc(100vw - 3rem);
         left: 1rem;
         right: 1rem;
     }
 
     .tab-preview-container {
+        top: 6rem;
         width: calc(100vw - 3rem);
         left: 1rem;
         right: 1rem;
@@ -444,7 +457,7 @@ select {
         margin: 1rem;
         left: 0rem;
         width: auto;
-        top: 26.1rem;
+        top: 30.1rem;
         border-radius: 16px;
         bottom: auto;
     }
