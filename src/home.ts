@@ -72,8 +72,10 @@ class Home {
             if (tab.videoS3URL && tab.videoS3URL.length >= 1) {
                 const existingURL = window.localStorage.getItem(tab.videoS3URL);
 
+                this.addRemoveS3URLListenersToIcons();  
+
                 if (existingURL) {
-                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video"></i></a>';    
+                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i id="icon-' + tab.videoS3URL[0] + '" style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video"></i></a>';    
                 }
                 else {
                     const label: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
@@ -84,7 +86,7 @@ class Home {
                     cancelButton.id = "cancel-button";
                     this.openPopUpModal(label.outerHTML + cancelButton.outerHTML);
                     window.localStorage.setItem(tab.videoS3URL, "true");
-                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video notify-icon"></i></a>';    
+                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i id="icon-' + tab.videoS3URL[0] + '" style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video notify-icon"></i></a>'; 
                 }
             }
             else {
@@ -103,8 +105,24 @@ class Home {
         })
     };
 
+    private addRemoveS3URLListenersToIcons = () => {
+        const s3URLIcons: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("fa-video") as HTMLCollectionOf<HTMLElement>;
+        
+        for (let i: number = 0; i < s3URLIcons.length; i++) {
+            const s3URLIcon: HTMLElement = s3URLIcons[i];
+            // Lol... this is insane and I love it.
+            const s3url = s3URLIcon.id.split("icon-")[1];
+
+            s3URLIcon.addEventListener("click", () => {
+                console.log("click", s3url)
+                this.deleteS3LinkOnVideoDownload(this.user.username, s3url);
+            })
+        };
+
+    };
+
     // TODO... This is not great, clean it up later...
-    private static deleteS3LinkOnVideoDownload = (username: string, videoS3URL: string ) => {
+    private deleteS3LinkOnVideoDownload = (username: string, videoS3URL: string ) => {
         console.log(username, videoS3URL)
         // Send the video and tabData to the server
         fetch(url + 'deleteS3Link', {

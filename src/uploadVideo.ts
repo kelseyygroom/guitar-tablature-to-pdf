@@ -593,6 +593,9 @@ class UploadVideo {
         const creatingVideoText: HTMLElement = document.getElementById("loading-message") as HTMLElement;
 
         startButton.addEventListener("click", () => {
+            if (!modifiedTabChunks) {
+                return;
+            }
             creatingVideoDisplay.style.display = "flex";
             creatingVideoText.innerHTML = "<p style='text-align: center;'>Uploading your video to TabTok...</p>";
             const filename = tabTitle.replace(/ /g, "_");
