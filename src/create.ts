@@ -175,31 +175,34 @@ class Create {
         });
     }
 
+    private postSaveTab = async (exportVideoButton: HTMLButtonElement): Promise<void> => {
+        const tabData: any = this.translateTabCellsToData();
+
+        const response = await fetch(url + "saveTab", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tabData, username: this.user.username, tabTitle: this.tabTitle })
+        })
+
+        if (response) {
+            exportVideoButton.classList.add("tab-cell-active-tutorial");
+            exportVideoButton.style.color = "white";
+
+            setTimeout(() => {
+                exportVideoButton.classList.remove("tab-cell-active-tutorial");
+                exportVideoButton.style.color = "#1D1D1F";
+                this.formatTabForPDFExport(tabData)
+            }, 1500);
+        }
+    }
+
     private saveTab = () => {
         const saveTabButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
 
         saveTabButton.addEventListener("click", async () => {
-            const tabData: any = this.translateTabCellsToData();
-            console.log(this.tabTitle, tabData, this.user.username)
-
-            const response = await fetch(url + "saveTab", {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ tabData, username: this.user.username, tabTitle: this.tabTitle })
-            })
-
-            if (response) {
-                saveTabButton.classList.add("tab-cell-active-tutorial");
-                saveTabButton.style.color = "white";
-
-                setTimeout(() => {
-                    saveTabButton.classList.remove("tab-cell-active-tutorial");
-                    saveTabButton.style.color = "#1D1D1F";
-                    this.formatTabForPDFExport(tabData)
-                }, 1500);
-            }
+            this.postSaveTab(saveTabButton);
         })
     };
 
@@ -652,9 +655,12 @@ class Create {
         });
 
         // For PDF
-        const pdfButton: HTMLElement = document.getElementById("export-button") as HTMLElement;
-        pdfButton.addEventListener("click", () => {
+        const exportToVideoButton: HTMLButtonElement = document.getElementById("export-button") as HTMLButtonElement;
+        exportToVideoButton.addEventListener("click", () => {
+            this.postSaveTab(exportToVideoButton);
+            setTimeout(() => {
             window.location.href = "uploadVideo.html?username=" + this.user.username + "&title=" + this.tabTitle;
+        }, 2000);
         })
     };
 
@@ -755,8 +761,8 @@ class Create {
             const exportButton: HTMLElement = document.getElementById("export-button") as HTMLElement;
             exportButton.classList.add("tab-cell-active-tutorial");
 
-            // const pdfButton: HTMLElement = document.getElementById("pdf-button") as HTMLElement;
-            // pdfButton.classList.add("tab-cell-active-tutorial");
+            // const exportToVideo: HTMLElement = document.getElementById("pdf-button") as HTMLElement;
+            // exportToVideo.classList.add("tab-cell-active-tutorial");
         })
     };
 
