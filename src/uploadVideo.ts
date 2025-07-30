@@ -825,7 +825,7 @@ class UploadVideo {
                 // Display all six strings stacked vertically
                 currentText.forEach((text, index) => {
                     if (text) {
-                        const textX = 50;
+                        const textX = 45;
                         const textY = canvas.height - (6 - index) * (lineHeightRatio * 100) - 50;
 
                         if (index % 6 === 0) {
