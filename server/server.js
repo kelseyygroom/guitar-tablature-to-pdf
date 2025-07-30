@@ -107,7 +107,6 @@ app.get('/login', async (req, res) => {
         const db = await connectToDatabase();
         const account = await db.collection('userAccount').findOne({ username: req.query.username });
 
-        console.log("pass", easySalt(account?.password, false))
         if (easySalt(account?.password, false) === req.query.pass) return res.json(true);
         res.json(false);
     } catch (error) {
@@ -248,7 +247,7 @@ function easySalt(str, encrypt = true) {
       .split('')
       .map(char => swap[char] || char)
       .join('');
-  }
+}
 
 function scheduleDeletionInOneDay(videoS3URL, username) {
     const now = new Date();
