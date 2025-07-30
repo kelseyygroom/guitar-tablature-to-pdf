@@ -72,8 +72,6 @@ class Home {
             if (tab.videoS3URL && tab.videoS3URL.length >= 1) {
                 const existingURL = window.localStorage.getItem(tab.videoS3URL);
 
-                this.addRemoveS3URLListenersToIcons();  
-
                 if (existingURL) {
                     listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i id="icon-' + tab.videoS3URL[0] + '" style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video"></i></a>';    
                 }
@@ -112,8 +110,9 @@ class Home {
             const s3URLIcon: HTMLElement = s3URLIcons[i];
             // Lol... this is insane and I love it.
             const s3url = s3URLIcon.id.split("icon-")[1];
-
+            console.log("url", s3url)
             s3URLIcon.addEventListener("click", () => {
+                console.log("click")
                 this.deleteS3LinkOnVideoDownload(this.user.username, s3url);
             })
         };
@@ -271,6 +270,7 @@ class Home {
         this.highlightTutorial();
         this.addDeleteButtonListeners();
         this.checkForEmptyTabs();
+        this.addRemoveS3URLListenersToIcons();
     }
 
     // Delete the tab based on the list-item delete-icon that was clicked.

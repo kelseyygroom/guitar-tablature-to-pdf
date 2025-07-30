@@ -16,6 +16,17 @@ class UploadVideo {
     private static videoDuration: number;
     private tabClipSegmentColors: string[];
     private static isVideoPlaying: boolean = false;
+    private static tabBackgroundColor: string = "black";
+    private static tabFont: string = "Inconsolata-Regular";
+
+    private static colorMap: any = {
+        black:  'rgba(20, 20, 20, 0.8)',     // Slightly lifted black for visibility
+        red:    'rgba(255, 69, 58, 0.8)',    // Vivid red (like iOS system red)
+        blue:   'rgba(10, 132, 255, 0.8)',   // Bright blue
+        purple: 'rgba(191, 90, 242, 0.8)',   // Vibrant purple
+        green:  'rgba(52, 199, 89, 0.8)',    // Fresh green (like success green)
+        orange: 'rgba(255, 149, 0, 0.8)'     // Lively orange
+      };
 
     constructor() {
         this.user = {};
@@ -318,6 +329,13 @@ class UploadVideo {
         const closeIcon: HTMLElement = document.getElementById("close-tab-chunk-container-icon") as HTMLElement;
 
         closeIcon.addEventListener("click", () => {
+            const checkedFontRadio = document.querySelectorAll('input[type="radio"].font-radio:checked') as NodeListOf<HTMLInputElement>;
+            const checkedColorRadio = document.querySelectorAll('input[type="radio"].color-radio:checked');
+            const fontTypeInput = checkedFontRadio[0] as HTMLInputElement;
+            const fontType = fontTypeInput ? fontTypeInput.value : "Inconsolata-Regular";
+            const fontColorInput = checkedColorRadio[0] as HTMLInputElement;
+            const fontColor = fontColorInput ? fontColorInput.value : "Black";
+            UploadVideo.tabBackgroundColor = fontColor;
             const popupModal: HTMLElement = document.getElementById("popup-modal") as HTMLElement;
             popupModal.style.display = "none";
         });
@@ -596,6 +614,7 @@ class UploadVideo {
             if (!modifiedTabChunks) {
                 return;
             }
+
             creatingVideoDisplay.style.display = "flex";
             creatingVideoText.innerHTML = "<p style='text-align: center;'>Uploading your video to TabTok...</p>";
             const filename = tabTitle.replace(/ /g, "_");
@@ -603,12 +622,6 @@ class UploadVideo {
             const username: string = params.get('username') as string;
             const title: string = params.get('title') as string;
             const formData: FormData = new FormData();
-            const checkedFontRadio = document.querySelectorAll('input[type="radio"].font-radio:checked') as NodeListOf<HTMLInputElement>;
-            const checkedColorRadio = document.querySelectorAll('input[type="radio"].color-radio:checked');
-            const fontTypeInput = checkedFontRadio[0] as HTMLInputElement;
-            const fontType = fontTypeInput ? fontTypeInput.value : "Inconsolata-Regular";
-            const fontColorInput = checkedColorRadio[0] as HTMLInputElement;
-            const fontColor = fontColorInput ? fontColorInput.value : "Black";
             let tabData = JSON.stringify(modifiedTabChunks);
 
             // TODO... This is a questionable method of handling sending the updated tabChunks to the lambda conversion function...
@@ -622,13 +635,15 @@ class UploadVideo {
             formData.append('username', username);
             formData.append('tabTitle', title);
             formData.append('tabData', tabData);
-            formData.append('tabColor', fontColor);
-            formData.append('tabFont', fontType);
+            formData.append('tabColor', UploadVideo.tabBackgroundColor);
+            formData.append('tabFont', UploadVideo.tabFont);
 
             // Upload Video.
             this.uploadWithRetry(formData, creatingVideoText, username)
         });
     }; 
+
+
     
     private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, username: string, retries = 3): Promise<void> => {
         if (this.tabTitle === "Tutorial") {
@@ -801,16 +816,24 @@ class UploadVideo {
                 const fontSize = canvasWidth * baseFontRatio;
                 
                 ctx.font = `${fontSize}px Monospace`;
-                ctx.fillStyle = 'white';
                 ctx.strokeStyle = 'white';
                 ctx.lineWidth = fontSize * 0.002; // optional: adjust line width based on font size
                 ctx.textAlign = 'left';
+                ctx.fillStyle = 'black';
+
     
                 // Display all six strings stacked vertically
                 currentText.forEach((text, index) => {
                     if (text) {
                         const textX = 50;
                         const textY = canvas.height - (6 - index) * (lineHeightRatio * 100) - 50;
+
+                        if (index % 6 === 0) {
+                            ctx.fillStyle = UploadVideo.colorMap[UploadVideo.tabBackgroundColor];
+                            ctx.fillRect(textX - 10, textY - 15, canvasWidth * .75, 100);
+                        }
+
+                        ctx.fillStyle = 'white';
                         ctx.fillText(text, textX, textY);
                         ctx.strokeText(text, textX, textY);
                     }
