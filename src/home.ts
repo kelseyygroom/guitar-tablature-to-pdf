@@ -1,6 +1,6 @@
 import "./home.css"
 import emblem from './images/main-logo.svg'
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = process.env.SERVER_URL;
 // const url = "http://localhost:5000/";
 
 // I started to speed through this, it's 4am and I'm just trying to get it done at this point. I want to deploy a working prototype already! 
@@ -65,28 +65,26 @@ class Home {
 
         this.tabs.forEach(tab => {
             const listItem = document.createElement("li");
-
-            // Create the tab title list item.
             listItem.id = "tab-title-" + tab.tabTitle;
             listItem.className = "list-item";
 
             // Indicate to user when video is ready for download.
-            if (tab.videoS3URL) {
+            if (tab.videoS3URL && tab.videoS3URL.length >= 1) {
                 const existingURL = window.localStorage.getItem(tab.videoS3URL);
 
                 if (existingURL) {
-                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video"></i></a>';    
+                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i id="icon-' + tab.videoS3URL[0] + '" style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video"></i></a>';    
                 }
                 else {
                     const label: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
                     const cancelButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
                     label.style.color = "white";
-                    label.innerHTML = "Your \"" + tab.tabTitle + "\" video is ready! Click the flashing green video icon to download it.";
+                    label.innerHTML = "<h3>Your \"" + tab.tabTitle + "\" video is ready!</h3> <p>Click the flashing video icon to download it.</p>";
                     cancelButton.innerHTML = "Cool!";
                     cancelButton.id = "cancel-button";
                     this.openPopUpModal(label.outerHTML + cancelButton.outerHTML);
                     window.localStorage.setItem(tab.videoS3URL, "true");
-                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video notify-icon"></i></a>';    
+                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i id="icon-' + tab.videoS3URL[0] + '" style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video notify-icon"></i></a>'; 
                 }
             }
             else {
@@ -104,6 +102,36 @@ class Home {
             tabListContainer.append(listItem);
         })
     };
+
+    private addRemoveS3URLListenersToIcons = () => {
+        const s3URLIcons: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName("fa-video") as HTMLCollectionOf<HTMLElement>;
+        
+        for (let i: number = 0; i < s3URLIcons.length; i++) {
+            const s3URLIcon: HTMLElement = s3URLIcons[i];
+            // Lol... this is insane and I love it.
+            const s3url = s3URLIcon.id.split("icon-")[1];
+            console.log("url", s3url)
+            s3URLIcon.addEventListener("click", () => {
+                console.log("click")
+                this.deleteS3LinkOnVideoDownload(this.user.username, s3url);
+            })
+        };
+
+    };
+
+    // TODO... This is not great, clean it up later...
+    private deleteS3LinkOnVideoDownload = (username: string, videoS3URL: string ) => {
+        console.log(username, videoS3URL)
+        // Send the video and tabData to the server
+        fetch(url + 'deleteS3Link', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, videoS3URL })
+        })
+        .then(response => response.json())
+    }
 
     private checkIfTabExists = (title: string) => {
         let tabExists = false;
@@ -212,7 +240,7 @@ class Home {
 
             if (firstTimeTutorial !== "true") {
                 setTimeout(() => {
-                    tutorialBox.style.backgroundColor = "#23FE69";
+                    tutorialBox.style.backgroundColor = "#C8B273;";
     
                     setTimeout(() => {
                         tutorialBox.style.backgroundColor = "rgba(43, 43, 43, 0.2)";
@@ -233,7 +261,7 @@ class Home {
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
 
         // Set user account image and name.
-        userAccountLabel.innerHTML = userAccountData.username + "'s Tabs";
+        userAccountLabel.innerHTML = userAccountData.username.length >= 1 ? userAccountData.username : "Test User";
         // Include this icon when you create the menu.
         //  + "<i class='fas fa-bars'></i>";
         this.user = userAccountData;
@@ -242,6 +270,7 @@ class Home {
         this.highlightTutorial();
         this.addDeleteButtonListeners();
         this.checkForEmptyTabs();
+        this.addRemoveS3URLListenersToIcons();
     }
 
     // Delete the tab based on the list-item delete-icon that was clicked.

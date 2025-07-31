@@ -1,7 +1,7 @@
 import './create.css';
 import jsPDF from "jspdf";
 import emblem from './images/main-logo.svg'
-const url = "https://guitar-tablature-to-pdf-147ddb720da0.herokuapp.com/";
+const url = process.env.SERVER_URL;
 // const url = "http://localhost:5000/";
 
 class Create {
@@ -175,29 +175,34 @@ class Create {
         });
     }
 
+    private postSaveTab = async (exportVideoButton: HTMLButtonElement): Promise<void> => {
+        const tabData: any = this.translateTabCellsToData();
+
+        const response = await fetch(url + "saveTab", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tabData, username: this.user.username, tabTitle: this.tabTitle })
+        })
+
+        if (response) {
+            exportVideoButton.classList.add("tab-cell-active-tutorial");
+            exportVideoButton.style.color = "white";
+
+            setTimeout(() => {
+                exportVideoButton.classList.remove("tab-cell-active-tutorial");
+                exportVideoButton.style.color = "#1D1D1F";
+                this.formatTabForPDFExport(tabData)
+            }, 1500);
+        }
+    }
+
     private saveTab = () => {
         const saveTabButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
 
         saveTabButton.addEventListener("click", async () => {
-            const tabData: any = this.translateTabCellsToData();
-            const response = await fetch(url + "saveTab", {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ tabData, username: this.user.username, title: this.tabTitle })
-            })
-
-            if (response) {
-                saveTabButton.classList.add("tab-cell-active-tutorial");
-                saveTabButton.style.color = "white";
-
-                setTimeout(() => {
-                    saveTabButton.classList.remove("tab-cell-active-tutorial");
-                    saveTabButton.style.color = "#1D1D1F";
-                    this.formatTabForPDFExport(tabData)
-                }, 1500);
-            }
+            this.postSaveTab(saveTabButton);
         })
     };
 
@@ -650,9 +655,12 @@ class Create {
         });
 
         // For PDF
-        const pdfButton: HTMLElement = document.getElementById("export-button") as HTMLElement;
-        pdfButton.addEventListener("click", () => {
+        const exportToVideoButton: HTMLButtonElement = document.getElementById("export-button") as HTMLButtonElement;
+        exportToVideoButton.addEventListener("click", () => {
+            this.postSaveTab(exportToVideoButton);
+            setTimeout(() => {
             window.location.href = "uploadVideo.html?username=" + this.user.username + "&title=" + this.tabTitle;
+        }, 2000);
         })
     };
 
@@ -708,7 +716,7 @@ class Create {
         const saveButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         saveButton.id = "save-confirm-button";
         saveButton.innerHTML = "Got it!";
-        saveLabel.innerHTML = "Excellent! Now let's save our tab.";
+        saveLabel.innerHTML = "<h3>Excellent!</h3> <p style='color: white;'>Now you can add new lines, and change the fret numbers!<p><p style='color: #C8B273;'>Next, save the tab using the \"Save Tab\" button.";
         
         this.openSavePopupModal(saveLabel.outerHTML + saveButton.outerHTML);
     };
@@ -718,7 +726,7 @@ class Create {
         const popupModal: HTMLDivElement = document.getElementById("popup-modal") as HTMLDivElement;
         const popupModalOverlay: HTMLDivElement = document.getElementById("popup-modal-overlay") as HTMLDivElement;
         popupModal.innerHTML = htmlString;
-        saveButton.classList.add("tab-cell-active-tutorial-icon");
+        saveButton.classList.add("tab-cell-active-tutorial");
         popupModal.style.display = "flex";
         popupModalOverlay.style.display = "flex";
         const confirmSaveButton: HTMLButtonElement = document.getElementById("save-confirm-button") as HTMLButtonElement;
@@ -753,8 +761,8 @@ class Create {
             const exportButton: HTMLElement = document.getElementById("export-button") as HTMLElement;
             exportButton.classList.add("tab-cell-active-tutorial");
 
-            const pdfButton: HTMLElement = document.getElementById("pdf-button") as HTMLElement;
-            pdfButton.classList.add("tab-cell-active-tutorial");
+            // const exportToVideo: HTMLElement = document.getElementById("pdf-button") as HTMLElement;
+            // exportToVideo.classList.add("tab-cell-active-tutorial");
         })
     };
 
@@ -763,10 +771,10 @@ class Create {
         const saveButton: HTMLButtonElement = document.getElementById("save-button") as HTMLButtonElement;
         const exportLabel: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
         const exportButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
-        saveButton.classList.remove("tab-cell-active-tutorial-icon");
+        saveButton.classList.remove("tab-cell-active-tutorial");
         exportButton.id = "export-confirm-button";
         exportButton.innerHTML = "Got it!";
-        exportLabel.innerHTML = "Excellent! Now that our tab has been saved, let's create a video with our tab on it! That way we can post it to TickTok, Instagram, Twitter, and more!";
+        exportLabel.innerHTML = "<h3>Fantastic job!</h3> <p style='color: white;'>The tab has been saved to your profile.</p><p style='color: white;'>It's time to generate the TabTok Tutorial Video!</p><p style='color: #C8B273;'>Select the \"Generate Video\" button to open the video generator.";
 
         setTimeout(() => {
             this.openExportPopupModal(exportLabel.outerHTML + exportButton.outerHTML);
@@ -779,7 +787,7 @@ class Create {
         const welcomeButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
         welcomeButton.id = "welcome-confirm-button";
         welcomeButton.innerHTML = "Got it!";
-        welcomeLabel.innerHTML = "Welcome to the tutorial! Let's do a quick walk through so we can get the ropes. Let's get started by adding a new line!";
+        welcomeLabel.innerHTML = "<h3>Welcome to the tutorial!</h3> <p style='color: white;'>Let's do a quick walk through so we can get the ropes.</p> <p style='color: #C8B273;'>Start by adding a new line.</p>";
 
         setTimeout(() => {
             this.openWelcomePopupModal(welcomeLabel.outerHTML + welcomeButton.outerHTML);
@@ -794,7 +802,7 @@ class Create {
             const newLineButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
             newLineButton.id = "new-line-confirm-button";
             newLineButton.innerHTML = "Got it!";
-            newLineLabel.innerHTML = "Awesome! Now let's change one of the frets to a new number. Let's add a zero to one of our frets!";
+            newLineLabel.innerHTML = "<h3>Great!</h3> <p style='color: white;'>Now let's change one of the frets to a new number.</p> <p style='color: #C8B273;'>Add a zero to one of our frets.</p>";
             
             setTimeout(() => {
                 this.openNewLinePopupModal(newLineLabel.outerHTML + newLineButton.outerHTML);

@@ -78,21 +78,21 @@ button i {
 }
 
 .popup-modal {
-    width: calc(90vw - 2rem);
-    height: calc(27.5vh - 2rem);;
+    width: calc(90vw - 4rem);
+    height: calc(40vh - 2rem);;
     background-color: #1D1D1F;
     animation: slideInFromBottom .5s;
     position: fixed;
     left: 5vw;
-    top: calc(37.5vh - 2rem);
+    top: calc(27.5vh - 2rem);
     border-radius: 10px;
     z-index: 99999;
     display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 1rem;
-    padding-block: 2rem;
+    padding: 2rem;
+    padding-block: 4rem;
     text-align: center;
     color: white;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -181,6 +181,7 @@ button i {
     left: 15vw;
     right: 15vw;
     color: white;
+    font-family: Inconsolata;
 }
 
 .tab-preview-container::-webkit-scrollbar {
@@ -191,7 +192,7 @@ button i {
 
 .tab-preview-container div {
     width: calc(100vw - 2rem);
-    font-family: monospace, monospace;
+    font-family: Inconsolata;
     white-space: nowrap;
     font-size: 1.1rem;
     min-height: 0px;
@@ -227,7 +228,7 @@ button i {
     height: 2rem;
     width: 100vw;
     background-color: #1D1D1F;
-    color: white;
+    color: #C8B273;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -244,6 +245,11 @@ button i {
     border-radius: 10px;
     padding: .33rem;
     background-color: #1D1D1F;
+}
+
+h3 {
+    color: #C8B273;
+    margin-bottom: 1rem;
 }
 
 .tab-table {
@@ -370,7 +376,7 @@ select {
         color: #1D1D1F;
     }
     50% {
-        background-color: #23FE69;
+        background-color: #C8B273;;
         transform: scale(1.05); /* Grows to 1.5x size */
         border-color: #F0f8ff;
     }
@@ -382,7 +388,7 @@ select {
         color: #1D1D1F;
     }
     50% {
-        color: #23FE69;
+        color: #C8B273;;
         transform: scale(1.05); /* Grows to 1.5x size */
     }
 }
@@ -410,14 +416,27 @@ select {
 }
 
 @media (max-width: 600px) and (orientation:portrait) {
+    .header {
+        padding-top: 2rem;
+    }
+
+    #tab-list-container {
+        margin-top: 4.5rem;
+    }
+
+    #username-label {
+        top: 2rem;
+    }
+
     .tab-cell-container {
-        top: 14.25rem;
+        top: 17rem;
         width: calc(100vw - 3rem);
         left: 1rem;
         right: 1rem;
     }
 
     .tab-preview-container {
+        top: 5.5rem;
         width: calc(100vw - 3rem);
         left: 1rem;
         right: 1rem;
@@ -439,7 +458,7 @@ select {
         margin: 1rem;
         left: 0rem;
         width: auto;
-        top: 26.1rem;
+        top: 29.5rem;
         border-radius: 16px;
         bottom: auto;
     }
@@ -507,4 +526,13 @@ select {
         -webkit-backdrop-filter: blur(5px);
         border: 1px solid rgba(255, 255, 255, 0.3);
     }
+}
+
+/* Fonts */
+
+@font-face {
+    font-family: 'Inconsolata';
+    src: url('./assets/fonts/Inconsolata-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }

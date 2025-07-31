@@ -143,10 +143,12 @@ h2 {
     margin-top: 0px;
     color: white !important;
     margin-bottom: .5rem !important;
+    font-size: xx-large;
 }
 
 p {
     margin-block: .25rem;
+    font-size: medium;
 }
 
 h2, article {
