@@ -246,15 +246,15 @@ a {
 
 @media (max-width: 600px) and (orientation:portrait) {
     .header {
-        padding-top: 3rem;
+        padding-top: 2.5rem;
     }
 
     #tab-list-container {
-        margin-top: 5.5rem;
+        margin-top: 5rem;
     }
 
     #username-label {
-        top: 3rem;
+        top: 2.5rem;
     }
 }
 

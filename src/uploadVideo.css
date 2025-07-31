@@ -660,11 +660,11 @@ h3 {
 
 @media (max-width: 600px) and (orientation:portrait) {
     .fa-download {
-        top: 3rem;
+        top: 2.5rem;
     }
 
     .fa-arrow-left {
-        top: 3rem;
+        top: 2.5rem;
     }
 }
 
