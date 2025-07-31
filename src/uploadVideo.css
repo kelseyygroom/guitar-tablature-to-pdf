@@ -58,7 +58,7 @@ body {
     color: #1D1D1F;
     white-space: nowrap;
     text-align: left;
-    font-family: monospace;
+    font-family: Inconsolata;
     background-color: white;
     opacity: .75;
     border-style: solid;
@@ -711,4 +711,13 @@ h3 {
     to {
       opacity: 1; /* Optional: Fully visible */
     }
+}
+
+/* Fonts */
+
+@font-face {
+    font-family: 'Inconsolata';
+    src: url('./assets/fonts/Inconsolata-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }

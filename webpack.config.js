@@ -63,6 +63,13 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(woff2?|ttf|eot|otf)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/Inconsolata-Regular.ttf',
+        },
+      },
+      {
         test: /\.(png|jpg|jpeg|gif|svg)$/i, // Match image files
         type: 'asset/resource', // Use Webpack's built-in asset/resource
       },

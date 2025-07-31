@@ -181,6 +181,7 @@ button i {
     left: 15vw;
     right: 15vw;
     color: white;
+    font-family: Inconsolata;
 }
 
 .tab-preview-container::-webkit-scrollbar {
@@ -191,7 +192,7 @@ button i {
 
 .tab-preview-container div {
     width: calc(100vw - 2rem);
-    font-family: monospace, monospace;
+    font-family: Inconsolata;
     white-space: nowrap;
     font-size: 1.1rem;
     min-height: 0px;
@@ -525,4 +526,13 @@ select {
         -webkit-backdrop-filter: blur(5px);
         border: 1px solid rgba(255, 255, 255, 0.3);
     }
+}
+
+/* Fonts */
+
+@font-face {
+    font-family: 'Inconsolata';
+    src: url('./assets/fonts/Inconsolata-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
