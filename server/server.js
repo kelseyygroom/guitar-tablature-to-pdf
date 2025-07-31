@@ -183,5 +183,25 @@ app.post('/deleteTab', async (req, res) => {
     }
 });
 
+// User Account Management Routes
+app.post('/deleteUser', async (req, res) => {
+    console.log(req.body);
+    const username = req.body.username;
+    console.log(username);
+    if (username === null || username === undefined) {
+        res.sendStatus(400);
+        return;
+    } 
+
+    try {
+        const db = await connectToDatabase();
+        db.collection('userAccount').deleteOne({
+            username
+        });
+    } catch {
+        res.sendStatus(500);
+    }
+});
+
 // Start Server
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

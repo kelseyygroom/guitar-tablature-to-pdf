@@ -1,0 +1,1 @@
+(()=>{"use strict";(new class{constructor(){this.init=()=>{document.getElementById("delete-button").addEventListener("click",(()=>{const e=document.getElementById("username").value;fetch("http://localhost:5000/deleteUser",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:e})})}))}}}).init()})();
