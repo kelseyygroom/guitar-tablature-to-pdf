@@ -639,13 +639,13 @@ class UploadVideo {
             formData.append('tabFont', UploadVideo.tabFont);
 
             // Upload Video.
-            this.uploadWithRetry(formData, creatingVideoText, username)
+            this.uploadWithRetry(formData, creatingVideoText, creatingVideoDisplay, username)
         });
     }; 
 
 
     
-    private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, username: string, retries = 3): Promise<void> => {
+    private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, creatingVideoDisplay: HTMLElement, username: string, retries = 3): Promise<void> => {
         if (this.tabTitle === "Tutorial") {
             creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Great work! The tutorial is complete!</h3><p style='text-align: center;'>You'll be returned to your home page where you can create your very own TabTok video!</p><p style='text-align: center;'>Try creating your own tabs, and add them to your guitar videos!</p><p style='text-align: center;'>Feel free to delete the tutorial at this time, or keep it around in case you have questions!</p>";
             setTimeout(() => {
@@ -665,8 +665,9 @@ class UploadVideo {
                 });
     
                 if (!res.ok) throw new Error('Server error');
-    
+
                 creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Upload Complete!</h3><p style='text-align: center;'>Your video will be available for download on the homepage in a few minutes.</p>";
+                
                 setTimeout(() => {
                     window.location.href = "home.html?username=" + username;
                 }, 5000);
@@ -674,16 +675,16 @@ class UploadVideo {
                 return await res.json();
             } catch (err) {
                 if (retries > 0) {
-                    creatingVideoText.innerHTML = "🟡 Retrying video upload (" + retries + ") attempts left.";
+                    creatingVideoText.innerHTML = "🟡 Retrying video upload " + retries + " attempt" + (retries === 1 ? '' : "s") + " left.";
                     
                     console.warn('Retrying upload...', retries);
                     await new Promise(resolve => setTimeout(resolve, 2000));
-                    return this.uploadWithRetry(formData, creatingVideoText, username, retries - 1);
+                    return this.uploadWithRetry(formData, creatingVideoText, creatingVideoDisplay, username, retries - 1);
                 } else {
                     setTimeout(() => {
                         creatingVideoText.innerHTML = "There was problem uploading your video to TabTok 😭";
-                        window.location.href = "home.html?username=" + username;
-                    }, 7500);
+                        creatingVideoDisplay.style.display = "none";
+                    }, 5000);
                     throw err;
                 }
             }
