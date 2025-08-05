@@ -50,7 +50,7 @@ app.post('/videoURL', async (req, res) => {
     try {
         const { username, videoID, tabTitle } = req.body;
 
-        scheduleDeletionInOneDay(videoID, username)
+        scheduleDeletionInOneHour(videoID, username)
         // Connect to the database and update the user's videoID array field
         const db = await connectToDatabase();
 
@@ -273,9 +273,9 @@ function easySalt(str, encrypt = true) {
       .join('');
 }
 
-function scheduleDeletionInOneDay(videoS3URL, username) {
+function scheduleDeletionInOneHour(videoS3URL, username) {
     const now = new Date();
-    const deletionTime = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours later
+    const deletionTime = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour later
     
     const minute = deletionTime.getMinutes();
     const hour = deletionTime.getHours();
@@ -287,6 +287,7 @@ function scheduleDeletionInOneDay(videoS3URL, username) {
     const job = cron.schedule(cronTime, async () => {    
 
       try {
+        console.log("Scheduled Deletion: ", videoS3URL)
         const db = await connectToDatabase();
         await db.collection('userAccount').updateMany(
             { "username": username, "tabs.videoS3URL": videoS3URL },
