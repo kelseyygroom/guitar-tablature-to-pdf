@@ -190,6 +190,30 @@ app.post('/deleteTab', async (req, res) => {
     }
 });
 
+// User Account Management Routes
+app.post('/deleteUser', async (req, res) => {
+    console.log(req.body);
+    const username = req.body.username;
+    const password = req.body.password;
+    const translatedPassword = easySalt(password, true);
+    console.log(username);
+    console.log("translated password:", translatedPassword);
+    if (username === null || username === undefined || translatedPassword === null || translatedPassword === undefined) {
+        res.sendStatus(400);
+        return;
+    } 
+
+    try {
+        const db = await connectToDatabase();
+        db.collection('userAccount').deleteOne({
+            username, 
+            password: translatedPassword
+        });
+    } catch {
+        res.sendStatus(500);
+    }
+});
+
 app.post('/deleteS3Link', async (req, res) => {
     const { username, videoS3URL } = req.body;
 
