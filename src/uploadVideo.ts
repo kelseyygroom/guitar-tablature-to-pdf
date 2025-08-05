@@ -642,10 +642,8 @@ class UploadVideo {
             this.uploadWithRetry(formData, creatingVideoText, creatingVideoDisplay, username)
         });
     }; 
-
-
     
-    private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, creatingVideoDisplay: HTMLElement, username: string, retries = 3): Promise<void> => {
+    private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, creatingVideoDisplay: HTMLElement, username: string, retries = 20): Promise<void> => {
         if (this.tabTitle === "Tutorial") {
             creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Great work! The tutorial is complete!</h3><p style='text-align: center;'>You'll be returned to your home page where you can create your very own TabTok video!</p><p style='text-align: center;'>Try creating your own tabs, and add them to your guitar videos!</p><p style='text-align: center;'>Feel free to delete the tutorial at this time, or keep it around in case you have questions!</p>";
             setTimeout(() => {
@@ -666,7 +664,7 @@ class UploadVideo {
     
                 if (!res.ok) throw new Error('Server error');
 
-                creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Upload Complete!</h3><p style='text-align: center;'>Your video will be available for download on the homepage in a few minutes.</p>";
+                creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Upload Complete!</h3><p style='text-align: center;'>Your video will be available for download on the homepage in a few minutes.</p><p style='text-align: center;'>Please note that your video will only be available for download for the next hour.</p>";
                 
                 setTimeout(() => {
                     window.location.href = "home.html?username=" + username;
@@ -675,9 +673,13 @@ class UploadVideo {
                 return await res.json();
             } catch (err) {
                 if (retries > 0) {
-                    creatingVideoText.innerHTML = "🟡 Retrying video upload " + retries + " attempt" + (retries === 1 ? '' : "s") + " left.";
+                    if (retries === 17) {
+                        creatingVideoText.innerHTML = "<p style='text-align: center;'>🟡 Slow connection...</p>";
+                    }
+                    else if (retries < 10) {
+                        creatingVideoText.innerHTML = "<p style='text-align: center;'>🟡 Very slow connection...</p><p style='text-align: center;'>Consider switching to WIFI for upload.</p>";
+                    }
                     
-                    console.warn('Retrying upload...', retries);
                     await new Promise(resolve => setTimeout(resolve, 2000));
                     return this.uploadWithRetry(formData, creatingVideoText, creatingVideoDisplay, username, retries - 1);
                 } else {
