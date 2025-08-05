@@ -121,16 +121,20 @@ class Home {
 
     // TODO... This is not great, clean it up later...
     private deleteS3LinkOnVideoDownload = (username: string, videoS3URL: string ) => {
-        console.log(username, videoS3URL)
-        // Send the video and tabData to the server
-        fetch(url + 'deleteS3Link', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, videoS3URL })
-        })
-        .then(response => response.json())
+        try {
+            // Send the video and tabData to the server
+            fetch(url + 'deleteS3Link', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, videoS3URL })
+            })
+            .then(response => response.json())
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 
     private checkIfTabExists = (title: string) => {

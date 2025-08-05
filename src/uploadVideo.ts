@@ -958,12 +958,12 @@ class UploadVideo {
         const aSplitArray: string [] = tab.aString.split("");
         const eSplitArray: string [] = tab.eString.split("");
 
-        const highEReturnArray: string [] = [];
-        const bReturnArray: string [] = [];
-        const gReturnArray: string [] = [];
-        const dReturnArray: string [] = [];
-        const aReturnArray: string [] = [];
-        const eReturnArray: string [] = [];
+        let highEReturnArray: string [] = [];
+        let bReturnArray: string [] = [];
+        let gReturnArray: string [] = [];
+        let dReturnArray: string [] = [];
+        let aReturnArray: string [] = [];
+        let eReturnArray: string [] = [];
 
         const returnObj: any = {
             highEString: [],
@@ -987,12 +987,21 @@ class UploadVideo {
             eReturnArray.push(eSplitArray[i]);
 
             if (i === counter || i === highESplitArray.length - 1) {
+                // Pretty crazy stuff here, but it works and it had to be done fast... (should be const, used let, can be designed better)
+                highEReturnArray = this.ensureStringsAreSameLength(highEReturnArray);
+                bReturnArray = this.ensureStringsAreSameLength(bReturnArray);
+                gReturnArray = this.ensureStringsAreSameLength(gReturnArray);
+                dReturnArray = this.ensureStringsAreSameLength(dReturnArray);
+                aReturnArray = this.ensureStringsAreSameLength(aReturnArray);
+                eReturnArray = this.ensureStringsAreSameLength(eReturnArray);
+
                 highEReturnArray.unshift("E|");
                 bReturnArray.unshift("B|");
                 gReturnArray.unshift("G|");
                 dReturnArray.unshift("D|");
                 aReturnArray.unshift("A|");
                 eReturnArray.unshift("E|");
+
                 returnObj.highEString.push({text: highEReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 returnObj.bString.push({text: bReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 returnObj.gString.push({text: gReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
@@ -1012,6 +1021,16 @@ class UploadVideo {
 
         return returnObj;
     };
+
+    private ensureStringsAreSameLength = (array: string[]) => {
+        if (array.length < 31) {
+            for (let i: number = array.length; i < 31; i++) {
+                array.push("-");
+            } 
+        }
+
+        return array;
+    }
 
     // Format the tab & handle double digit tab cells.
     private formatTabForPDFExport = (rawTabData: any) => {
