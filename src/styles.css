@@ -200,6 +200,10 @@ footer {
         display: none;
     }
 
+    #mobile-h2 {
+        text-align: center;
+    }
+
     article {
         width: calc(85% - 2rem);
     }
