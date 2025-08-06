@@ -60,12 +60,17 @@ a {
     box-sizing: border-box;
     width: 85%;
     padding: 1rem;
-    color: #1D1D1F;
+    color: #C8B273;
     border-color: #1D1D1F;
     background-color: #F6F6F8;
     border-radius: 10px;
     border-width: 1px;
     text-align: center;
+    background-color: #1D1D1F;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
 }
 
 #failed-login-error {
@@ -108,7 +113,7 @@ footer p {
 }
 
 .icons {
-    width: 100%;
+    width: 97.5%;
     display: flex;
     justify-content: space-between;
     font-size: 3rem;
@@ -140,10 +145,14 @@ article {
 }
 
 h2 {
-    margin-top: 0px;
-    color: white !important;
-    margin-bottom: .5rem !important;
+    margin-bottom: 1rem;
+    color: white;
+    margin-top: 0rem !important;
     font-size: xx-large;
+}
+
+video {
+    border-radius: 5px;
 }
 
 p {
@@ -167,8 +176,8 @@ h1 {
      1px  1px 0 #1D1D1F;
 }
 
-b {
-    color: #5DCCF5;
+b, i {
+    color: #C8B273;
 }
 
 footer {
@@ -183,8 +192,12 @@ footer {
 @media (max-width: 600px) and (orientation:portrait) {
     #logo {
         width: 90vw;
-        margin-top: -2rem;
-        margin-bottom: -4rem;
+        margin-top: -3rem;
+        margin-bottom: -5rem;
+    }
+
+    #landscape-h2 {
+        display: none;
     }
 
     article {
@@ -216,11 +229,32 @@ footer {
     }
 
     .icons {
-        width: 85%;
+        width: 80%;
     }
 }
 
 @media (min-width: 600px) and (orientation:landscape) {
+    video {
+        border-radius: 5px;
+        width: 10rem;
+    }
+
+    #mobile-h2 {
+        display: none;
+    }
+
+    #landscape-h2 {
+        margin-left: 1rem;
+    }
+
+    p {
+        margin-left: 1rem;
+    }
+
+    .responsive-container-wide {
+        flex-direction: row;
+    }
+
     h2, article {
         text-align: left;
     }
