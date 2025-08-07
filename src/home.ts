@@ -9,7 +9,7 @@ class Home {
     private user;
     private tabs: any[];
     constructor() {
-        this.user = { username: "", tabs: [] };
+        this.user = { username: "Guest", tabs: [{tabTitle: "Tutorial"}] };
         this.tabs = [];
     }
 
@@ -51,7 +51,7 @@ class Home {
     };
 
     private checkForEmptyTabs = () => {
-        if (this.user.tabs.length === 0) {
+        if (this.user && this.user.tabs && this.user.tabs.length === 0) {
             const createNewTabButton: HTMLElement = document.getElementById("create-tab-button") as HTMLElement;
             createNewTabButton.classList.add("notify");
         }
@@ -63,44 +63,55 @@ class Home {
 
         loadingIcon.style.display = "none";
 
-        this.tabs.forEach(tab => {
+        if (!this.tabs || this.tabs.length < 1) {
             const listItem = document.createElement("li");
-            listItem.id = "tab-title-" + tab.tabTitle;
+            listItem.id = "tab-title-" + "Tutorial";
             listItem.className = "list-item";
 
-            // Indicate to user when video is ready for download.
-            if (tab.videoS3URL && tab.videoS3URL.length >= 1) {
-                const existingURL = window.localStorage.getItem(tab.videoS3URL);
-
-                if (existingURL) {
-                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i id="icon-' + tab.videoS3URL[0] + '" style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video"></i></a>';    
-                }
-                else {
-                    const label: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
-                    const cancelButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
-                    label.style.color = "white";
-                    label.innerHTML = "<h3>Your \"" + tab.tabTitle + "\" video is ready!</h3> <p>Click the flashing video icon to download it.</p>";
-                    cancelButton.innerHTML = "Cool!";
-                    cancelButton.id = "cancel-button";
-                    this.openPopUpModal(label.outerHTML + cancelButton.outerHTML);
-                    window.localStorage.setItem(tab.videoS3URL, "true");
-                    listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i id="icon-' + tab.videoS3URL[0] + '" style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video notify-icon"></i></a>'; 
-                }
-            }
-            else {
-                listItem.innerHTML = '<i style="position: absolute; height: 1rem; width: 1rem; left: 1rem;" class="fa-solid fa-guitar"></i>';
-            }
-
-            listItem.innerHTML += '<p>' + tab.tabTitle + '</p><i id="' + tab.tabTitle + '-icon" style="position: absolute; height: 1rem; width: 1rem; right: 1rem;" class="delete-icon fas fa-trash-can"></i>';
-
-            // Open the create page when the Tab title is selected.
-            const openCreatePageButton = listItem.children[1] as HTMLElement;
-            openCreatePageButton.onclick = () => {
-                this.openCreatePage(tab.tabTitle);
-            }
+            listItem.innerHTML += '<p><a href="/create.html?username=Guest&title=Tutorial">Tutorial</a></p><i id="Tutorial-icon" style="position: absolute; height: 1rem; width: 1rem; right: 1rem;" class="delete-icon fas fa-trash-can"></i>';
 
             tabListContainer.append(listItem);
-        })
+        }
+        else {
+            this.tabs.forEach(tab => {
+                const listItem = document.createElement("li");
+                listItem.id = "tab-title-" + tab.tabTitle;
+                listItem.className = "list-item";
+    
+                // Indicate to user when video is ready for download.
+                if (tab.videoS3URL && tab.videoS3URL.length >= 1) {
+                    const existingURL = window.localStorage.getItem(tab.videoS3URL);
+    
+                    if (existingURL) {
+                        listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i id="icon-' + tab.videoS3URL[0] + '" style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video"></i></a>';    
+                    }
+                    else {
+                        const label: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+                        const cancelButton: HTMLButtonElement = document.createElement("button") as HTMLButtonElement;
+                        label.style.color = "white";
+                        label.innerHTML = "<h3>Your \"" + tab.tabTitle + "\" video is ready!</h3> <p>Click the flashing video icon to download it.</p>";
+                        cancelButton.innerHTML = "Cool!";
+                        cancelButton.id = "cancel-button";
+                        this.openPopUpModal(label.outerHTML + cancelButton.outerHTML);
+                        window.localStorage.setItem(tab.videoS3URL, "true");
+                        listItem.innerHTML = '<a download href="' + tab.videoS3URL[0] + '"><i id="icon-' + tab.videoS3URL[0] + '" style="position: absolute; height: 1rem; width: 1rem; left: 1rem; top: calc(50% - .5rem);" class="fas fa-video notify-icon"></i></a>'; 
+                    }
+                }
+                else {
+                    listItem.innerHTML = '<i style="position: absolute; height: 1rem; width: 1rem; left: 1rem;" class="fa-solid fa-guitar"></i>';
+                }
+    
+                listItem.innerHTML += '<p>' + tab.tabTitle + '</p><i id="' + tab.tabTitle + '-icon" style="position: absolute; height: 1rem; width: 1rem; right: 1rem;" class="delete-icon fas fa-trash-can"></i>';
+    
+                // Open the create page when the Tab title is selected.
+                const openCreatePageButton = listItem.children[1] as HTMLElement;
+                openCreatePageButton.onclick = () => {
+                    this.openCreatePage(tab.tabTitle);
+                }
+    
+                tabListContainer.append(listItem);
+            })
+        }
     };
 
     private addRemoveS3URLListenersToIcons = () => {
@@ -110,9 +121,7 @@ class Home {
             const s3URLIcon: HTMLElement = s3URLIcons[i];
             // Lol... this is insane and I love it.
             const s3url = s3URLIcon.id.split("icon-")[1];
-            console.log("url", s3url)
             s3URLIcon.addEventListener("click", () => {
-                console.log("click")
                 this.deleteS3LinkOnVideoDownload(this.user.username, s3url);
             })
         };
@@ -131,6 +140,9 @@ class Home {
                 body: JSON.stringify({ username, videoS3URL })
             })
             .then(response => response.json())
+            .catch((err) => {
+                console.log("err")
+            })
         }
         catch (err) {
             console.log(err)
@@ -140,7 +152,7 @@ class Home {
     private checkIfTabExists = (title: string) => {
         let tabExists = false;
 
-        if (this.user.tabs.length > 1) {
+        if (this.user && this.user.tabs && this.user.tabs.length > 1) {
             this.user.tabs.forEach((tab: any) => {
                 if (tab.tabTitle === title) {
                     tabExists = true;
@@ -153,37 +165,45 @@ class Home {
 
     private addNewTabToDb = () => {
         const createButton: HTMLButtonElement = document.getElementById("create-button") as HTMLButtonElement;
+
         createButton.addEventListener("click", () => {
             const createInput: HTMLInputElement = document.getElementById("create-new-tab-input") as HTMLInputElement;
             const title = createInput.value;
 
-            if (title.length > 1) {
-                if (this.checkIfTabExists(title)) {
-                    const createErrorLabel: HTMLLabelElement = document.getElementById("create-error-label") as HTMLLabelElement;
-                    createErrorLabel.style.display = "flex";
-                    return
-                }
+            if (this.user.username === "Guest") {
+                window.location.href = "create.html?username=Guest&title=My Tab";
+            }
+            else {
+                if (title.length > 1) {
 
-                fetch(url + "saveTab", {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        username: this.user.username,
-                        tabData: {
-                            highEString: "-----",
-                            bString: "-----",
-                            gString: "-----",
-                            dString: "-----",
-                            aString: "-----",
-                            eString: "-----"
-                        }, 
-                        tabTitle: title,
-                    })
-                });
-                window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
-            };
+                    if (this.checkIfTabExists(title)) {
+                        const createErrorLabel: HTMLLabelElement = document.getElementById("create-error-label") as HTMLLabelElement;
+                        createErrorLabel.style.display = "flex";
+                        return
+                    }
+
+                    fetch(url + "saveTab", {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            username: this.user.username,
+                            tabData: {
+                                highEString: "-----",
+                                bString: "-----",
+                                gString: "-----",
+                                dString: "-----",
+                                aString: "-----",
+                                eString: "-----"
+                            }, 
+                            tabTitle: title,
+                        })
+                    });
+
+                    window.location.href = "create.html?username=" + this.user.username + "&title=" + title;
+                }
+            }
         });
     }
 
@@ -265,7 +285,7 @@ class Home {
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
 
         // Set user account image and name.
-        userAccountLabel.innerHTML = userAccountData.username.length >= 1 ? userAccountData.username : "Test User";
+        userAccountLabel.innerHTML = userAccountData.username && userAccountData.username.length >= 1 && !userAccountData.username.includes("Guest") ? userAccountData.username : "Guest";
         // Include this icon when you create the menu.
         //  + "<i class='fas fa-bars'></i>";
         this.user = userAccountData;

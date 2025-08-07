@@ -1,7 +1,7 @@
 import './styles.css';
 import logo from "./images/landing-logo.svg"
+import { v4 as uuidv4 } from 'uuid';
 const url = process.env.SERVER_URL;
-// const url = "http://localhost:5000/";
 
 class SignIn {
     constructor() {
@@ -15,20 +15,18 @@ class SignIn {
     };
 
     public init = (): void => {
-        const loginButton: HTMLButtonElement = document.getElementById("login-button") as HTMLButtonElement;
-        const loginErrorLabel: HTMLLabelElement = document.getElementById("failed-login-error") as HTMLLabelElement;
-        const usernameInput: HTMLInputElement = document.getElementById("username-input") as HTMLInputElement;
-        const passwordInput: HTMLInputElement = document.getElementById("password-input") as HTMLInputElement;
+        const guestButton: HTMLButtonElement = document.getElementById("try-as-guest-button") as HTMLButtonElement;
+        const guestID: string = "Guest-" + uuidv4();
         
-        loginButton?.addEventListener("click", async () => {
-            const userResponse = await fetch(url + `login?username=${usernameInput.value}&pass=${passwordInput.value}`);
-            const loginApproval = await userResponse.json();
-            if (loginApproval === true) {
-                window.location.href = "home.html?username=" + usernameInput.value;
-            }
-            else {
-                loginErrorLabel.style.display = "block";
-            }
+        guestButton?.addEventListener("click", async () => {
+            const createUserResponse = await fetch(url + `createAccount`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: guestID, password: guestID, email: "Guest" })
+            });
+            window.location.replace("/home.html?username=" + guestID)
         });
     }
 }

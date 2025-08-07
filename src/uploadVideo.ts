@@ -666,6 +666,10 @@ class UploadVideo {
 
                 creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Upload Complete!</h3><p style='text-align: center;'>Your video will be available for download on the homepage in a few minutes.</p><p style='text-align: center;'>Please note that your video will only be available for download for the next hour.</p>";
                 
+                if (this.user.username.includes("Guest")) {
+                    creatingVideoText.innerHTML += "<p>As a guest, do not close TabTok in your browser. This account is only temporary and you will not be able to download your video if you close this page.</p>"
+                }
+
                 setTimeout(() => {
                     window.location.href = "home.html?username=" + username;
                 }, 5000);
@@ -948,6 +952,23 @@ class UploadVideo {
         UploadVideo.tab = this.splitTabIntoChunks(this.formatTabForPDFExport(tab.tabData));
         UploadVideo.tabChunks = this.splitTabIntoChunks(this.formatTabForPDFExport(tab.tabData));
         this.initVideoUpload();
+    }
+
+    private resetGuestTab = async (): Promise<void> => {
+        const response = await fetch(url + "saveTab", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tabData: {
+                "highEString" : "------------",
+                "bString" : "------------",
+                "gString" : "------------",
+                "dString" : "------------",
+                "aString" : "------------",
+                "eString" : "------------"
+            }, username: "Guest", tabTitle: "My Tab" })
+        })
     }
 
     private splitTabIntoChunks = (tab: any) => {
