@@ -256,14 +256,27 @@ class Home {
         const queryString = window.location.search; // For the current page
         const params = new URLSearchParams(queryString);
         const username = params.get('username');
+        const userHeader = document.getElementById('user-header') as HTMLElement;
         const userAccount = await fetch(url + "getUserAccount?username=" + username)
         const userAccountData = await userAccount.json()
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
 
         // Set user account image and name.
-        userAccountLabel.innerHTML = userAccountData.username.length >= 1 ? userAccountData.username: "Test User";
-        // Include this icon when you create the menu.
-        //  + "<i class='fas fa-bars'></i>";
+
+        if (userHeader) {
+            userHeader.innerHTML = (userAccountData.username.length >= 1 
+                ? userAccountData.username 
+                : "Test User") + " <i id='menu-icon' class='fas fa-bars'></i>";
+        }
+        
+        const menuIcon = document.getElementById('menu-icon');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+
+        if (menuIcon && dropdownMenu) {
+            menuIcon.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('hidden');
+            });
+        }
         this.user = userAccountData;
         this.tabs = userAccountData.tabs
         this.displayTabsList();
