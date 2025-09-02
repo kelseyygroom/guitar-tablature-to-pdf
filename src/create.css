@@ -206,7 +206,7 @@ button i {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100vw;
+    width: calc(100vw - .5rem);
     position: fixed;
     padding: .25rem;
     bottom: 0px;

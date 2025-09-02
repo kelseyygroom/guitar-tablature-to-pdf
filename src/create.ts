@@ -203,7 +203,7 @@ class Create {
 
         saveTabButton.addEventListener("click", async () => {
             this.postSaveTab(saveTabButton);
-        })
+        });
     };
 
     private findLongestString = (rawTabData: any) => {
@@ -654,13 +654,13 @@ class Create {
             doc.save(this.tabTitle);
         });
 
-        // For PDF
         const exportToVideoButton: HTMLButtonElement = document.getElementById("export-button") as HTMLButtonElement;
         exportToVideoButton.addEventListener("click", () => {
             this.postSaveTab(exportToVideoButton);
+            
             setTimeout(() => {
-            window.location.href = "uploadVideo.html?username=" + this.user.username + "&title=" + this.tabTitle;
-        }, 2000);
+                window.location.href = "uploadVideo.html?username=" + this.user.username + "&title=" + this.tabTitle;
+            }, 2000);
         })
     };
 

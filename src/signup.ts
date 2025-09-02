@@ -30,10 +30,6 @@ class SignUp {
         const passwordIsValidLabel: HTMLInputElement = document.getElementById("failed-password-error-label") as HTMLInputElement;
         if (!passwordInput) return;
         passwordInput.addEventListener("keyup", (event: any) => {
-            console.log(       this.validPasswordCheckSpecial,
-                this.validPasswordCheckCapital,
-                this.validPasswordCheckNumber,
-                this.validPasswordCheckLength,)
             const passwordEntry: string = event.target.value;
             passwordIsValidChecklist.style.display = "flex";
             passwordIsValidLabel.style.display = "flex";

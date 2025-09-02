@@ -43,7 +43,8 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
   prev[`process.env.${next}`] = JSON.stringify(env[next]);
   return prev;
 }, {});
- 
+
+// required for new pages
 module.exports = {
   entry: {
     index: './src/main.ts',
@@ -52,7 +53,10 @@ module.exports = {
     signup: './src/signup.ts',
     uploadVideo: './src/uploadVideo.ts',
     signin: './src/signin.ts',
-    deleteUser: "./src/deleteUser.ts"
+    deleteUser: "./src/deleteUser.ts",
+    contact: "./src/contact.ts",
+    privacy: "./src/privacy.ts",
+    about: "./src/about.ts"
   },
   output: {
     filename: '[name].bundle.js',
@@ -106,6 +110,7 @@ module.exports = {
     }),
     new SitemapPlugin({ base: 'https://tabtok.us/', paths, options: {} }),
     new webpack.DefinePlugin(envKeys),
+    // each new page requires new HtmlWebpackPlugin
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
@@ -140,6 +145,21 @@ module.exports = {
       template: './src/deleteUser.html',
       filename: 'deleteUser.html',
       chunks: ['deleteUser'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/contact.html',
+      filename: 'contact.html',
+      chunks: ['contact'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/privacy.html',
+      filename: 'privacy.html',
+      chunks: ['privacy'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/about.html',
+      filename: 'about.html',
+      chunks: ['about'],
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css', // Output CSS file names

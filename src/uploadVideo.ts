@@ -642,10 +642,8 @@ class UploadVideo {
             this.uploadWithRetry(formData, creatingVideoText, creatingVideoDisplay, username)
         });
     }; 
-
-
     
-    private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, creatingVideoDisplay: HTMLElement, username: string, retries = 3): Promise<void> => {
+    private uploadWithRetry = async (formData: FormData, creatingVideoText: HTMLElement, creatingVideoDisplay: HTMLElement, username: string, retries = 20): Promise<void> => {
         if (this.tabTitle === "Tutorial") {
             creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Great work! The tutorial is complete!</h3><p style='text-align: center;'>You'll be returned to your home page where you can create your very own TabTok video!</p><p style='text-align: center;'>Try creating your own tabs, and add them to your guitar videos!</p><p style='text-align: center;'>Feel free to delete the tutorial at this time, or keep it around in case you have questions!</p>";
             setTimeout(() => {
@@ -666,8 +664,12 @@ class UploadVideo {
     
                 if (!res.ok) throw new Error('Server error');
 
-                creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Upload Complete!</h3><p style='text-align: center;'>Your video will be available for download on the homepage in a few minutes.</p>";
+                creatingVideoText.innerHTML = "<h3 style='text-align: center;'>Upload Complete!</h3><p style='text-align: center;'>Your video will be available for download on the homepage in a few minutes.</p><p style='text-align: center;'>Please note that your video will only be available for download for the next hour.</p>";
                 
+                if (this.user.username.includes("Guest")) {
+                    creatingVideoText.innerHTML += "<p>As a guest, do not close TabTok in your browser. This account is only temporary and you will not be able to download your video if you close this page.</p>"
+                }
+
                 setTimeout(() => {
                     window.location.href = "home.html?username=" + username;
                 }, 5000);
@@ -675,9 +677,13 @@ class UploadVideo {
                 return await res.json();
             } catch (err) {
                 if (retries > 0) {
-                    creatingVideoText.innerHTML = "🟡 Retrying video upload " + retries + " attempt" + (retries === 1 ? '' : "s") + " left.";
+                    if (retries === 17) {
+                        creatingVideoText.innerHTML = "<p style='text-align: center;'>🟡 Slow connection...</p>";
+                    }
+                    else if (retries < 10) {
+                        creatingVideoText.innerHTML = "<p style='text-align: center;'>🟡 Very slow connection...</p><p style='text-align: center;'>Consider switching to WIFI for upload.</p>";
+                    }
                     
-                    console.warn('Retrying upload...', retries);
                     await new Promise(resolve => setTimeout(resolve, 2000));
                     return this.uploadWithRetry(formData, creatingVideoText, creatingVideoDisplay, username, retries - 1);
                 } else {
@@ -948,6 +954,23 @@ class UploadVideo {
         this.initVideoUpload();
     }
 
+    private resetGuestTab = async (): Promise<void> => {
+        const response = await fetch(url + "saveTab", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tabData: {
+                "highEString" : "------------",
+                "bString" : "------------",
+                "gString" : "------------",
+                "dString" : "------------",
+                "aString" : "------------",
+                "eString" : "------------"
+            }, username: "Guest", tabTitle: "My Tab" })
+        })
+    }
+
     private splitTabIntoChunks = (tab: any) => {
         const highESplitArray: string [] = tab.highEString.split("");
         const bSplitArray: string [] = tab.bString.split("");
@@ -956,12 +979,12 @@ class UploadVideo {
         const aSplitArray: string [] = tab.aString.split("");
         const eSplitArray: string [] = tab.eString.split("");
 
-        const highEReturnArray: string [] = [];
-        const bReturnArray: string [] = [];
-        const gReturnArray: string [] = [];
-        const dReturnArray: string [] = [];
-        const aReturnArray: string [] = [];
-        const eReturnArray: string [] = [];
+        let highEReturnArray: string [] = [];
+        let bReturnArray: string [] = [];
+        let gReturnArray: string [] = [];
+        let dReturnArray: string [] = [];
+        let aReturnArray: string [] = [];
+        let eReturnArray: string [] = [];
 
         const returnObj: any = {
             highEString: [],
@@ -985,12 +1008,21 @@ class UploadVideo {
             eReturnArray.push(eSplitArray[i]);
 
             if (i === counter || i === highESplitArray.length - 1) {
+                // Pretty crazy stuff here, but it works and it had to be done fast... (should be const, used let, can be designed better)
+                highEReturnArray = this.ensureStringsAreSameLength(highEReturnArray);
+                bReturnArray = this.ensureStringsAreSameLength(bReturnArray);
+                gReturnArray = this.ensureStringsAreSameLength(gReturnArray);
+                dReturnArray = this.ensureStringsAreSameLength(dReturnArray);
+                aReturnArray = this.ensureStringsAreSameLength(aReturnArray);
+                eReturnArray = this.ensureStringsAreSameLength(eReturnArray);
+
                 highEReturnArray.unshift("E|");
                 bReturnArray.unshift("B|");
                 gReturnArray.unshift("G|");
                 dReturnArray.unshift("D|");
                 aReturnArray.unshift("A|");
                 eReturnArray.unshift("E|");
+
                 returnObj.highEString.push({text: highEReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 returnObj.bString.push({text: bReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
                 returnObj.gString.push({text: gReturnArray.join(""), id: i, time: { start: timer, end: timer + this.TIMER }});
@@ -1010,6 +1042,16 @@ class UploadVideo {
 
         return returnObj;
     };
+
+    private ensureStringsAreSameLength = (array: string[]) => {
+        if (array.length < 31) {
+            for (let i: number = array.length; i < 31; i++) {
+                array.push("-");
+            } 
+        }
+
+        return array;
+    }
 
     // Format the tab & handle double digit tab cells.
     private formatTabForPDFExport = (rawTabData: any) => {

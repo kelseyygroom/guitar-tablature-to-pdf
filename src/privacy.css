@@ -1,0 +1,349 @@
+html {
+    height: 100vh;
+    background: linear-gradient(to right, #5DCCF5, #964FF6);
+    margin: 0px;
+}
+
+h1 {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: white;
+}
+
+.privacy-list {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: white;
+    
+}   
+
+.header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 2rem;
+    width: 100vw;
+    background-color: #1D1D1F;
+    color: #C8B273;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding: .25rem;
+    z-index: 99999;
+}
+
+.fa-door-open {
+    color: #C8B273;
+}
+
+.header i {
+    margin-inline: .5rem;
+}
+
+body {
+    margin: 0px;
+    overflow-y: hidden;
+    height: 100%;
+    background-size: 75vw !important;
+}
+
+h3 {
+    color: #C8B273
+}
+
+#tab-list-container {
+    position: fixed;
+    margin-top: 2.5rem;
+    padding: 0px;
+    width: 100vw;
+    margin-left: 0px;
+    overflow: scroll;
+    padding-bottom: 10rem;
+    height: 90vh;
+}
+
+.popup-modal-overlay {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    animation: fadeIn 1s;
+    /* From https://css.glass */
+    background: rgba(43, 43, 43, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: none;
+}
+
+.popup-modal {
+    width: calc(90vw - 2rem);
+    height: calc(33.5vh - 2rem);;
+    background-color: #1D1D1F;
+    animation: slideInFromBottom .5s;
+    position: fixed;
+    left: 5vw;
+    top: calc(37.5vh - 2rem);
+    border-radius: 10px;
+    z-index: 99999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+    padding-block: 2rem;
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.delete-icon {
+    color: #D2042D;
+    z-index: 99999;
+}
+
+.list-item {
+    position: relative;
+    margin: 10px;
+    list-style-type: none;
+    padding: 1.5em 5em;
+    background: white;
+    border: none;
+    border-radius: .5rem;
+    color: #444;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .2rem;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
+    animation: slideInFromBottom 1s;
+    /* From https://css.glass */
+    background: rgba(43, 43, 43, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.list-item p {
+    margin: 0px;
+    text-align: center;
+    width: 100%;
+}
+
+#create-new-tab-input {
+    box-sizing: border-box; 
+    width: 90%;
+    padding: .75rem;
+    border-radius: 10px;
+}
+
+#create-label {
+    width: 90%;
+    color: #C8B273;
+    margin-bottom: 1rem;
+}
+
+#cancel-button {
+    margin-top: .5rem;
+    width: 90%;
+    padding: .75rem;
+    border-radius: 10px;
+    background-color: white;
+}
+
+#create-button {
+    margin-top: .5rem;
+    width: 90%;
+    padding: .75rem;
+    border-radius: 10px;
+    background-color: white;
+}
+
+#create-error-label {
+    width: 90%;
+    color: white;
+    margin-top: .5rem;
+    animation: fadeIn 1s;
+    color: white;
+    font-size: small;
+    display: none;
+}
+
+
+#reload-icon {
+    position: fixed;
+    bottom: 5vh;
+    left: 0px;
+    width: fit-content;
+    height: 3rem;
+    margin: 1rem;
+    border-radius: 1.5rem;
+    background-color: #1D1D1F;
+    z-index: 99999;
+    color: #C8B273;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
+}
+
+#reload-icon i {
+    margin-left: .5rem;
+}
+
+#create-tab-button {
+    position: fixed;
+    bottom: 5vh;
+    right: 0px;
+    width: fit-content;
+    height: 3rem;
+    margin: 1rem;
+    border-radius: 1.5rem;
+    background-color: #1D1D1F;
+    z-index: 99999;
+    color: #C8B273;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .2),
+    -6px -6px 10px rgba(255, 255, 255, .2),
+    6px 6px 8px rgba(255, 255, 255, .3),
+    6px 6px 10px rgba(0, 0, 0, .05);
+}
+
+#create-tab-button:hover {
+    background-color: #246ec3;
+}
+
+a {
+    color: #F0f8ff;
+    text-decoration: none; /* no underline */
+}
+
+#username-label {
+    color: inherit;
+    position: fixed;
+    right: .5rem;
+    top: 5px;
+    margin: .25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    cursor: pointer;
+    border-radius: 18%;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;    
+  right: 0;     
+  min-width: 150px;
+  background: #1D1D1F;
+  border: 1px solid #1D1D1F;
+  border-radius: 0 0 36px 36px; 
+  display: inline-block;
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 0;
+  overflow: hidden;
+}
+
+.dropdown li {
+  padding: 10px 15px;
+}
+
+.dropdown li a {
+  text-decoration: none;
+  color: #C8B273;
+  display: block; 
+}
+
+.dropdown li:hover {
+  background: #246ec3;
+}
+
+.hidden {
+  display: none;
+}
+
+
+
+
+
+#loading-icon {
+    transition: all;
+    animation: fadeIn 1s;    
+}
+
+.notify {
+    animation: grow-shrink-green 1.5s infinite ease-in-out !important;
+}
+
+.notify-icon {
+    animation: grow-shrink-green-icon 1.5s infinite ease-in-out !important;
+}
+
+@media (max-width: 600px) and (orientation:portrait) {
+    .header {
+        padding-top: 2rem;
+    }
+
+    #tab-list-container {
+        margin-top: 4.5rem;
+    }
+
+    #username-label {
+        top: 2rem;
+    }
+
+    #reload-icon {
+        bottom: 7.5vh;
+    }
+
+    #create-tab-button {
+        bottom: 7.5vh;
+    }
+}
+
+@media (min-width: 600px) and (orientation:landscape) {
+    #create-tab-button {
+        bottom: 0px;
+    }
+
+    #reload-icon {
+        bottom: 0px;
+    }
+
+    body {
+        background-size: 25vw;
+    }
+
+    li {
+        width: 50vw;
+    }
+
+    .popup-modal {
+        width: calc(25vw - 2rem);
+        left: 37.5vw;
+    }
+
+    #tab-list-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #tab-list-container {
+        margin-top: 3.5rem;
+    }
+}
