@@ -262,12 +262,9 @@ class Home {
         const userAccountLabel: HTMLElement = document.getElementById('username-label') as HTMLElement;
 
         // Set user account image and name.
-
-        if (userHeader) {
-            userHeader.innerHTML = (userAccountData.username.length >= 1 
+        userHeader.innerHTML = (userAccountData.username.length >= 1 
                 ? userAccountData.username 
                 : "Test User") + " <i id='menu-icon' class='fas fa-bars'></i>";
-        }
         
         const menuIcon = document.getElementById('menu-icon');
         const dropdownMenu = document.getElementById('dropdown-menu');
